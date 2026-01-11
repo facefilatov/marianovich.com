@@ -27,13 +27,6 @@
             position: relative;
         }
 
-        :root {
-            --mouse-x: 0px;
-            --mouse-y: 0px;
-            --mouse-x-stars: 0px;
-            --mouse-y-stars: 0px;
-        }
-
         /* Cosmic background */
         .cosmic-bg {
             position: fixed;
@@ -43,6 +36,7 @@
             height: 100%;
             z-index: -1;
             background: #000000;
+            transition: transform 0.2s ease-out;
         }
 
         /* Nebula layer with green/teal wisps */
@@ -60,7 +54,6 @@
                 radial-gradient(ellipse 1050px 1050px at 90% 20%, rgba(25, 105, 85, 0.2) 0%, transparent 50%);
             animation: nebulaFloat 120s ease-in-out infinite;
             mix-blend-mode: screen;
-            will-change: transform;
         }
 
         /* Star field with glowing particles */
@@ -94,7 +87,6 @@
                 90% 40%;
             animation: starsFloat 225s linear infinite;
             opacity: 0.6;
-            will-change: transform;
         }
 
         /* Additional glowing particles layer */
@@ -112,7 +104,7 @@
                 radial-gradient(circle at 70% 15%, rgba(110, 245, 190, 0.23) 0%, transparent 5.5%),
                 radial-gradient(circle at 25% 65%, rgba(130, 255, 205, 0.21) 0%, transparent 6.5%);
             animation: particlesPulse 60s ease-in-out infinite;
-            will-change: transform;
+            transition: transform 0.2s ease-out;
         }
 
         .container {
@@ -250,22 +242,27 @@
         }
 
         .gemstone:nth-child(2) {
-            animation-delay: -4.5s;
+            animation-delay: -3.75s;
             top: 0;
         }
 
         .gemstone:nth-child(3) {
-            animation-delay: -9s;
+            animation-delay: -7.5s;
             top: 0;
         }
 
         .gemstone:nth-child(4) {
-            animation-delay: -13.5s;
+            animation-delay: -11.25s;
             top: 0;
         }
 
         .gemstone:nth-child(5) {
-            animation-delay: -18s;
+            animation-delay: -15s;
+            top: 0;
+        }
+
+        .gemstone:nth-child(6) {
+            animation-delay: -18.75s;
             top: 0;
         }
 
@@ -288,7 +285,7 @@
 
         .stone-names-content {
             display: flex;
-            whitespace: nowrap;
+            white-space: nowrap;
             animation: scrollLeft 45s linear infinite;
         }
 
@@ -299,24 +296,26 @@
             font-weight: 300;
         }
 
-        /* Bottom scrolling text */
-        .scroll-text-bottom {
+        /* Bottom scrolling logos */
+        .scroll-logos-bottom {
             position: absolute;
             bottom: 80px;
             width: 100%;
             overflow: hidden;
         }
 
-        .scroll-content-bottom {
+        .scroll-logos-content {
             display: flex;
             white-space: nowrap;
             animation: scrollRight 30s linear infinite;
+            align-items: center;
         }
 
-        .scroll-content-bottom span {
-            font-size: 12px;
-            letter-spacing: 3px;
-            padding: 0 30px;
+        .scroll-logos-content img {
+            height: 30px;
+            width: auto;
+            margin: 0 40px;
+            filter: brightness(0) invert(1);
         }
 
         /* Footer */
@@ -493,19 +492,19 @@
             </div>
         </div>
 
-        <!-- Bottom scrolling text -->
-        <div class="scroll-text-bottom">
-            <div class="scroll-content-bottom">
-                <span>MARIANOVICH</span>
-                <span>MARIANOVICH</span>
-                <span>MARIANOVICH</span>
-                <span>MARIANOVICH</span>
-                <span>MARIANOVICH</span>
-                <span>MARIANOVICH</span>
-                <span>MARIANOVICH</span>
-                <span>MARIANOVICH</span>
-                <span>MARIANOVICH</span>
-                <span>MARIANOVICH</span>
+        <!-- Bottom scrolling logos -->
+        <div class="scroll-logos-bottom">
+            <div class="scroll-logos-content">
+                <img src="https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Marianovich%20Logo.svg" alt="Marianovich">
+                <img src="https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Marianovich%20Logo.svg" alt="Marianovich">
+                <img src="https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Marianovich%20Logo.svg" alt="Marianovich">
+                <img src="https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Marianovich%20Logo.svg" alt="Marianovich">
+                <img src="https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Marianovich%20Logo.svg" alt="Marianovich">
+                <img src="https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Marianovich%20Logo.svg" alt="Marianovich">
+                <img src="https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Marianovich%20Logo.svg" alt="Marianovich">
+                <img src="https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Marianovich%20Logo.svg" alt="Marianovich">
+                <img src="https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Marianovich%20Logo.svg" alt="Marianovich">
+                <img src="https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Marianovich%20Logo.svg" alt="Marianovich">
             </div>
         </div>
 
@@ -516,23 +515,26 @@
     </div>
 
     <script>
-        // Mouse parallax effect for cosmic background
+        // Mouse parallax effect for cosmic background - INCREASED MOVEMENT
         document.addEventListener('mousemove', (e) => {
             const mouseX = e.clientX / window.innerWidth;
             const mouseY = e.clientY / window.innerHeight;
             
-            const moveX = (mouseX - 0.5) * 50;
-            const moveY = (mouseY - 0.5) * 50;
+            // Increased from 50 to 150 for much more visible movement
+            const moveX = (mouseX - 0.5) * 150;
+            const moveY = (mouseY - 0.5) * 150;
             
-            const cosmicBg = document.querySelector('.cosmic-bg::before');
+            const cosmicBg = document.querySelector('.cosmic-bg');
             const starParticles = document.querySelector('.star-particles');
-            const cosmicAfter = document.querySelector('.cosmic-bg::after');
             
-            // Apply transforms to background layers
-            document.documentElement.style.setProperty('--mouse-x', `${moveX}px`);
-            document.documentElement.style.setProperty('--mouse-y', `${moveY}px`);
-            document.documentElement.style.setProperty('--mouse-x-stars', `${moveX * 0.5}px`);
-            document.documentElement.style.setProperty('--mouse-y-stars', `${moveY * 0.5}px`);
+            if (cosmicBg) {
+                cosmicBg.style.transform = `translate(${moveX}px, ${moveY}px)`;
+            }
+            
+            if (starParticles) {
+                // Stars move at 70% of the nebula speed for depth
+                starParticles.style.transform = `translate(${moveX * 0.7}px, ${moveY * 0.7}px)`;
+            }
         });
     </script>
 </body>
