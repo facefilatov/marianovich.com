@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Marianovich Gems</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Futura', 'Trebuchet MS', Arial, sans-serif;
+            background-color: #000;
+            color: #fff;
+            overflow-x: hidden;
+        }
+
+        .container {
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+
+        /* Top scrolling text */
+        .scroll-text-top {
+            position: absolute;
+            top: 0;
+            width: 100%;
+            overflow: hidden;
+            background: #000;
+            padding: 10px 0;
+            border-bottom: 1px solid #333;
+        }
+
+        .scroll-content-top {
+            display: flex;
+            white-space: nowrap;
+            animation: scrollLeft 20s linear infinite;
+        }
+
+        .scroll-content-top span {
+            font-size: 12px;
+            letter-spacing: 3px;
+            padding: 0 30px;
+        }
+
+        /* Social icons */
+        .social-icons {
+            position: absolute;
+            top: 120px;
+            left: 60px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            z-index: 10;
+        }
+
+        .social-icon {
+            opacity: 0;
+            transform: translateX(-100px);
+            animation: slideInWave 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+        }
+
+        .social-icon:nth-child(1) {
+            animation-delay: 0.2s;
+        }
+
+        .social-icon:nth-child(2) {
+            animation-delay: 0.4s;
+        }
+
+        .social-icon:nth-child(3) {
+            animation-delay: 0.6s;
+        }
+
+        .social-icon img,
+        .social-icon svg {
+            width: 60px;
+            height: 60px;
+        }
+
+        /* Main content */
+        .main-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+        }
+
+        .logo {
+            margin-bottom: 80px;
+        }
+
+        .logo h1 {
+            font-size: 72px;
+            font-weight: 300;
+            letter-spacing: 8px;
+            text-transform: uppercase;
+        }
+
+        .logo .gems {
+            font-size: 36px;
+            font-weight: 300;
+            letter-spacing: 4px;
+            text-align: right;
+            margin-top: -10px;
+        }
+
+        /* Gemstones carousel */
+        .gemstones {
+            width: 100%;
+            height: 200px;
+            position: relative;
+            overflow: hidden;
+            margin-bottom: 40px;
+        }
+
+        .gemstone {
+            position: absolute;
+            width: 200px;
+            height: 200px;
+            object-fit: contain;
+            animation: moveGemstone 15s linear infinite;
+        }
+
+        .gemstone:nth-child(1) {
+            animation-delay: 0s;
+            top: 0;
+        }
+
+        .gemstone:nth-child(2) {
+            animation-delay: -3s;
+            top: 0;
+        }
+
+        .gemstone:nth-child(3) {
+            animation-delay: -6s;
+            top: 0;
+        }
+
+        .gemstone:nth-child(4) {
+            animation-delay: -9s;
+            top: 0;
+        }
+
+        .gemstone:nth-child(5) {
+            animation-delay: -12s;
+            top: 0;
+        }
+
+        /* Stone names scrolling */
+        .stone-names {
+            width: 100%;
+            overflow: hidden;
+            background: rgba(255, 255, 255, 0.05);
+            padding: 20px 0;
+        }
+
+        .stone-names-content {
+            display: flex;
+            white-space: nowrap;
+            animation: scrollLeft 30s linear infinite;
+        }
+
+        .stone-names-content span {
+            font-size: 32px;
+            letter-spacing: 2px;
+            padding: 0 50px;
+            font-weight: 300;
+        }
+
+        /* Bottom scrolling text */
+        .scroll-text-bottom {
+            position: absolute;
+            bottom: 80px;
+            width: 100%;
+            overflow: hidden;
+        }
+
+        .scroll-content-bottom {
+            display: flex;
+            white-space: nowrap;
+            animation: scrollRight 20s linear infinite;
+        }
+
+        .scroll-content-bottom span {
+            font-size: 12px;
+            letter-spacing: 3px;
+            padding: 0 30px;
+        }
+
+        /* Footer */
+        .footer {
+            position: absolute;
+            bottom: 20px;
+            width: 100%;
+            text-align: center;
+            font-size: 18px;
+            letter-spacing: 1px;
+        }
+
+        /* Animations */
+        @keyframes scrollLeft {
+            0% {
+                transform: translateX(0);
+            }
+            100% {
+                transform: translateX(-50%);
+            }
+        }
+
+        @keyframes scrollRight {
+            0% {
+                transform: translateX(-50%);
+            }
+            100% {
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes slideInWave {
+            0% {
+                opacity: 0;
+                transform: translateX(-100px) translateY(0);
+            }
+            60% {
+                transform: translateX(10px) translateY(-5px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateX(0) translateY(0);
+            }
+        }
+
+        @keyframes moveGemstone {
+            0% {
+                left: 100vw;
+            }
+            100% {
+                left: -220px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Top scrolling text -->
+        <div class="scroll-text-top">
+            <div class="scroll-content-top">
+                <span>MARIANOVICH</span>
+                <span>MARIANOVICH</span>
+                <span>MARIANOVICH</span>
+                <span>MARIANOVICH</span>
+                <span>MARIANOVICH</span>
+                <span>MARIANOVICH</span>
+                <span>MARIANOVICH</span>
+                <span>MARIANOVICH</span>
+                <span>MARIANOVICH</span>
+                <span>MARIANOVICH</span>
+            </div>
+        </div>
+
+        <!-- Social icons -->
+        <div class="social-icons">
+            <div class="social-icon">
+                <svg viewBox="0 0 24 24" fill="#E4405F">
+                    <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
+                </svg>
+            </div>
+            <div class="social-icon">
+                <svg viewBox="0 0 48 48" fill="#F1641E">
+                    <path d="M24,4C12.954,4,4,12.954,4,24s8.954,20,20,20s20-8.954,20-20S35.046,4,24,4z M33.427,29.604 c-0.265,1.078-1.189,1.877-2.284,1.982c-2.888,0.277-5.797,0.277-8.685,0c-1.095-0.105-2.019-0.904-2.284-1.982 c-0.421-1.711-0.421-3.493,0-5.204c0.265-1.078,1.189-1.877,2.284-1.982c2.888-0.277,5.797-0.277,8.685,0 c1.095,0.105,2.019,0.904,2.284,1.982C33.848,26.111,33.848,27.893,33.427,29.604z"/>
+                    <polygon points="22,28 28,24 22,20"/>
+                </svg>
+            </div>
+            <div class="social-icon">
+                <svg viewBox="0 0 48 48">
+                    <defs>
+                        <linearGradient id="ebayGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                            <stop offset="0%" style="stop-color:#e53238"/>
+                            <stop offset="25%" style="stop-color:#0064d2"/>
+                            <stop offset="50%" style="stop-color:#f5af02"/>
+                            <stop offset="75%" style="stop-color:#86b817"/>
+                        </linearGradient>
+                    </defs>
+                    <text x="50%" y="50%" text-anchor="middle" dominant-baseline="middle" font-size="16" font-weight="bold" fill="url(#ebayGradient)">eBay</text>
+                </svg>
+            </div>
+        </div>
+
+        <!-- Main content -->
+        <div class="main-content">
+            <div class="logo">
+                <h1>MARIANOVICH</h1>
+                <div class="gems">gems</div>
+            </div>
+
+            <!-- Gemstones carousel -->
+            <div class="gemstones">
+                <svg class="gemstone" viewBox="0 0 200 200">
+                    <defs>
+                        <linearGradient id="demantoid1" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" style="stop-color:#2d5016"/>
+                            <stop offset="50%" style="stop-color:#4a7c2e"/>
+                            <stop offset="100%" style="stop-color:#1a2f0d"/>
+                        </linearGradient>
+                    </defs>
+                    <polygon points="100,40 160,80 160,120 100,160 40,120 40,80" fill="url(#demantoid1)" opacity="0.9"/>
+                    <polygon points="100,40 160,80 100,100" fill="#5a9c3e" opacity="0.7"/>
+                    <polygon points="100,160 40,120 100,100" fill="#1a2f0d" opacity="0.8"/>
+                </svg>
+
+                <svg class="gemstone" viewBox="0 0 200 200">
+                    <defs>
+                        <radialGradient id="emerald">
+                            <stop offset="0%" style="stop-color:#00ff00"/>
+                            <stop offset="100%" style="stop-color:#006400"/>
+                        </radialGradient>
+                    </defs>
+                    <polygon points="100,30 140,70 140,130 100,170 60,130 60,70" fill="url(#emerald)"/>
+                    <polygon points="100,30 140,70 100,100" fill="#00aa00" opacity="0.8"/>
+                </svg>
+
+                <svg class="gemstone" viewBox="0 0 200 200">
+                    <defs>
+                        <radialGradient id="heliodor">
+                            <stop offset="0%" style="stop-color:#ffff00"/>
+                            <stop offset="50%" style="stop-color:#ffd700"/>
+                            <stop offset="100%" style="stop-color:#cc9900"/>
+                        </radialGradient>
+                    </defs>
+                    <circle cx="100" cy="100" r="70" fill="url(#heliodor)"/>
+                    <path d="M100,30 L130,60 L130,140 L100,170 L70,140 L70,60 Z" fill="#fff700" opacity="0.6"/>
+                </svg>
+
+                <svg class="gemstone" viewBox="0 0 200 200">
+                    <defs>
+                        <radialGradient id="sapphire">
+                            <stop offset="0%" style="stop-color:#6495ed"/>
+                            <stop offset="100%" style="stop-color:#00008b"/>
+                        </radialGradient>
+                    </defs>
+                    <ellipse cx="100" cy="100" rx="75" ry="65" fill="url(#sapphire)"/>
+                    <ellipse cx="100" cy="85" rx="50" ry="40" fill="#4169e1" opacity="0.6"/>
+                </svg>
+
+                <svg class="gemstone" viewBox="0 0 200 200">
+                    <defs>
+                        <linearGradient id="aquamarine" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" style="stop-color:#7fffd4"/>
+                            <stop offset="100%" style="stop-color:#00ced1"/>
+                        </linearGradient>
+                    </defs>
+                    <rect x="30" y="60" width="140" height="80" fill="url(#aquamarine)" opacity="0.9"/>
+                    <polygon points="30,60 170,60 150,80 50,80" fill="#5fd9d9" opacity="0.7"/>
+                </svg>
+            </div>
+
+            <!-- Stone names -->
+            <div class="stone-names">
+                <div class="stone-names-content">
+                    <span>Demantoid</span>
+                    <span>Sapphire</span>
+                    <span>Aquamarine</span>
+                    <span>Heliodor</span>
+                    <span>Topaz</span>
+                    <span>Alexandrite</span>
+                    <span>Emerald</span>
+                    <span>Demantoid</span>
+                    <span>Sapphire</span>
+                    <span>Aquamarine</span>
+                    <span>Heliodor</span>
+                    <span>Topaz</span>
+                    <span>Alexandrite</span>
+                    <span>Emerald</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Bottom scrolling text -->
+        <div class="scroll-text-bottom">
+            <div class="scroll-content-bottom">
+                <span>MARIANOVICH</span>
+                <span>MARIANOVICH</span>
+                <span>MARIANOVICH</span>
+                <span>MARIANOVICH</span>
+                <span>MARIANOVICH</span>
+                <span>MARIANOVICH</span>
+                <span>MARIANOVICH</span>
+                <span>MARIANOVICH</span>
+                <span>MARIANOVICH</span>
+                <span>MARIANOVICH</span>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="footer">
+            contact@marianovich.com
+        </div>
+    </div>
+</body>
+</html>
