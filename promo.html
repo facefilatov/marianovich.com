@@ -21,90 +21,79 @@
 
         body {
             font-family: 'Futura Next', 'Futura', 'Trebuchet MS', Arial, sans-serif;
-            background-color: #000;
+            background-color: #0a0e1a;
             color: #fff;
             overflow-x: hidden;
             position: relative;
         }
 
-        /* Cosmic background */
-        .cosmic-bg {
+        /* Multi-layer parallax cosmic background */
+        .parallax-container {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
             z-index: -1;
-            background: #000000;
-            transition: transform 0.2s ease-out;
+            overflow: hidden;
         }
 
-        /* Nebula layer with green/teal wisps */
-        .cosmic-bg::before {
-            content: '';
+        .parallax-layer {
             position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
+            top: -10%;
+            left: -10%;
+            width: 120%;
+            height: 120%;
+            background-size: cover;
+            background-position: center;
+        }
+
+        .layer-base {
+            background: radial-gradient(ellipse at center, #1a2332 0%, #0a0e1a 100%);
+            z-index: 1;
+        }
+
+        .layer-nebula {
             background: 
-                radial-gradient(ellipse 1200px 900px at 80% 60%, rgba(30, 120, 90, 0.35) 0%, transparent 50%),
-                radial-gradient(ellipse 900px 1200px at 60% 30%, rgba(15, 90, 105, 0.28) 0%, transparent 50%),
-                radial-gradient(ellipse 1500px 750px at 30% 70%, rgba(10, 60, 75, 0.25) 0%, transparent 50%),
-                radial-gradient(ellipse 1050px 1050px at 90% 20%, rgba(25, 105, 85, 0.2) 0%, transparent 50%);
-            animation: nebulaFloat 120s ease-in-out infinite;
-            mix-blend-mode: screen;
+                radial-gradient(ellipse 1000px 800px at 70% 50%, rgba(20, 100, 80, 0.2) 0%, transparent 50%),
+                radial-gradient(ellipse 800px 1000px at 30% 60%, rgba(10, 80, 90, 0.15) 0%, transparent 50%),
+                radial-gradient(ellipse 1200px 600px at 50% 30%, rgba(15, 70, 75, 0.12) 0%, transparent 50%);
+            z-index: 2;
         }
 
-        /* Star field with glowing particles */
-        .cosmic-bg::after {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
+        .layer-stars-far {
             background-image: 
-                radial-gradient(circle, rgba(120, 255, 200, 0.9) 0%, transparent 2px),
-                radial-gradient(circle, rgba(100, 240, 180, 0.7) 0%, transparent 1px),
-                radial-gradient(circle, rgba(170, 255, 220, 1) 0%, transparent 2px),
-                radial-gradient(circle, rgba(80, 220, 160, 0.6) 0%, transparent 1px),
-                radial-gradient(circle, rgba(140, 250, 200, 0.8) 0%, transparent 1.5px),
-                radial-gradient(circle, rgba(220, 255, 240, 0.5) 0%, transparent 1px);
-            background-size: 
-                1200px 800px,
-                800px 1000px,
-                1500px 600px,
-                600px 900px,
-                1000px 1200px,
-                900px 700px;
-            background-position: 
-                0% 0%,
-                30% 50%,
-                60% 20%,
-                80% 70%,
-                20% 80%,
-                90% 40%;
-            animation: starsFloat 225s linear infinite;
-            opacity: 0.6;
+                radial-gradient(1px 1px at 20% 30%, rgba(180, 255, 220, 0.3), transparent),
+                radial-gradient(1px 1px at 60% 70%, rgba(180, 255, 220, 0.3), transparent),
+                radial-gradient(1px 1px at 50% 50%, rgba(180, 255, 220, 0.2), transparent),
+                radial-gradient(1px 1px at 80% 10%, rgba(180, 255, 220, 0.3), transparent),
+                radial-gradient(1px 1px at 90% 60%, rgba(180, 255, 220, 0.2), transparent),
+                radial-gradient(1px 1px at 33% 80%, rgba(180, 255, 220, 0.3), transparent),
+                radial-gradient(1px 1px at 15% 15%, rgba(180, 255, 220, 0.2), transparent);
+            background-size: 800px 800px, 600px 900px, 900px 700px, 700px 800px, 850px 750px, 950px 650px, 750px 850px;
+            background-position: 0 0, 40% 60%, 130% 270%, 70% 100%, 200% 150%, 250% 200%, 180% 120%;
+            z-index: 3;
         }
 
-        /* Additional glowing particles layer */
-        .star-particles {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: -1;
+        .layer-stars-near {
             background-image: 
-                radial-gradient(circle at 15% 25%, rgba(120, 255, 200, 0.25) 0%, transparent 5%),
-                radial-gradient(circle at 85% 45%, rgba(100, 240, 180, 0.22) 0%, transparent 6%),
-                radial-gradient(circle at 45% 75%, rgba(140, 250, 200, 0.2) 0%, transparent 7%),
-                radial-gradient(circle at 70% 15%, rgba(110, 245, 190, 0.23) 0%, transparent 5.5%),
-                radial-gradient(circle at 25% 65%, rgba(130, 255, 205, 0.21) 0%, transparent 6.5%);
-            animation: particlesPulse 60s ease-in-out infinite;
-            transition: transform 0.2s ease-out;
+                radial-gradient(2px 2px at 25% 40%, rgba(150, 255, 200, 0.8), transparent),
+                radial-gradient(1.5px 1.5px at 75% 20%, rgba(150, 255, 200, 0.7), transparent),
+                radial-gradient(2px 2px at 45% 65%, rgba(150, 255, 200, 0.9), transparent),
+                radial-gradient(1px 1px at 85% 55%, rgba(150, 255, 200, 0.6), transparent),
+                radial-gradient(2px 2px at 15% 75%, rgba(150, 255, 200, 0.8), transparent);
+            background-size: 500px 500px, 400px 600px, 600px 400px, 550px 450px, 450px 550px;
+            background-position: 0 0, 50% 50%, 100% 100%, 150% 50%, 50% 150%;
+            z-index: 4;
+        }
+
+        .layer-glow {
+            background-image: 
+                radial-gradient(circle at 15% 25%, rgba(100, 255, 180, 0.15) 0%, transparent 20%),
+                radial-gradient(circle at 85% 45%, rgba(80, 220, 160, 0.12) 0%, transparent 20%),
+                radial-gradient(circle at 45% 75%, rgba(120, 240, 180, 0.1) 0%, transparent 20%);
+            animation: glowPulse 60s ease-in-out infinite;
+            z-index: 5;
         }
 
         .container {
@@ -115,33 +104,34 @@
             position: relative;
         }
 
-        /* Top scrolling text */
-        .scroll-text-top {
+        /* Top scrolling mini-logos */
+        .scroll-mini-logos-top {
             position: absolute;
             top: 0;
             width: 100%;
             overflow: hidden;
-            background: #000;
-            padding: 10px 0;
-            border-bottom: 1px solid #333;
+            background: rgba(0, 0, 0, 0.3);
+            padding: 5px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            z-index: 100;
         }
 
-        .scroll-content-top {
+        .scroll-mini-logos-top-content {
             display: flex;
-            white-space: nowrap;
-            animation: scrollLeft 30s linear infinite;
+            animation: scrollLeftContinuous 20s linear infinite;
         }
 
-        .scroll-content-top span {
-            font-size: 12px;
-            letter-spacing: 3px;
-            padding: 0 30px;
+        .scroll-mini-logos-top-content img {
+            height: 10px;
+            width: auto;
+            filter: brightness(0) invert(1);
+            flex-shrink: 0;
         }
 
         /* Social icons */
         .social-icons {
             position: absolute;
-            top: 20px;
+            top: 30px;
             left: 20px;
             display: flex;
             flex-direction: column;
@@ -173,8 +163,7 @@
             animation-delay: 0.9s;
         }
 
-        .social-icon img,
-        .social-icon svg {
+        .social-icon img {
             width: 120px;
             height: 120px;
         }
@@ -187,12 +176,13 @@
             justify-content: center;
             align-items: center;
             position: relative;
+            margin-top: -20vh;
         }
 
         .logo {
             margin-bottom: 80px;
             width: 90%;
-            max-width: 500px;
+            max-width: 575px;
             padding: 0 5%;
         }
 
@@ -206,7 +196,7 @@
         @media (max-width: 768px) {
             .logo {
                 width: 85%;
-                max-width: 400px;
+                max-width: 460px;
                 margin-bottom: 60px;
             }
         }
@@ -214,7 +204,7 @@
         @media (max-width: 480px) {
             .logo {
                 width: 80%;
-                max-width: 300px;
+                max-width: 345px;
                 margin-bottom: 40px;
             }
         }
@@ -222,7 +212,7 @@
         /* Gemstones carousel */
         .gemstones {
             width: 100%;
-            height: 200px;
+            height: 150px;
             position: relative;
             overflow: hidden;
             margin-bottom: 40px;
@@ -230,8 +220,8 @@
 
         .gemstone {
             position: absolute;
-            width: 200px;
-            height: 200px;
+            width: 150px;
+            height: 150px;
             object-fit: contain;
             animation: moveGemstone 22.5s linear infinite;
         }
@@ -276,7 +266,7 @@
             -webkit-backdrop-filter: blur(10px);
             border-top: 1px solid rgba(255, 255, 255, 0.1);
             border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-            padding: 20px 0;
+            padding: 10px 0;
             box-shadow: 
                 0 8px 32px 0 rgba(31, 38, 135, 0.15),
                 inset 0 1px 0 0 rgba(255, 255, 255, 0.15),
@@ -290,32 +280,30 @@
         }
 
         .stone-names-content span {
-            font-size: 32px;
+            font-size: 21px;
             letter-spacing: 2px;
-            padding: 0 50px;
+            padding: 0 35px;
             font-weight: 300;
         }
 
-        /* Bottom scrolling logos */
-        .scroll-logos-bottom {
+        /* Bottom scrolling mini-logos */
+        .scroll-mini-logos-bottom {
             position: absolute;
-            bottom: 80px;
+            bottom: 60px;
             width: 100%;
             overflow: hidden;
         }
 
-        .scroll-logos-content {
+        .scroll-mini-logos-bottom-content {
             display: flex;
-            white-space: nowrap;
-            animation: scrollRight 30s linear infinite;
-            align-items: center;
+            animation: scrollRightContinuous 20s linear infinite;
         }
 
-        .scroll-logos-content img {
-            height: 30px;
+        .scroll-mini-logos-bottom-content img {
+            height: 10px;
             width: auto;
-            margin: 0 40px;
             filter: brightness(0) invert(1);
+            flex-shrink: 0;
         }
 
         /* Footer */
@@ -324,7 +312,7 @@
             bottom: 20px;
             width: 100%;
             text-align: center;
-            font-size: 18px;
+            font-size: 14px;
             letter-spacing: 1px;
         }
 
@@ -334,42 +322,12 @@
         }
 
         /* Animations */
-        @keyframes nebulaFloat {
+        @keyframes glowPulse {
             0%, 100% {
-                transform: translate(0, 0) scale(1);
-                opacity: 1;
-            }
-            25% {
-                transform: translate(20px, -30px) scale(1.05);
                 opacity: 0.8;
             }
             50% {
-                transform: translate(-30px, 20px) scale(0.95);
-                opacity: 0.9;
-            }
-            75% {
-                transform: translate(15px, 25px) scale(1.02);
-                opacity: 0.85;
-            }
-        }
-
-        @keyframes starsFloat {
-            0% {
-                transform: translate(0, 0);
-            }
-            100% {
-                transform: translate(-100px, -100px);
-            }
-        }
-
-        @keyframes particlesPulse {
-            0%, 100% {
-                opacity: 0.3;
-                transform: scale(1);
-            }
-            50% {
-                opacity: 0.6;
-                transform: scale(1.1);
+                opacity: 1;
             }
         }
 
@@ -382,9 +340,18 @@
             }
         }
 
-        @keyframes scrollRight {
+        @keyframes scrollLeftContinuous {
             0% {
-                transform: translateX(-50%);
+                transform: translateX(0);
+            }
+            100% {
+                transform: translateX(-100%);
+            }
+        }
+
+        @keyframes scrollRightContinuous {
+            0% {
+                transform: translateX(-100%);
             }
             100% {
                 transform: translateX(0);
@@ -410,30 +377,45 @@
                 left: 100vw;
             }
             100% {
-                left: -220px;
+                left: -170px;
             }
         }
     </style>
 </head>
 <body>
-    <!-- Cosmic background -->
-    <div class="cosmic-bg"></div>
-    <div class="star-particles"></div>
+    <!-- Multi-layer parallax background -->
+    <div class="parallax-container">
+        <div class="parallax-layer layer-base"></div>
+        <div class="parallax-layer layer-nebula" data-speed="0.3"></div>
+        <div class="parallax-layer layer-stars-far" data-speed="0.5"></div>
+        <div class="parallax-layer layer-stars-near" data-speed="0.8"></div>
+        <div class="parallax-layer layer-glow" data-speed="0.4"></div>
+    </div>
     
     <div class="container">
-        <!-- Top scrolling text -->
-        <div class="scroll-text-top">
-            <div class="scroll-content-top">
-                <span>MARIANOVICH</span>
-                <span>MARIANOVICH</span>
-                <span>MARIANOVICH</span>
-                <span>MARIANOVICH</span>
-                <span>MARIANOVICH</span>
-                <span>MARIANOVICH</span>
-                <span>MARIANOVICH</span>
-                <span>MARIANOVICH</span>
-                <span>MARIANOVICH</span>
-                <span>MARIANOVICH</span>
+        <!-- Top scrolling mini-logos -->
+        <div class="scroll-mini-logos-top">
+            <div class="scroll-mini-logos-top-content">
+                <img src="https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Marianovich%20Logo.svg" alt="Marianovich">
+                <img src="https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Marianovich%20Logo.svg" alt="Marianovich">
+                <img src="https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Marianovich%20Logo.svg" alt="Marianovich">
+                <img src="https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Marianovich%20Logo.svg" alt="Marianovich">
+                <img src="https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Marianovich%20Logo.svg" alt="Marianovich">
+                <img src="https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Marianovich%20Logo.svg" alt="Marianovich">
+                <img src="https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Marianovich%20Logo.svg" alt="Marianovich">
+                <img src="https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Marianovich%20Logo.svg" alt="Marianovich">
+                <img src="https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Marianovich%20Logo.svg" alt="Marianovich">
+                <img src="https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Marianovich%20Logo.svg" alt="Marianovich">
+                <img src="https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Marianovich%20Logo.svg" alt="Marianovich">
+                <img src="https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Marianovich%20Logo.svg" alt="Marianovich">
+                <img src="https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Marianovich%20Logo.svg" alt="Marianovich">
+                <img src="https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Marianovich%20Logo.svg" alt="Marianovich">
+                <img src="https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Marianovich%20Logo.svg" alt="Marianovich">
+                <img src="https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Marianovich%20Logo.svg" alt="Marianovich">
+                <img src="https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Marianovich%20Logo.svg" alt="Marianovich">
+                <img src="https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Marianovich%20Logo.svg" alt="Marianovich">
+                <img src="https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Marianovich%20Logo.svg" alt="Marianovich">
+                <img src="https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Marianovich%20Logo.svg" alt="Marianovich">
             </div>
         </div>
 
@@ -492,9 +474,19 @@
             </div>
         </div>
 
-        <!-- Bottom scrolling logos -->
-        <div class="scroll-logos-bottom">
-            <div class="scroll-logos-content">
+        <!-- Bottom scrolling mini-logos -->
+        <div class="scroll-mini-logos-bottom">
+            <div class="scroll-mini-logos-bottom-content">
+                <img src="https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Marianovich%20Logo.svg" alt="Marianovich">
+                <img src="https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Marianovich%20Logo.svg" alt="Marianovich">
+                <img src="https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Marianovich%20Logo.svg" alt="Marianovich">
+                <img src="https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Marianovich%20Logo.svg" alt="Marianovich">
+                <img src="https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Marianovich%20Logo.svg" alt="Marianovich">
+                <img src="https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Marianovich%20Logo.svg" alt="Marianovich">
+                <img src="https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Marianovich%20Logo.svg" alt="Marianovich">
+                <img src="https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Marianovich%20Logo.svg" alt="Marianovich">
+                <img src="https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Marianovich%20Logo.svg" alt="Marianovich">
+                <img src="https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Marianovich%20Logo.svg" alt="Marianovich">
                 <img src="https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Marianovich%20Logo.svg" alt="Marianovich">
                 <img src="https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Marianovich%20Logo.svg" alt="Marianovich">
                 <img src="https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Marianovich%20Logo.svg" alt="Marianovich">
@@ -515,26 +507,27 @@
     </div>
 
     <script>
-        // Mouse parallax effect for cosmic background - INCREASED MOVEMENT
+        // Proper multi-layer parallax effect - industry standard approach
+        const parallaxLayers = document.querySelectorAll('.parallax-layer[data-speed]');
+        
         document.addEventListener('mousemove', (e) => {
-            const mouseX = e.clientX / window.innerWidth;
-            const mouseY = e.clientY / window.innerHeight;
+            const mouseX = (e.clientX / window.innerWidth - 0.5) * 2;
+            const mouseY = (e.clientY / window.innerHeight - 0.5) * 2;
             
-            // Increased from 50 to 150 for much more visible movement
-            const moveX = (mouseX - 0.5) * 150;
-            const moveY = (mouseY - 0.5) * 150;
-            
-            const cosmicBg = document.querySelector('.cosmic-bg');
-            const starParticles = document.querySelector('.star-particles');
-            
-            if (cosmicBg) {
-                cosmicBg.style.transform = `translate(${moveX}px, ${moveY}px)`;
-            }
-            
-            if (starParticles) {
-                // Stars move at 70% of the nebula speed for depth
-                starParticles.style.transform = `translate(${moveX * 0.7}px, ${moveY * 0.7}px)`;
-            }
+            parallaxLayers.forEach(layer => {
+                const speed = parseFloat(layer.getAttribute('data-speed'));
+                const x = mouseX * speed * 50;
+                const y = mouseY * speed * 50;
+                
+                layer.style.transform = `translate(${x}px, ${y}px)`;
+            });
+        });
+
+        // Reset on mouse leave
+        document.addEventListener('mouseleave', () => {
+            parallaxLayers.forEach(layer => {
+                layer.style.transform = 'translate(0, 0)';
+            });
         });
     </script>
 </body>
