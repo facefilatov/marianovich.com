@@ -152,11 +152,11 @@
         /* Social icons */
         .social-icons {
             position: absolute;
-            top: 120px;
-            left: 60px;
+            top: 20px;
+            left: 20px;
             display: flex;
             flex-direction: column;
-            gap: 4px;
+            gap: -10px;
             z-index: 10;
         }
 
@@ -197,13 +197,32 @@
 
         .logo {
             margin-bottom: 80px;
+            width: 90%;
+            max-width: 500px;
+            padding: 0 5%;
         }
 
         .logo img {
-            width: 500px;
+            width: 100%;
             height: auto;
             display: block;
             filter: brightness(0) invert(1);
+        }
+
+        @media (max-width: 768px) {
+            .logo {
+                width: 85%;
+                max-width: 400px;
+                margin-bottom: 60px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .logo {
+                width: 80%;
+                max-width: 300px;
+                margin-bottom: 40px;
+            }
         }
 
         /* Gemstones carousel */
