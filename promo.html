@@ -156,7 +156,7 @@
             left: 20px;
             display: flex;
             flex-direction: column;
-            gap: -10px;
+            gap: 0;
             z-index: 10;
         }
 
@@ -164,6 +164,11 @@
             opacity: 0;
             transform: translateX(-100px);
             animation: slideInWave 1.2s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+            margin-top: -60px;
+        }
+
+        .social-icon:first-child {
+            margin-top: 0;
         }
 
         .social-icon:nth-child(1) {
