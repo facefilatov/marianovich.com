@@ -21,79 +21,10 @@
 
         body {
             font-family: 'Futura Next', 'Futura', 'Trebuchet MS', Arial, sans-serif;
-            background-color: #0a0e1a;
+            background-color: #000;
             color: #fff;
             overflow-x: hidden;
             position: relative;
-        }
-
-        /* Multi-layer parallax cosmic background */
-        .parallax-container {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: -1;
-            overflow: hidden;
-        }
-
-        .parallax-layer {
-            position: absolute;
-            top: -10%;
-            left: -10%;
-            width: 120%;
-            height: 120%;
-            background-size: cover;
-            background-position: center;
-        }
-
-        .layer-base {
-            background: radial-gradient(ellipse at center, #1a2332 0%, #0a0e1a 100%);
-            z-index: 1;
-        }
-
-        .layer-nebula {
-            background: 
-                radial-gradient(ellipse 1000px 800px at 70% 50%, rgba(20, 100, 80, 0.2) 0%, transparent 50%),
-                radial-gradient(ellipse 800px 1000px at 30% 60%, rgba(10, 80, 90, 0.15) 0%, transparent 50%),
-                radial-gradient(ellipse 1200px 600px at 50% 30%, rgba(15, 70, 75, 0.12) 0%, transparent 50%);
-            z-index: 2;
-        }
-
-        .layer-stars-far {
-            background-image: 
-                radial-gradient(1px 1px at 20% 30%, rgba(180, 255, 220, 0.3), transparent),
-                radial-gradient(1px 1px at 60% 70%, rgba(180, 255, 220, 0.3), transparent),
-                radial-gradient(1px 1px at 50% 50%, rgba(180, 255, 220, 0.2), transparent),
-                radial-gradient(1px 1px at 80% 10%, rgba(180, 255, 220, 0.3), transparent),
-                radial-gradient(1px 1px at 90% 60%, rgba(180, 255, 220, 0.2), transparent),
-                radial-gradient(1px 1px at 33% 80%, rgba(180, 255, 220, 0.3), transparent),
-                radial-gradient(1px 1px at 15% 15%, rgba(180, 255, 220, 0.2), transparent);
-            background-size: 800px 800px, 600px 900px, 900px 700px, 700px 800px, 850px 750px, 950px 650px, 750px 850px;
-            background-position: 0 0, 40% 60%, 130% 270%, 70% 100%, 200% 150%, 250% 200%, 180% 120%;
-            z-index: 3;
-        }
-
-        .layer-stars-near {
-            background-image: 
-                radial-gradient(2px 2px at 25% 40%, rgba(150, 255, 200, 0.8), transparent),
-                radial-gradient(1.5px 1.5px at 75% 20%, rgba(150, 255, 200, 0.7), transparent),
-                radial-gradient(2px 2px at 45% 65%, rgba(150, 255, 200, 0.9), transparent),
-                radial-gradient(1px 1px at 85% 55%, rgba(150, 255, 200, 0.6), transparent),
-                radial-gradient(2px 2px at 15% 75%, rgba(150, 255, 200, 0.8), transparent);
-            background-size: 500px 500px, 400px 600px, 600px 400px, 550px 450px, 450px 550px;
-            background-position: 0 0, 50% 50%, 100% 100%, 150% 50%, 50% 150%;
-            z-index: 4;
-        }
-
-        .layer-glow {
-            background-image: 
-                radial-gradient(circle at 15% 25%, rgba(100, 255, 180, 0.15) 0%, transparent 20%),
-                radial-gradient(circle at 85% 45%, rgba(80, 220, 160, 0.12) 0%, transparent 20%),
-                radial-gradient(circle at 45% 75%, rgba(120, 240, 180, 0.1) 0%, transparent 20%);
-            animation: glowPulse 60s ease-in-out infinite;
-            z-index: 5;
         }
 
         .container {
@@ -104,34 +35,10 @@
             position: relative;
         }
 
-        /* Top scrolling mini-logos */
-        .scroll-mini-logos-top {
-            position: absolute;
-            top: 0;
-            width: 100%;
-            overflow: hidden;
-            background: rgba(0, 0, 0, 0.3);
-            padding: 5px 0;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-            z-index: 100;
-        }
-
-        .scroll-mini-logos-top-content {
-            display: flex;
-            animation: scrollLeftContinuous 20s linear infinite;
-        }
-
-        .scroll-mini-logos-top-content img {
-            height: 10px;
-            width: auto;
-            filter: brightness(0) invert(1);
-            flex-shrink: 0;
-        }
-
         /* Social icons */
         .social-icons {
             position: absolute;
-            top: 30px;
+            top: 20px;
             left: 20px;
             display: flex;
             flex-direction: column;
@@ -215,7 +122,7 @@
             height: 150px;
             position: relative;
             overflow: hidden;
-            margin-bottom: 40px;
+            margin-bottom: 20px;
         }
 
         .gemstone {
@@ -256,6 +163,26 @@
             top: 0;
         }
 
+        /* Scrolling mini-logos line - top */
+        .scroll-mini-logos-line {
+            width: 100%;
+            overflow: hidden;
+            padding: 8px 0;
+        }
+
+        .scroll-mini-logos-content {
+            display: flex;
+            animation: scrollRightSeamless 15s linear infinite;
+            width: fit-content;
+        }
+
+        .scroll-mini-logos-content img {
+            height: 10px;
+            width: auto;
+            filter: brightness(0) invert(1);
+            display: block;
+        }
+
         /* Stone names scrolling */
         .stone-names {
             width: 100%;
@@ -286,26 +213,6 @@
             font-weight: 300;
         }
 
-        /* Bottom scrolling mini-logos */
-        .scroll-mini-logos-bottom {
-            position: absolute;
-            bottom: 60px;
-            width: 100%;
-            overflow: hidden;
-        }
-
-        .scroll-mini-logos-bottom-content {
-            display: flex;
-            animation: scrollRightContinuous 20s linear infinite;
-        }
-
-        .scroll-mini-logos-bottom-content img {
-            height: 10px;
-            width: auto;
-            filter: brightness(0) invert(1);
-            flex-shrink: 0;
-        }
-
         /* Footer */
         .footer {
             position: absolute;
@@ -322,15 +229,6 @@
         }
 
         /* Animations */
-        @keyframes glowPulse {
-            0%, 100% {
-                opacity: 0.8;
-            }
-            50% {
-                opacity: 1;
-            }
-        }
-
         @keyframes scrollLeft {
             0% {
                 transform: translateX(0);
@@ -340,21 +238,12 @@
             }
         }
 
-        @keyframes scrollLeftContinuous {
+        @keyframes scrollRightSeamless {
             0% {
                 transform: translateX(0);
             }
             100% {
-                transform: translateX(-100%);
-            }
-        }
-
-        @keyframes scrollRightContinuous {
-            0% {
-                transform: translateX(-100%);
-            }
-            100% {
-                transform: translateX(0);
+                transform: translateX(-50%);
             }
         }
 
@@ -383,42 +272,7 @@
     </style>
 </head>
 <body>
-    <!-- Multi-layer parallax background -->
-    <div class="parallax-container">
-        <div class="parallax-layer layer-base"></div>
-        <div class="parallax-layer layer-nebula" data-speed="0.3"></div>
-        <div class="parallax-layer layer-stars-far" data-speed="0.5"></div>
-        <div class="parallax-layer layer-stars-near" data-speed="0.8"></div>
-        <div class="parallax-layer layer-glow" data-speed="0.4"></div>
-    </div>
-    
     <div class="container">
-        <!-- Top scrolling mini-logos -->
-        <div class="scroll-mini-logos-top">
-            <div class="scroll-mini-logos-top-content">
-                <img src="https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Marianovich%20Logo.svg" alt="Marianovich">
-                <img src="https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Marianovich%20Logo.svg" alt="Marianovich">
-                <img src="https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Marianovich%20Logo.svg" alt="Marianovich">
-                <img src="https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Marianovich%20Logo.svg" alt="Marianovich">
-                <img src="https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Marianovich%20Logo.svg" alt="Marianovich">
-                <img src="https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Marianovich%20Logo.svg" alt="Marianovich">
-                <img src="https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Marianovich%20Logo.svg" alt="Marianovich">
-                <img src="https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Marianovich%20Logo.svg" alt="Marianovich">
-                <img src="https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Marianovich%20Logo.svg" alt="Marianovich">
-                <img src="https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Marianovich%20Logo.svg" alt="Marianovich">
-                <img src="https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Marianovich%20Logo.svg" alt="Marianovich">
-                <img src="https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Marianovich%20Logo.svg" alt="Marianovich">
-                <img src="https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Marianovich%20Logo.svg" alt="Marianovich">
-                <img src="https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Marianovich%20Logo.svg" alt="Marianovich">
-                <img src="https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Marianovich%20Logo.svg" alt="Marianovich">
-                <img src="https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Marianovich%20Logo.svg" alt="Marianovich">
-                <img src="https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Marianovich%20Logo.svg" alt="Marianovich">
-                <img src="https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Marianovich%20Logo.svg" alt="Marianovich">
-                <img src="https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Marianovich%20Logo.svg" alt="Marianovich">
-                <img src="https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Marianovich%20Logo.svg" alt="Marianovich">
-            </div>
-        </div>
-
         <!-- Social icons -->
         <div class="social-icons">
             <div class="social-icon">
@@ -453,6 +307,52 @@
                 <img class="gemstone" src="https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Emerald.webp" alt="Emerald">
             </div>
 
+            <!-- Top scrolling mini-logos line -->
+            <div class="scroll-mini-logos-line">
+                <div class="scroll-mini-logos-content">
+                    <img src="https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Marianovich%20Logo.svg" alt="Marianovich">
+                    <img src="https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Marianovich%20Logo.svg" alt="Marianovich">
+                    <img src="https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Marianovich%20Logo.svg" alt="Marianovich">
+                    <img src="https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Marianovich%20Logo.svg" alt="Marianovich">
+                    <img src="https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Marianovich%20Logo.svg" alt="Marianovich">
+                    <img src="https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Marianovich%20Logo.svg" alt="Marianovich">
+                    <img src="https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Marianovich%20Logo.svg" alt="Marianovich">
+                    <img src="https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Marianovich%20Logo.svg" alt="Marianovich">
+                    <img src="https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Marianovich%20Logo.svg" alt="Marianovich">
+                    <img src="https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Marianovich%20Logo.svg" alt="Marianovich">
+                    <img src="https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Marianovich%20Logo.svg" alt="Marianovich">
+                    <img src="https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Marianovich%20Logo.svg" alt="Marianovich">
+                    <img src="https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Marianovich%20Logo.svg" alt="Marianovich">
+                    <img src="https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Marianovich%20Logo.svg" alt="Marianovich">
+                    <img src="https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Marianovich%20Logo.svg" alt="Marianovich">
+                    <img src="https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Marianovich%20Logo.svg" alt="Marianovich">
+                    <img src="https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Marianovich%20Logo.svg" alt="Marianovich">
+                    <img src="https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Marianovich%20Logo.svg" alt="Marianovich">
+                    <img src="https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Marianovich%20Logo.svg" alt="Marianovich">
+                    <img src="https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Marianovich%20Logo.svg" alt="Marianovich">
+                    <img src="https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Marianovich%20Logo.svg" alt="Marianovich">
+                    <img src="https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Marianovich%20Logo.svg" alt="Marianovich">
+                    <img src="https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Marianovich%20Logo.svg" alt="Marianovich">
+                    <img src="https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Marianovich%20Logo.svg" alt="Marianovich">
+                    <img src="https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Marianovich%20Logo.svg" alt="Marianovich">
+                    <img src="https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Marianovich%20Logo.svg" alt="Marianovich">
+                    <img src="https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Marianovich%20Logo.svg" alt="Marianovich">
+                    <img src="https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Marianovich%20Logo.svg" alt="Marianovich">
+                    <img src="https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Marianovich%20Logo.svg" alt="Marianovich">
+                    <img src="https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Marianovich%20Logo.svg" alt="Marianovich">
+                    <img src="https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Marianovich%20Logo.svg" alt="Marianovich">
+                    <img src="https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Marianovich%20Logo.svg" alt="Marianovich">
+                    <img src="https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Marianovich%20Logo.svg" alt="Marianovich">
+                    <img src="https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Marianovich%20Logo.svg" alt="Marianovich">
+                    <img src="https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Marianovich%20Logo.svg" alt="Marianovich">
+                    <img src="https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Marianovich%20Logo.svg" alt="Marianovich">
+                    <img src="https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Marianovich%20Logo.svg" alt="Marianovich">
+                    <img src="https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Marianovich%20Logo.svg" alt="Marianovich">
+                    <img src="https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Marianovich%20Logo.svg" alt="Marianovich">
+                    <img src="https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Marianovich%20Logo.svg" alt="Marianovich">
+                </div>
+            </div>
+
             <!-- Stone names -->
             <div class="stone-names">
                 <div class="stone-names-content">
@@ -472,31 +372,51 @@
                     <span>Emerald</span>
                 </div>
             </div>
-        </div>
 
-        <!-- Bottom scrolling mini-logos -->
-        <div class="scroll-mini-logos-bottom">
-            <div class="scroll-mini-logos-bottom-content">
-                <img src="https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Marianovich%20Logo.svg" alt="Marianovich">
-                <img src="https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Marianovich%20Logo.svg" alt="Marianovich">
-                <img src="https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Marianovich%20Logo.svg" alt="Marianovich">
-                <img src="https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Marianovich%20Logo.svg" alt="Marianovich">
-                <img src="https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Marianovich%20Logo.svg" alt="Marianovich">
-                <img src="https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Marianovich%20Logo.svg" alt="Marianovich">
-                <img src="https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Marianovich%20Logo.svg" alt="Marianovich">
-                <img src="https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Marianovich%20Logo.svg" alt="Marianovich">
-                <img src="https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Marianovich%20Logo.svg" alt="Marianovich">
-                <img src="https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Marianovich%20Logo.svg" alt="Marianovich">
-                <img src="https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Marianovich%20Logo.svg" alt="Marianovich">
-                <img src="https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Marianovich%20Logo.svg" alt="Marianovich">
-                <img src="https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Marianovich%20Logo.svg" alt="Marianovich">
-                <img src="https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Marianovich%20Logo.svg" alt="Marianovich">
-                <img src="https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Marianovich%20Logo.svg" alt="Marianovich">
-                <img src="https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Marianovich%20Logo.svg" alt="Marianovich">
-                <img src="https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Marianovich%20Logo.svg" alt="Marianovich">
-                <img src="https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Marianovich%20Logo.svg" alt="Marianovich">
-                <img src="https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Marianovich%20Logo.svg" alt="Marianovich">
-                <img src="https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Marianovich%20Logo.svg" alt="Marianovich">
+            <!-- Bottom scrolling mini-logos line -->
+            <div class="scroll-mini-logos-line">
+                <div class="scroll-mini-logos-content">
+                    <img src="https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Marianovich%20Logo.svg" alt="Marianovich">
+                    <img src="https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Marianovich%20Logo.svg" alt="Marianovich">
+                    <img src="https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Marianovich%20Logo.svg" alt="Marianovich">
+                    <img src="https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Marianovich%20Logo.svg" alt="Marianovich">
+                    <img src="https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Marianovich%20Logo.svg" alt="Marianovich">
+                    <img src="https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Marianovich%20Logo.svg" alt="Marianovich">
+                    <img src="https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Marianovich%20Logo.svg" alt="Marianovich">
+                    <img src="https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Marianovich%20Logo.svg" alt="Marianovich">
+                    <img src="https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Marianovich%20Logo.svg" alt="Marianovich">
+                    <img src="https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Marianovich%20Logo.svg" alt="Marianovich">
+                    <img src="https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Marianovich%20Logo.svg" alt="Marianovich">
+                    <img src="https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Marianovich%20Logo.svg" alt="Marianovich">
+                    <img src="https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Marianovich%20Logo.svg" alt="Marianovich">
+                    <img src="https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Marianovich%20Logo.svg" alt="Marianovich">
+                    <img src="https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Marianovich%20Logo.svg" alt="Marianovich">
+                    <img src="https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Marianovich%20Logo.svg" alt="Marianovich">
+                    <img src="https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Marianovich%20Logo.svg" alt="Marianovich">
+                    <img src="https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Marianovich%20Logo.svg" alt="Marianovich">
+                    <img src="https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Marianovich%20Logo.svg" alt="Marianovich">
+                    <img src="https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Marianovich%20Logo.svg" alt="Marianovich">
+                    <img src="https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Marianovich%20Logo.svg" alt="Marianovich">
+                    <img src="https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Marianovich%20Logo.svg" alt="Marianovich">
+                    <img src="https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Marianovich%20Logo.svg" alt="Marianovich">
+                    <img src="https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Marianovich%20Logo.svg" alt="Marianovich">
+                    <img src="https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Marianovich%20Logo.svg" alt="Marianovich">
+                    <img src="https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Marianovich%20Logo.svg" alt="Marianovich">
+                    <img src="https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Marianovich%20Logo.svg" alt="Marianovich">
+                    <img src="https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Marianovich%20Logo.svg" alt="Marianovich">
+                    <img src="https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Marianovich%20Logo.svg" alt="Marianovich">
+                    <img src="https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Marianovich%20Logo.svg" alt="Marianovich">
+                    <img src="https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Marianovich%20Logo.svg" alt="Marianovich">
+                    <img src="https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Marianovich%20Logo.svg" alt="Marianovich">
+                    <img src="https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Marianovich%20Logo.svg" alt="Marianovich">
+                    <img src="https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Marianovich%20Logo.svg" alt="Marianovich">
+                    <img src="https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Marianovich%20Logo.svg" alt="Marianovich">
+                    <img src="https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Marianovich%20Logo.svg" alt="Marianovich">
+                    <img src="https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Marianovich%20Logo.svg" alt="Marianovich">
+                    <img src="https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Marianovich%20Logo.svg" alt="Marianovich">
+                    <img src="https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Marianovich%20Logo.svg" alt="Marianovich">
+                    <img src="https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Marianovich%20Logo.svg" alt="Marianovich">
+                </div>
             </div>
         </div>
 
@@ -505,30 +425,5 @@
             <a href="mailto:contact@marianovich.com">contact@marianovich.com</a>
         </div>
     </div>
-
-    <script>
-        // Proper multi-layer parallax effect - industry standard approach
-        const parallaxLayers = document.querySelectorAll('.parallax-layer[data-speed]');
-        
-        document.addEventListener('mousemove', (e) => {
-            const mouseX = (e.clientX / window.innerWidth - 0.5) * 2;
-            const mouseY = (e.clientY / window.innerHeight - 0.5) * 2;
-            
-            parallaxLayers.forEach(layer => {
-                const speed = parseFloat(layer.getAttribute('data-speed'));
-                const x = mouseX * speed * 50;
-                const y = mouseY * speed * 50;
-                
-                layer.style.transform = `translate(${x}px, ${y}px)`;
-            });
-        });
-
-        // Reset on mouse leave
-        document.addEventListener('mouseleave', () => {
-            parallaxLayers.forEach(layer => {
-                layer.style.transform = 'translate(0, 0)';
-            });
-        });
-    </script>
 </body>
 </html>
