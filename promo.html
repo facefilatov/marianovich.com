@@ -16,6 +16,85 @@
             background-color: #000;
             color: #fff;
             overflow-x: hidden;
+            position: relative;
+        }
+
+        /* Cosmic background */
+        .cosmic-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            background: #000000;
+        }
+
+        /* Nebula layer with green/teal wisps */
+        .cosmic-bg::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(ellipse 800px 600px at 80% 60%, rgba(20, 80, 60, 0.15) 0%, transparent 50%),
+                radial-gradient(ellipse 600px 800px at 60% 30%, rgba(10, 60, 70, 0.12) 0%, transparent 50%),
+                radial-gradient(ellipse 1000px 500px at 30% 70%, rgba(0, 40, 50, 0.1) 0%, transparent 50%),
+                radial-gradient(ellipse 700px 700px at 90% 20%, rgba(15, 70, 55, 0.08) 0%, transparent 50%);
+            animation: nebulaFloat 80s ease-in-out infinite;
+            mix-blend-mode: screen;
+        }
+
+        /* Star field with glowing particles */
+        .cosmic-bg::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                radial-gradient(circle, rgba(100, 255, 180, 0.8) 0%, transparent 2px),
+                radial-gradient(circle, rgba(80, 220, 160, 0.6) 0%, transparent 1px),
+                radial-gradient(circle, rgba(150, 255, 200, 0.9) 0%, transparent 2px),
+                radial-gradient(circle, rgba(60, 200, 140, 0.5) 0%, transparent 1px),
+                radial-gradient(circle, rgba(120, 240, 180, 0.7) 0%, transparent 1.5px),
+                radial-gradient(circle, rgba(200, 255, 220, 0.4) 0%, transparent 1px);
+            background-size: 
+                1200px 800px,
+                800px 1000px,
+                1500px 600px,
+                600px 900px,
+                1000px 1200px,
+                900px 700px;
+            background-position: 
+                0% 0%,
+                30% 50%,
+                60% 20%,
+                80% 70%,
+                20% 80%,
+                90% 40%;
+            animation: starsFloat 150s linear infinite;
+            opacity: 0.5;
+        }
+
+        /* Additional glowing particles layer */
+        .star-particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            background-image: 
+                radial-gradient(circle at 15% 25%, rgba(100, 255, 180, 0.15) 0%, transparent 3%),
+                radial-gradient(circle at 85% 45%, rgba(80, 220, 160, 0.12) 0%, transparent 4%),
+                radial-gradient(circle at 45% 75%, rgba(120, 240, 180, 0.1) 0%, transparent 5%),
+                radial-gradient(circle at 70% 15%, rgba(90, 230, 170, 0.13) 0%, transparent 3.5%),
+                radial-gradient(circle at 25% 65%, rgba(110, 245, 185, 0.11) 0%, transparent 4.5%);
+            animation: particlesPulse 40s ease-in-out infinite;
         }
 
         .container {
@@ -98,19 +177,10 @@
             margin-bottom: 80px;
         }
 
-        .logo h1 {
-            font-size: 72px;
-            font-weight: 300;
-            letter-spacing: 8px;
-            text-transform: uppercase;
-        }
-
-        .logo .gems {
-            font-size: 36px;
-            font-weight: 300;
-            letter-spacing: 4px;
-            text-align: right;
-            margin-top: -10px;
+        .logo img {
+            width: 500px;
+            height: auto;
+            display: block;
         }
 
         /* Gemstones carousel */
@@ -207,6 +277,45 @@
         }
 
         /* Animations */
+        @keyframes nebulaFloat {
+            0%, 100% {
+                transform: translate(0, 0) scale(1);
+                opacity: 1;
+            }
+            25% {
+                transform: translate(20px, -30px) scale(1.05);
+                opacity: 0.8;
+            }
+            50% {
+                transform: translate(-30px, 20px) scale(0.95);
+                opacity: 0.9;
+            }
+            75% {
+                transform: translate(15px, 25px) scale(1.02);
+                opacity: 0.85;
+            }
+        }
+
+        @keyframes starsFloat {
+            0% {
+                transform: translate(0, 0);
+            }
+            100% {
+                transform: translate(-100px, -100px);
+            }
+        }
+
+        @keyframes particlesPulse {
+            0%, 100% {
+                opacity: 0.3;
+                transform: scale(1);
+            }
+            50% {
+                opacity: 0.6;
+                transform: scale(1.1);
+            }
+        }
+
         @keyframes scrollLeft {
             0% {
                 transform: translateX(0);
@@ -250,6 +359,10 @@
     </style>
 </head>
 <body>
+    <!-- Cosmic background -->
+    <div class="cosmic-bg"></div>
+    <div class="star-particles"></div>
+    
     <div class="container">
         <!-- Top scrolling text -->
         <div class="scroll-text-top">
@@ -298,8 +411,7 @@
         <!-- Main content -->
         <div class="main-content">
             <div class="logo">
-                <h1>MARIANOVICH</h1>
-                <div class="gems">gems</div>
+                <img src="https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Marianovich%20gems%20Logo.svg" alt="Marianovich Gems">
             </div>
 
             <!-- Gemstones carousel -->
