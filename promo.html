@@ -270,10 +270,33 @@
     /* Новая анимация камней - используем translate3d вместо left */
     @keyframes moveGemstoneSmooth {
         0% {
-            transform: translate3d(100vw, 0, 0);
+            transform: translate3d(calc(100vw + 150px), 0, 0);
         }
         100% {
             transform: translate3d(-170px, 0, 0);
+        }
+    }
+    
+    /* Увеличиваем расстояние между камнями на мобильных */
+    @media (max-width: 768px) {
+        .gemstone:nth-child(2) {
+            animation-delay: -4.5s;
+        }
+        
+        .gemstone:nth-child(3) {
+            animation-delay: -9s;
+        }
+        
+        .gemstone:nth-child(4) {
+            animation-delay: -13.5s;
+        }
+        
+        .gemstone:nth-child(5) {
+            animation-delay: -18s;
+        }
+        
+        .gemstone:nth-child(6) {
+            animation-delay: -22.5s;
         }
     }
 </style>
@@ -295,7 +318,6 @@
             </div>
         </div>
 
-```
     <!-- Main content -->
     <div class="main-content">
         <div class="logo">
@@ -435,7 +457,6 @@
         <a href="mailto:contact@marianovich.com">contact@marianovich.com</a>
     </div>
 </div>
-```
 
 </body>
 </html>
