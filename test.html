@@ -1,0 +1,856 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <!-- Primary Meta Tags -->
+  <title>Marianovich gems - Natural Gemstone Collection</title>
+  <meta name="title" content="Marianovich gems - Natural Gemstone Collection">
+  <meta name="description" content="Rare natural gemstones from Russian depths. Specializing in sapphire, demantoid, alexandrite, emerald, spinel, and collector specimens.">
+  <meta name="keywords" content="natural gemstones, Russian gemstones, sapphire, demantoid, alexandrite, spinel, emerald">
+  <meta name="author" content="Marianovich gems">
+  
+  <!-- Open Graph -->
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://marianovich.com/">
+  <meta property="og:title" content="Marianovich gems - Natural Gemstone Collection">
+  <meta property="og:description" content="Rare natural gemstones from Russian depths. Premium quality for discerning collectors.">
+  <meta property="og:image" content="https://marianovich.com/images/og-image.jpg">
+  
+  <!-- Favicon -->
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='0.9em' font-size='90' fill='%23C9A44C'%3E💎%3C/text%3E%3C/svg%3E">
+  
+  <!-- Google Analytics 4 -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-7N9GCV8ZNT"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-7N9GCV8ZNT');
+  </script>
+  
+  <style>
+    /* Reset & Base */
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    
+    html {
+      scroll-behavior: smooth;
+    }
+    
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+      background: linear-gradient(135deg, #0C1D1E 0%, #000000 100%);
+      color: #FFFFFF;
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+    
+    /* Header */
+    .header {
+      background: rgba(12, 29, 30, 0.95);
+      backdrop-filter: blur(10px);
+      padding: 1.5rem 0;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      border-bottom: 1px solid rgba(201, 164, 76, 0.1);
+    }
+    
+    .header-container {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 0 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    
+    .logo-container {
+      flex: 0 0 auto;
+    }
+    
+    .logo {
+      width: 200px;
+      height: auto;
+      filter: drop-shadow(0 0 15px rgba(201, 164, 76, 0.3));
+      transition: filter 0.3s ease;
+    }
+    
+    .logo:hover {
+      filter: drop-shadow(0 0 25px rgba(201, 164, 76, 0.5));
+    }
+    
+    .nav {
+      display: flex;
+      gap: 2rem;
+      align-items: center;
+    }
+    
+    .nav-link {
+      color: rgba(255, 255, 255, 0.8);
+      text-decoration: none;
+      font-size: 0.9rem;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      transition: color 0.3s ease;
+      position: relative;
+    }
+    
+    .nav-link::after {
+      content: '';
+      position: absolute;
+      bottom: -4px;
+      left: 0;
+      width: 0;
+      height: 1px;
+      background: #C9A44C;
+      transition: width 0.3s ease;
+    }
+    
+    .nav-link:hover {
+      color: #C9A44C;
+    }
+    
+    .nav-link:hover::after {
+      width: 100%;
+    }
+    
+    /* Collection Header */
+    .collection-header {
+      background: linear-gradient(180deg, rgba(12, 29, 30, 0.9) 0%, rgba(0, 0, 0, 0.8) 100%);
+      padding: 4rem 2rem 3rem;
+      text-align: center;
+      border-bottom: 1px solid rgba(201, 164, 76, 0.2);
+    }
+    
+    .collection-title {
+      font-size: clamp(2rem, 5vw, 3.5rem);
+      font-weight: 300;
+      letter-spacing: 0.1em;
+      color: #C9A44C;
+      margin-bottom: 1rem;
+      text-transform: uppercase;
+    }
+    
+    .collection-subtitle {
+      font-size: clamp(0.875rem, 2vw, 1.125rem);
+      color: rgba(255, 255, 255, 0.7);
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      font-weight: 300;
+    }
+    
+    /* Filters */
+    .filters-section {
+      background: rgba(12, 29, 30, 0.6);
+      padding: 1.5rem 2rem;
+      border-bottom: 1px solid rgba(201, 164, 76, 0.1);
+    }
+    
+    .filters-container {
+      max-width: 1400px;
+      margin: 0 auto;
+      display: flex;
+      gap: 2rem;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+    
+    .filter-group {
+      display: flex;
+      gap: 0.5rem;
+      align-items: center;
+    }
+    
+    .filter-label {
+      color: rgba(255, 255, 255, 0.6);
+      font-size: 0.85rem;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+    }
+    
+    .filter-select {
+      background: rgba(0, 0, 0, 0.4);
+      border: 1px solid rgba(201, 164, 76, 0.3);
+      color: #FFFFFF;
+      padding: 0.5rem 1rem;
+      border-radius: 4px;
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    
+    .filter-select:hover {
+      border-color: #C9A44C;
+      background: rgba(201, 164, 76, 0.1);
+    }
+    
+    .filter-select:focus {
+      outline: none;
+      border-color: #C9A44C;
+      box-shadow: 0 0 0 2px rgba(201, 164, 76, 0.2);
+    }
+    
+    /* Product Grid */
+    .products-section {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 3rem 2rem;
+    }
+    
+    .products-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 2.5rem;
+      margin-bottom: 3rem;
+    }
+    
+    /* Product Card */
+    .product-card {
+      background: rgba(12, 29, 30, 0.4);
+      border: 1px solid rgba(201, 164, 76, 0.15);
+      border-radius: 8px;
+      overflow: hidden;
+      transition: all 0.4s ease;
+      cursor: pointer;
+      position: relative;
+    }
+    
+    .product-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: linear-gradient(135deg, rgba(201, 164, 76, 0.1) 0%, transparent 100%);
+      opacity: 0;
+      transition: opacity 0.4s ease;
+      pointer-events: none;
+    }
+    
+    .product-card:hover {
+      transform: translateY(-8px);
+      border-color: rgba(201, 164, 76, 0.4);
+      box-shadow: 0 12px 40px rgba(201, 164, 76, 0.15);
+    }
+    
+    .product-card:hover::before {
+      opacity: 1;
+    }
+    
+    .product-image-container {
+      position: relative;
+      width: 100%;
+      padding-top: 100%;
+      background: rgba(0, 0, 0, 0.3);
+      overflow: hidden;
+    }
+    
+    .product-image {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.5s ease;
+    }
+    
+    .product-card:hover .product-image {
+      transform: scale(1.08);
+    }
+    
+    .product-badge {
+      position: absolute;
+      top: 1rem;
+      right: 1rem;
+      background: #C9A44C;
+      color: #000;
+      padding: 0.35rem 0.75rem;
+      border-radius: 4px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      z-index: 2;
+    }
+    
+    .product-info {
+      padding: 1.5rem;
+    }
+    
+    .product-type {
+      color: rgba(201, 164, 76, 0.8);
+      font-size: 0.75rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      margin-bottom: 0.5rem;
+      font-weight: 500;
+    }
+    
+    .product-title {
+      font-size: 1.1rem;
+      font-weight: 500;
+      margin-bottom: 0.75rem;
+      color: #FFFFFF;
+      line-height: 1.4;
+    }
+    
+    .product-description {
+      font-size: 0.85rem;
+      color: rgba(255, 255, 255, 0.6);
+      margin-bottom: 1rem;
+      line-height: 1.5;
+    }
+    
+    .product-price {
+      font-size: 1.25rem;
+      color: #C9A44C;
+      font-weight: 600;
+      margin-bottom: 1rem;
+    }
+    
+    .product-specs {
+      display: flex;
+      gap: 1rem;
+      margin-bottom: 1rem;
+      flex-wrap: wrap;
+    }
+    
+    .spec {
+      font-size: 0.75rem;
+      color: rgba(255, 255, 255, 0.5);
+      display: flex;
+      align-items: center;
+      gap: 0.35rem;
+    }
+    
+    .spec-dot {
+      width: 4px;
+      height: 4px;
+      background: rgba(201, 164, 76, 0.5);
+      border-radius: 50%;
+    }
+    
+    .product-button {
+      width: 100%;
+      padding: 0.85rem;
+      background: transparent;
+      border: 1px solid rgba(201, 164, 76, 0.4);
+      color: #C9A44C;
+      font-size: 0.875rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      font-weight: 500;
+    }
+    
+    .product-button:hover {
+      background: rgba(201, 164, 76, 0.1);
+      border-color: #C9A44C;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(201, 164, 76, 0.2);
+    }
+    
+    /* Pagination */
+    .pagination {
+      display: flex;
+      justify-content: center;
+      gap: 0.5rem;
+      margin-top: 3rem;
+    }
+    
+    .page-btn {
+      padding: 0.75rem 1.25rem;
+      background: transparent;
+      border: 1px solid rgba(201, 164, 76, 0.3);
+      color: rgba(255, 255, 255, 0.8);
+      cursor: pointer;
+      transition: all 0.3s ease;
+      border-radius: 4px;
+      font-size: 0.9rem;
+    }
+    
+    .page-btn:hover,
+    .page-btn.active {
+      background: rgba(201, 164, 76, 0.1);
+      border-color: #C9A44C;
+      color: #C9A44C;
+    }
+    
+    /* Footer */
+    .footer {
+      background: rgba(12, 29, 30, 0.95);
+      border-top: 1px solid rgba(201, 164, 76, 0.2);
+      padding: 3rem 2rem 2rem;
+      margin-top: 4rem;
+    }
+    
+    .footer-container {
+      max-width: 1400px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 3rem;
+      margin-bottom: 2rem;
+    }
+    
+    .footer-section h3 {
+      color: #C9A44C;
+      font-size: 0.9rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      margin-bottom: 1rem;
+      font-weight: 500;
+    }
+    
+    .footer-links {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+    
+    .footer-link {
+      color: rgba(255, 255, 255, 0.6);
+      text-decoration: none;
+      font-size: 0.9rem;
+      transition: color 0.3s ease;
+    }
+    
+    .footer-link:hover {
+      color: #C9A44C;
+    }
+    
+    .footer-text {
+      color: rgba(255, 255, 255, 0.6);
+      font-size: 0.9rem;
+      line-height: 1.6;
+    }
+    
+    .footer-bottom {
+      text-align: center;
+      padding-top: 2rem;
+      border-top: 1px solid rgba(201, 164, 76, 0.1);
+      color: rgba(255, 255, 255, 0.5);
+      font-size: 0.85rem;
+    }
+    
+    .etsy-link {
+      color: #C9A44C;
+      text-decoration: none;
+      transition: color 0.3s ease;
+    }
+    
+    .etsy-link:hover {
+      color: #E0BE6F;
+    }
+    
+    /* Responsive */
+    @media (max-width: 768px) {
+      .header-container {
+        flex-direction: column;
+        gap: 1.5rem;
+      }
+      
+      .logo {
+        width: 160px;
+      }
+      
+      .nav {
+        gap: 1rem;
+        flex-wrap: wrap;
+        justify-content: center;
+      }
+      
+      .products-grid {
+        grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+        gap: 1.5rem;
+      }
+      
+      .filters-container {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+    }
+    
+    /* Animations */
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    
+    .product-card {
+      animation: fadeIn 0.5s ease-out forwards;
+    }
+    
+    .product-card:nth-child(1) { animation-delay: 0.05s; }
+    .product-card:nth-child(2) { animation-delay: 0.1s; }
+    .product-card:nth-child(3) { animation-delay: 0.15s; }
+    .product-card:nth-child(4) { animation-delay: 0.2s; }
+    .product-card:nth-child(5) { animation-delay: 0.25s; }
+    .product-card:nth-child(6) { animation-delay: 0.3s; }
+    
+    @media (prefers-reduced-motion: reduce) {
+      *,
+      *::before,
+      *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Header -->
+  <header class="header">
+    <div class="header-container">
+      <div class="logo-container">
+        <svg class="logo" viewBox="0 0 779.44 184.74" role="img" aria-label="Marianovich gems">
+          <g fill="#C9A44C">
+            <path d="M11.8,107H0L43.5,27l18,29L88.5,0l36.3,107h-11.7l-33.6-67-18,36-13-20L11.8,107Z"/>
+            <path d="M194.9,107.4l-7.9-18.3h-32.3l-8.4,18.3h-12.2l37.3-80.1,36,80.1h-12.5ZM159.5,78.4h22.9l-11.2-25.6-11.7,25.6Z"/>
+            <path d="M242.4,75.3l23.3,32.1h-13.9l-21.5-30.9h-2.1v30.9h-11.4V32h13.4c10.13,0,17.63,2.17,22.5,6.5,4.27,3.8,6.4,9,6.4,15.6,0,5.27-1.53,9.83-4.6,13.7-3.07,3.87-7.1,6.37-12.1,7.5h0ZM228.2,42.7v23.9h3.6c5.27,0,9.28-1.05,12.05-3.15s4.15-5.15,4.15-9.15c0-7.73-5.23-11.6-15.7-11.6,0,0-4.1,0-4.1,0Z"/>
+            <path d="M277,32h11.4v75.4h-11.4V32Z"/>
+            <path d="M358.7,107.4l-7.9-18.3h-32.3l-8.4,18.3h-12.2l37.3-80.1,36,80.1s-12.5,0-12.5,0ZM323.3,78.4h22.9l-11.2-25.6-11.7,25.6h0Z"/>
+            <path d="M392,107.4h-11.4V26.9l55,57.5v-52.4h11.4v80l-55-57.4v52.8Z"/>
+            <path d="M462,69.4c0-5.13,1.03-10.07,3.1-14.8s4.93-8.9,8.6-12.5,7.93-6.42,12.8-8.45c4.87-2.03,9.9-3.05,15.1-3.05s10.1,1.03,14.9,3.1c4.8,2.07,9.02,4.92,12.65,8.55,3.63,3.63,6.48,7.85,8.55,12.65s3.1,9.77,3.1,14.9-1.05,10.2-3.15,15c-2.1,4.8-4.98,8.98-8.65,12.55-3.67,3.57-7.94,6.37-12.8,8.4-4.87,2.03-9.93,3.05-15.2,3.05-3.73,0-7.75-.67-12.05-2s-8.43-3.6-12.4-6.8c-3.97-3.2-7.03-6.77-9.2-10.7s-3.6-7.58-4.3-10.95c-.7-3.37-1.05-6.35-1.05-8.95h0ZM473.4,69.5c0,4,.75,7.77,2.25,11.3,1.5,3.53,3.56,6.6,6.2,9.2,2.63,2.6,5.63,4.6,9,6s6.78,2.1,10.25,2.1c3.8,0,7.43-.72,10.9-2.15,3.46-1.43,6.48-3.45,9.05-6.05,2.57-2.6,4.58-5.65,6.05-9.15,1.46-3.5,2.2-7.18,2.2-11.05s-.72-7.65-2.15-11.15c-1.44-3.5-3.44-6.53-6-9.1-2.57-2.57-5.57-4.57-9-6-3.44-1.43-7.02-2.15-10.75-2.15s-7.22.72-10.65,2.15c-3.44,1.43-6.45,3.45-9.05,6.05-2.6,2.6-4.63,5.63-6.1,9.1s-2.2,7.1-2.2,10.9h0Z"/>
+            <path d="M543.2,32h12.4l20.9,52.3,21.1-52.3h12.5l-33.9,81.1s-33-81.1-33-81.1Z"/>
+            <path d="M619.4,32h11.4v75.4h-11.4V32Z"/>
+            <path d="M704.6,36.1v13.4c-6.47-5.47-13.27-8.2-20.4-8.2-3.73,0-7.3.73-10.7,2.2s-6.37,3.52-8.9,6.15-4.5,5.7-5.9,9.2-2.1,7.18-2.1,11.05.7,7.42,2.1,10.85c1.4,3.43,3.37,6.45,5.9,9.05,2.53,2.6,5.5,4.63,8.9,6.1s7,2.2,10.8,2.2,7.21-.65,10.25-1.95c3.03-1.3,6.38-3.52,10.05-6.65v13.7c-6.47,3.73-13.3,5.6-20.5,5.6-5.2,0-10.18-1-14.95-3s-8.95-4.78-12.55-8.35-6.4-7.73-8.4-12.5-3-9.75-3-14.95,1-10.22,3-15.05,4.8-9.08,8.4-12.75c3.6-3.67,7.87-6.53,12.8-8.6,4.93-2.07,10.13-3.1,15.6-3.1,6.73,0,13.27,1.87,19.6,5.6h0Z"/>
+            <path d="M732.5,32v29.5h32.5v-29.5h11.4v75.4h-11.4v-35.2h-32.5v35.2h-11.4V32h11.4Z"/>
+          </g>
+          <g fill="#C9A44C">
+            <path d="M639.24,127.28h3.5v34.57c0,7.27-1.54,12.75-4.63,16.46-3.09,3.71-7.56,5.57-13.43,5.57-2.34,0-4.53-.34-6.58-1.01-2.05-.68-3.84-1.67-5.37-3-1.53-1.32-2.79-2.97-3.78-4.94-.99-1.97-1.61-4.18-1.87-6.62h3.74c.93,8.04,5.58,12.07,13.94,12.07,5.19,0,8.9-1.49,11.13-4.48,2.23-2.99,3.35-7.46,3.35-13.43v-5.45c-3.94,4.67-8.67,7.01-14.17,7.01-2.39,0-4.66-.49-6.81-1.48-2.15-.99-4.04-2.35-5.64-4.09-1.61-1.74-2.87-3.75-3.78-6.03-.91-2.28-1.36-4.67-1.36-7.16,0-1.87.31-3.87.93-6,.62-2.13,1.76-4.24,3.42-6.34,1.66-2.1,3.75-3.7,6.27-4.79,2.52-1.09,5.02-1.63,7.51-1.63,2.75,0,5.22.57,7.4,1.71,2.18,1.14,4.25,2.91,6.23,5.29v-6.23ZM611.14,145.19c0,4.46,1.31,8.17,3.93,11.13,2.62,2.96,5.93,4.44,9.93,4.44,1.5,0,3.09-.26,4.75-.78,1.66-.52,3.2-1.4,4.63-2.65,1.43-1.25,2.63-2.89,3.62-4.94.99-2.05,1.48-4.5,1.48-7.36,0-2.23-.4-4.31-1.21-6.23-.81-1.92-1.88-3.55-3.23-4.9-1.35-1.35-2.89-2.38-4.63-3.08-1.74-.7-3.49-1.05-5.25-1.05-1.4,0-2.89.27-4.48.82-1.58.54-3.08,1.45-4.48,2.72-1.4,1.27-2.6,2.92-3.58,4.94-.99,2.02-1.48,4.33-1.48,6.93Z"/>
+            <path d="M688.28,145.65h-30.83c0,2.65.6,5.19,1.79,7.63,1.19,2.44,2.91,4.31,5.14,5.6,2.23,1.3,4.57,1.95,7.01,1.95,2.7,0,5.07-.66,7.12-1.98,2.05-1.32,3.93-3.41,5.64-6.27l2.96,1.79c-1.82,3.17-4.06,5.58-6.73,7.24-2.67,1.66-5.72,2.49-9.15,2.49-1.87,0-3.81-.31-5.84-.93-2.02-.62-4.01-1.8-5.96-3.54-1.95-1.74-3.41-3.89-4.4-6.46-.99-2.57-1.48-5.15-1.48-7.75,0-3.27.74-6.42,2.22-9.46s3.63-5.37,6.46-7.01c2.83-1.63,5.8-2.45,8.91-2.45,2.44,0,4.71.48,6.81,1.44,2.1.96,3.92,2.3,5.45,4.01,1.53,1.71,2.72,3.75,3.58,6.11.86,2.36,1.29,4.89,1.29,7.59ZM657.69,142.31h26.55c-.73-3.68-2.3-6.69-4.71-9.03-2.41-2.33-5.23-3.5-8.45-3.5-3.37,0-6.31,1.19-8.8,3.58-2.49,2.39-4.02,5.37-4.59,8.95Z"/>
+            <path d="M698.56,163.17v-35.89h3.5v4.44c2.18-3.48,5.27-5.22,9.26-5.22,4.51,0,7.86,2.15,10.04,6.46,2.28-4.31,5.79-6.46,10.51-6.46,3.37,0,6.1,1.04,8.17,3.11.93.93,1.66,2.12,2.18,3.54.52,1.43.78,3.59.78,6.5v23.51h-3.5v-23.98c0-3.43-.67-5.86-2.02-7.32-1.25-1.4-3.17-2.1-5.76-2.1-6.02,0-9.03,3.92-9.03,11.75v21.64h-3.58v-23.12c0-6.85-2.65-10.28-7.94-10.28-2.96,0-5.22,1.06-6.77,3.19-1.56,2.13-2.34,5.27-2.34,9.42v20.79h-3.5Z"/>
+            <path d="M774.62,132.34l-3.04,1.48c-1.45-2.7-3.5-4.05-6.15-4.05-1.61,0-3.05.57-4.32,1.71-1.27,1.14-1.91,2.49-1.91,4.05,0,1.4.52,2.56,1.56,3.46,1.04.91,2.88,1.88,5.53,2.92,3.22,1.25,5.55,2.37,7.01,3.39,1.45,1.01,2.39,2.17,2.8,3.46.42,1.3.62,2.62.62,3.97,0,3.27-1.12,5.98-3.35,8.13-2.23,2.15-5.03,3.23-8.41,3.23-3.01,0-5.59-.83-7.75-2.49-2.15-1.66-3.67-3.97-4.55-6.93l3.43-1.17c.83,2.39,2,4.2,3.5,5.45,1.5,1.25,3.29,1.87,5.37,1.87,1.56,0,3.02-.45,4.4-1.36,1.37-.91,2.33-1.97,2.88-3.19.54-1.22.82-2.35.82-3.39,0-1.4-.38-2.69-1.13-3.85-.75-1.17-2.69-2.32-5.8-3.46-3.84-1.35-6.55-2.78-8.13-4.28-1.58-1.5-2.38-3.37-2.38-5.61,0-1.82.54-3.5,1.64-5.06,1.09-1.56,2.39-2.63,3.89-3.23,1.5-.6,2.88-.89,4.13-.89,4.05,0,7.16,1.95,9.34,5.84Z"/>
+          </g>
+        </svg>
+      </div>
+      <nav class="nav">
+        <a href="#" class="nav-link">Collections</a>
+        <a href="#" class="nav-link">About</a>
+        <a href="#" class="nav-link">Contact</a>
+        <a href="https://www.etsy.com/shop/marianovich" class="nav-link">Shop</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Collection Header -->
+  <section class="collection-header">
+    <h1 class="collection-title">Natural Gemstones</h1>
+    <p class="collection-subtitle">Collector's Grade Specimens</p>
+  </section>
+
+  <!-- Filters -->
+  <section class="filters-section">
+    <div class="filters-container">
+      <div class="filter-group">
+        <label class="filter-label">Sort by:</label>
+        <select class="filter-select">
+          <option>Featured</option>
+          <option>Price: Low to High</option>
+          <option>Price: High to Low</option>
+          <option>Newest</option>
+        </select>
+      </div>
+      <div class="filter-group">
+        <label class="filter-label">Type:</label>
+        <select class="filter-select">
+          <option>All Gemstones</option>
+          <option>Sapphire</option>
+          <option>Demantoid</option>
+          <option>Alexandrite</option>
+          <option>Emerald</option>
+          <option>Spinel</option>
+        </select>
+      </div>
+      <div class="filter-group">
+        <label class="filter-label">Origin:</label>
+        <select class="filter-select">
+          <option>All Origins</option>
+          <option>Ural Mountains</option>
+          <option>Pamir</option>
+          <option>Siberia</option>
+        </select>
+      </div>
+    </div>
+  </section>
+
+  <!-- Products Grid -->
+  <section class="products-section">
+    <div class="products-grid">
+      
+      <!-- Product 1 -->
+      <div class="product-card">
+        <div class="product-image-container">
+          <span class="product-badge">New</span>
+          <img src="https://images.unsplash.com/photo-1611591437281-460bfbe1220a?w=500&h=500&fit=crop" alt="Natural Sapphire" class="product-image">
+        </div>
+        <div class="product-info">
+          <div class="product-type">Sapphire</div>
+          <h3 class="product-title">Natural Blue Sapphire</h3>
+          <p class="product-description">Exceptional clarity and deep blue color from the Ural Mountains</p>
+          <div class="product-specs">
+            <span class="spec"><span class="spec-dot"></span>3.2ct</span>
+            <span class="spec"><span class="spec-dot"></span>Ural, Russia</span>
+          </div>
+          <div class="product-price">$2,850</div>
+          <button class="product-button">View Details</button>
+        </div>
+      </div>
+
+      <!-- Product 2 -->
+      <div class="product-card">
+        <div class="product-image-container">
+          <img src="https://images.unsplash.com/photo-1583937443569-f0edb4b2ddb0?w=500&h=500&fit=crop" alt="Demantoid Garnet" class="product-image">
+        </div>
+        <div class="product-info">
+          <div class="product-type">Demantoid</div>
+          <h3 class="product-title">Demantoid Garnet</h3>
+          <p class="product-description">Rare green garnet with characteristic horsetail inclusions</p>
+          <div class="product-specs">
+            <span class="spec"><span class="spec-dot"></span>1.8ct</span>
+            <span class="spec"><span class="spec-dot"></span>Ural, Russia</span>
+          </div>
+          <div class="product-price">$3,200</div>
+          <button class="product-button">View Details</button>
+        </div>
+      </div>
+
+      <!-- Product 3 -->
+      <div class="product-card">
+        <div class="product-image-container">
+          <span class="product-badge">Featured</span>
+          <img src="https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?w=500&h=500&fit=crop" alt="Alexandrite" class="product-image">
+        </div>
+        <div class="product-info">
+          <div class="product-type">Alexandrite</div>
+          <h3 class="product-title">Color-Change Alexandrite</h3>
+          <p class="product-description">Strong color change from green to purplish-red</p>
+          <div class="product-specs">
+            <span class="spec"><span class="spec-dot"></span>2.5ct</span>
+            <span class="spec"><span class="spec-dot"></span>Ural, Russia</span>
+          </div>
+          <div class="product-price">$8,500</div>
+          <button class="product-button">View Details</button>
+        </div>
+      </div>
+
+      <!-- Product 4 -->
+      <div class="product-card">
+        <div class="product-image-container">
+          <img src="https://images.unsplash.com/photo-1601121141461-9d6647bca1ed?w=500&h=500&fit=crop" alt="Emerald" class="product-image">
+        </div>
+        <div class="product-info">
+          <div class="product-type">Emerald</div>
+          <h3 class="product-title">Natural Emerald</h3>
+          <p class="product-description">Vivid green with excellent transparency</p>
+          <div class="product-specs">
+            <span class="spec"><span class="spec-dot"></span>4.1ct</span>
+            <span class="spec"><span class="spec-dot"></span>Ural, Russia</span>
+          </div>
+          <div class="product-price">$5,400</div>
+          <button class="product-button">View Details</button>
+        </div>
+      </div>
+
+      <!-- Product 5 -->
+      <div class="product-card">
+        <div class="product-image-container">
+          <span class="product-badge">Rare</span>
+          <img src="https://images.unsplash.com/photo-1603561591411-07134e71a2a9?w=500&h=500&fit=crop" alt="Pamir Rose Spinel" class="product-image">
+        </div>
+        <div class="product-info">
+          <div class="product-type">Spinel</div>
+          <h3 class="product-title">Pamir Rose Spinel</h3>
+          <p class="product-description">Delicate rose pink color, exceptional clarity</p>
+          <div class="product-specs">
+            <span class="spec"><span class="spec-dot"></span>5.3ct</span>
+            <span class="spec"><span class="spec-dot"></span>Pamir, Tajikistan</span>
+          </div>
+          <div class="product-price">$4,200</div>
+          <button class="product-button">View Details</button>
+        </div>
+      </div>
+
+      <!-- Product 6 -->
+      <div class="product-card">
+        <div class="product-image-container">
+          <img src="https://images.unsplash.com/photo-1569243693593-f2eed07fa8c3?w=500&h=500&fit=crop" alt="Aquamarine" class="product-image">
+        </div>
+        <div class="product-info">
+          <div class="product-type">Aquamarine</div>
+          <h3 class="product-title">Siberian Aquamarine</h3>
+          <p class="product-description">Pure blue color with excellent clarity</p>
+          <div class="product-specs">
+            <span class="spec"><span class="spec-dot"></span>6.7ct</span>
+            <span class="spec"><span class="spec-dot"></span>Siberia, Russia</span>
+          </div>
+          <div class="product-price">$1,850</div>
+          <button class="product-button">View Details</button>
+        </div>
+      </div>
+
+      <!-- Product 7 -->
+      <div class="product-card">
+        <div class="product-image-container">
+          <img src="https://images.unsplash.com/photo-1535632787350-4e68ef0ac584?w=500&h=500&fit=crop" alt="Imperial Topaz" class="product-image">
+        </div>
+        <div class="product-info">
+          <div class="product-type">Topaz</div>
+          <h3 class="product-title">Imperial Topaz</h3>
+          <p class="product-description">Rich golden orange, collector-grade specimen</p>
+          <div class="product-specs">
+            <span class="spec"><span class="spec-dot"></span>3.9ct</span>
+            <span class="spec"><span class="spec-dot"></span>Ural, Russia</span>
+          </div>
+          <div class="product-price">$2,650</div>
+          <button class="product-button">View Details</button>
+        </div>
+      </div>
+
+      <!-- Product 8 -->
+      <div class="product-card">
+        <div class="product-image-container">
+          <span class="product-badge">New</span>
+          <img src="https://images.unsplash.com/photo-1588444650700-00c3099ba7e5?w=500&h=500&fit=crop" alt="Heliodor" class="product-image">
+        </div>
+        <div class="product-info">
+          <div class="product-type">Heliodor</div>
+          <h3 class="product-title">Golden Heliodor</h3>
+          <p class="product-description">Brilliant yellow beryl with exceptional luster</p>
+          <div class="product-specs">
+            <span class="spec"><span class="spec-dot"></span>4.5ct</span>
+            <span class="spec"><span class="spec-dot"></span>Ural, Russia</span>
+          </div>
+          <div class="product-price">$1,950</div>
+          <button class="product-button">View Details</button>
+        </div>
+      </div>
+
+      <!-- Product 9 -->
+      <div class="product-card">
+        <div class="product-image-container">
+          <img src="https://images.unsplash.com/photo-1610375461246-83df859d849d?w=500&h=500&fit=crop" alt="Red Spinel" class="product-image">
+        </div>
+        <div class="product-info">
+          <div class="product-type">Spinel</div>
+          <h3 class="product-title">Mahenge Red Spinel</h3>
+          <p class="product-description">Vibrant red color, museum-quality</p>
+          <div class="product-specs">
+            <span class="spec"><span class="spec-dot"></span>2.1ct</span>
+            <span class="spec"><span class="spec-dot"></span>Pamir, Tajikistan</span>
+          </div>
+          <div class="product-price">$6,800</div>
+          <button class="product-button">View Details</button>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Pagination -->
+    <div class="pagination">
+      <button class="page-btn">← Prev</button>
+      <button class="page-btn active">1</button>
+      <button class="page-btn">2</button>
+      <button class="page-btn">3</button>
+      <button class="page-btn">Next →</button>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="footer-container">
+      <div class="footer-section">
+        <h3>About Marianovich gems</h3>
+        <p class="footer-text">Specializing in rare natural gemstones from Russian depths. Each specimen is carefully selected for exceptional quality and collector appeal.</p>
+      </div>
+      
+      <div class="footer-section">
+        <h3>Quick Links</h3>
+        <div class="footer-links">
+          <a href="#" class="footer-link">All Collections</a>
+          <a href="#" class="footer-link">New Arrivals</a>
+          <a href="#" class="footer-link">About Us</a>
+          <a href="#" class="footer-link">Gemstone Care</a>
+        </div>
+      </div>
+      
+      <div class="footer-section">
+        <h3>Customer Service</h3>
+        <div class="footer-links">
+          <a href="#" class="footer-link">Contact</a>
+          <a href="#" class="footer-link">Shipping Info</a>
+          <a href="#" class="footer-link">Returns</a>
+          <a href="#" class="footer-link">Authenticity</a>
+        </div>
+      </div>
+      
+      <div class="footer-section">
+        <h3>Shop</h3>
+        <div class="footer-links">
+          <a href="https://www.etsy.com/shop/marianovich" class="footer-link etsy-link">Visit our Etsy Store</a>
+        </div>
+      </div>
+    </div>
+    
+    <div class="footer-bottom">
+      <p>&copy; 2025 Marianovich gems. All rights reserved. | <a href="#" class="etsy-link">Privacy Policy</a> | <a href="#" class="etsy-link">Terms of Service</a></p>
+    </div>
+  </footer>
+
+  <script>
+    // Smooth scroll for navigation
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+      anchor.addEventListener('click', function (e) {
+        e.preventDefault();
+        const target = document.querySelector(this.getAttribute('href'));
+        if (target) {
+          target.scrollIntoView({ behavior: 'smooth' });
+        }
+      });
+    });
+
+    // Product card hover effect tracking
+    document.querySelectorAll('.product-card').forEach(card => {
+      card.addEventListener('click', function() {
+        if (typeof gtag === 'function') {
+          gtag('event', 'product_click', {
+            event_category: 'Products',
+            event_label: this.querySelector('.product-title').textContent
+          });
+        }
+      });
+    });
+
+    // Filter change tracking
+    document.querySelectorAll('.filter-select').forEach(select => {
+      select.addEventListener('change', function() {
+        if (typeof gtag === 'function') {
+          gtag('event', 'filter_change', {
+            event_category: 'Filters',
+            event_label: this.value
+          });
+        }
+      });
+    });
+  </script>
+</body>
+</html>
