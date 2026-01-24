@@ -54,15 +54,15 @@
         }
 
         .social-icon:nth-child(1) {
-            animation-delay: 0.3s;
+            animation-delay: 1.1s;
         }
 
         .social-icon:nth-child(2) {
-            animation-delay: 0.6s;
+            animation-delay: 1.4s;
         }
 
         .social-icon:nth-child(3) {
-            animation-delay: 0.9s;
+            animation-delay: 1.7s;
         }
 
         .social-icon img {
@@ -107,7 +107,7 @@
             justify-content: space-between;
             align-items: center;
             position: relative;
-            padding-top: 120px;
+            padding-top: 100px;
             padding-bottom: 0;
         }
 
@@ -122,8 +122,22 @@
             width: 80%;
             max-width: 600px;
             margin: 0 auto;
-            padding: 20px 0;
+            padding: 0;
             box-sizing: border-box;
+            opacity: 0;
+            transform: translateX(100vw);
+            animation: slideInLogo 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+        }
+
+        @keyframes slideInLogo {
+            0% {
+                opacity: 0;
+                transform: translateX(100vw);
+            }
+            100% {
+                opacity: 1;
+                transform: translateX(0);
+            }
         }
         
         .logo img {
@@ -153,7 +167,7 @@
             transform: translateY(-50%) translateX(calc(100vw + 300px));
             will-change: transform;
             backface-visibility: hidden;
-            animation: moveGemstoneSmooth 60s linear infinite;
+            animation: moveGemstoneSmooth 50s linear infinite;
         }
 
         .gemstone:nth-child(1) {
@@ -161,23 +175,53 @@
         }
 
         .gemstone:nth-child(2) {
-            animation-delay: -10s;
+            animation-delay: -8.33s;
         }
 
         .gemstone:nth-child(3) {
-            animation-delay: -20s;
+            animation-delay: -16.66s;
         }
 
         .gemstone:nth-child(4) {
-            animation-delay: -30s;
+            animation-delay: -25s;
         }
 
         .gemstone:nth-child(5) {
-            animation-delay: -40s;
+            animation-delay: -33.33s;
         }
 
         .gemstone:nth-child(6) {
-            animation-delay: -50s;
+            animation-delay: -41.66s;
+        }
+
+        @media (max-width: 768px) {
+            .gemstone {
+                animation: moveGemstoneSmoothMobile 60s linear infinite;
+            }
+
+            .gemstone:nth-child(1) {
+                animation-delay: 0s;
+            }
+
+            .gemstone:nth-child(2) {
+                animation-delay: -10s;
+            }
+
+            .gemstone:nth-child(3) {
+                animation-delay: -20s;
+            }
+
+            .gemstone:nth-child(4) {
+                animation-delay: -30s;
+            }
+
+            .gemstone:nth-child(5) {
+                animation-delay: -40s;
+            }
+
+            .gemstone:nth-child(6) {
+                animation-delay: -50s;
+            }
         }
 
         .bottom-section {
@@ -189,10 +233,10 @@
         /* Scrolling mini-logos lines */
         .scroll-mini-logos-line {
             width: 100%;
-            height: 26px;
+            height: 17px;
             background-image: url('https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Marianovich%20Logo.svg');
             background-repeat: repeat-x;
-            background-size: auto 10px;
+            background-size: auto 7px;
             background-position: 0 center;
             filter: brightness(0) invert(1);
             animation: scrollBgLeft 40s linear infinite;
@@ -224,7 +268,7 @@
         .stone-names-content span {
             font-size: 21px;
             letter-spacing: 2px;
-            padding: 0 35px;
+            padding: 0 20px;
             font-weight: 300;
         }
 
@@ -286,6 +330,15 @@
         }
 
         @keyframes moveGemstoneSmooth {
+            0% {
+                transform: translateY(-50%) translateX(calc(100vw + 300px));
+            }
+            100% {
+                transform: translateY(-50%) translateX(-300px);
+            }
+        }
+
+        @keyframes moveGemstoneSmoothMobile {
             0% {
                 transform: translateY(-50%) translateX(calc(100vw + 300px));
             }
