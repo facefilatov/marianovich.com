@@ -28,12 +28,13 @@
         }
 
         .container {
-    width: 100vw;
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    position: relative;
-}
+            width: 100vw;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+
         /* Social icons */
         .social-icons {
             position: absolute;
@@ -83,7 +84,7 @@
             align-items: center;
             position: relative;
             padding-top: 10vh;
-            overflow-y: auto;
+            padding-bottom: 60px;
         }
 
         .logo {
@@ -135,7 +136,7 @@
             will-change: transform;
             transform: translateZ(0);
             backface-visibility: hidden;
-            animation: moveGemstoneSmooth 22.5s linear infinite;
+            animation: moveGemstoneSmooth 45s linear infinite;
         }
 
         .gemstone:nth-child(1) {
@@ -143,23 +144,23 @@
         }
 
         .gemstone:nth-child(2) {
-            animation-delay: -4.5s;
+            animation-delay: -7.5s;
         }
 
         .gemstone:nth-child(3) {
-            animation-delay: -9s;
+            animation-delay: -15s;
         }
 
         .gemstone:nth-child(4) {
-            animation-delay: -13.5s;
+            animation-delay: -22.5s;
         }
 
         .gemstone:nth-child(5) {
-            animation-delay: -18s;
+            animation-delay: -30s;
         }
 
         .gemstone:nth-child(6) {
-            animation-delay: -22.5s;
+            animation-delay: -37.5s;
         }
 
         /* Scrolling mini-logos lines */
@@ -171,12 +172,12 @@
             background-size: auto 10px;
             background-position: 0 center;
             filter: brightness(0) invert(1);
-            animation: scrollBgLeft 20s linear infinite;
+            animation: scrollBgLeft 40s linear infinite;
         }
 
         /* Bottom line scrolls right */
         .scroll-mini-logos-line:last-of-type {
-            animation: scrollBgRight 20s linear infinite;
+            animation: scrollBgRight 40s linear infinite;
         }
 
         /* Stone names scrolling */
@@ -199,7 +200,7 @@
         .stone-names-content {
             display: flex;
             white-space: nowrap;
-            animation: scrollLeft 45s linear infinite;
+            animation: scrollLeft 90s linear infinite;
             will-change: transform;
             transform: translateZ(0);
         }
@@ -213,8 +214,8 @@
 
         /* Footer */
         .footer {
-            position: absolute;
-            bottom: 20px;
+            position: relative;
+            padding: 20px 0;
             width: 100%;
             text-align: center;
             font-size: 14px;
@@ -315,6 +316,13 @@
             <!-- Stone names -->
             <div class="stone-names">
                 <div class="stone-names-content">
+                    <span>Demantoid</span>
+                    <span>Sapphire</span>
+                    <span>Aquamarine</span>
+                    <span>Heliodor</span>
+                    <span>Topaz</span>
+                    <span>Alexandrite</span>
+                    <span>Emerald</span>
                     <span>Demantoid</span>
                     <span>Sapphire</span>
                     <span>Aquamarine</span>
