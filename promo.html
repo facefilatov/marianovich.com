@@ -88,17 +88,18 @@
     }
 
     .logo {
-        width: 80%;
-        padding: 100 10%;
-    }
-
-    .logo img {
-        width: 100%;
-        height: auto;
-        display: block;
-        filter: brightness(0) invert(1);
-    }
-
+    width: 80%;
+    margin: 0 auto; /* Center horizontally */
+    padding: 20px 0; /* Space above and below */
+    max-width: 100%; /* Prevent overflow */
+    box-sizing: border-box; /* Include padding in width calculation */
+}
+.logo img {
+    width: 100%;
+    height: auto;
+    display: block;
+    filter: brightness(0) invert(1);
+}
     @media (max-width: 768px) {
         .logo {
             width: 85%;
