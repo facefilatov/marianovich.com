@@ -48,9 +48,21 @@
             align-items: center;
         }
         .social-icons::after {
-    bottom: -30px;  /* 30px под иконками */
-    /* Или: top: 130px; если иконки 100px высотой + 30px отступ */
+    content: '';
+    position: absolute;
+    left: 50%;
+    bottom: -30px; /* линия под иконками */
+    transform: translateX(-50%);
+    width: 100vw;
+    height: 1px;
+    background: linear-gradient(
+        135deg,
+        rgba(255, 255, 255, 0.03) 0%,
+        rgba(255, 255, 255, 0.08) 50%,
+        rgba(255, 255, 255, 0.03) 100%
+    );
 }
+
 /*
         .social-icons::after {
             position: absolute;
