@@ -203,25 +203,25 @@
     margin-bottom: 0;
 }
 
-.gemstones-track {
-    display: flex;
-    gap: 20vw;  /* Add this line - same as gemstones-content gap */
-    animation: scrollStones 36.67s linear infinite;
-    will-change: transform;
-}
-
-.gemstones-content {
-    display: flex;
-    gap: 20vw;
-    flex-shrink: 0;
-}
 .gemstone {
-    width: 150px;
-    height: 150px;
+    width: clamp(100px, 15vw, 200px);  /* Scales between 100-200px */
+    height: clamp(100px, 15vw, 200px);
     object-fit: contain;
     flex-shrink: 0;
 }
 
+.gemstones-content {
+    display: flex;
+    gap: clamp(30px, 10vw, 150px);  /* Scales between 30-150px */
+    flex-shrink: 0;
+}
+
+.gemstones-track {
+    display: flex;
+    gap: clamp(30px, 10vw, 150px);  /* Same as content gap */
+    animation: scrollStones 36.67s linear infinite;
+    will-change: transform;
+}
 @keyframes scrollStones {
     0% {
         transform: translateX(0);
