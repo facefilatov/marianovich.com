@@ -55,8 +55,8 @@
             left: 50%;
             transform: translateX(-50%);
             width: 100vw;
-            height: 2px;
-            background-color: #fff;
+            height: 1px;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.03) 0%, rgba(255, 255, 255, 0.08) 50%, rgba(255, 255, 255, 0.03) 100%);
         }
 
         .social-icon {
@@ -77,30 +77,30 @@
             animation-delay: 0.84s;
         }
 
-        .social-icon:nth-child(1) img {
-            width: 80px;
-            height: 80px;
-        }
-
-        .social-icon:nth-child(2) img,
+        .social-icon:nth-child(1) img,
         .social-icon:nth-child(3) img {
             width: 60px;
             height: 60px;
         }
 
+        .social-icon:nth-child(2) img {
+            width: 80px;
+            height: 80px;
+        }
+
         /* Instagram gradient overlay */
-        .social-icon:nth-child(1) {
+        .social-icon:nth-child(2) {
             position: relative;
         }
 
-        .social-icon:nth-child(1)::after {
+        .social-icon:nth-child(2)::after {
             content: '';
             position: absolute;
             top: 0;
             left: 0;
             width: 80px;
             height: 80px;
-            background: linear-gradient(45deg, #e6683c 0%, #dc2743 50%, #bc1888 100%);
+            background: radial-gradient(circle at 30% 107%, #fdf497 0%, #fdf497 5%, #fd5949 45%, #d6249f 60%, #285AEB 90%);
             mask-image: url('https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Instagram%20Logo.svg');
             mask-size: contain;
             mask-repeat: no-repeat;
@@ -109,7 +109,7 @@
             -webkit-mask-repeat: no-repeat;
         }
 
-        .social-icon:nth-child(1) img {
+        .social-icon:nth-child(2) img {
             opacity: 0;
         }
 
@@ -118,10 +118,10 @@
             flex: 1;
             display: flex;
             flex-direction: column;
-            justify-content: space-between;
+            justify-content: center;
             align-items: center;
             position: relative;
-            padding-top: 120px;
+            padding-top: 60px;
             padding-bottom: 0;
         }
 
@@ -130,6 +130,8 @@
             display: flex;
             flex-direction: column;
             align-items: center;
+            justify-content: center;
+            flex: 1;
         }
 
         .logo {
@@ -258,7 +260,7 @@
         .stone-names-content {
             display: flex;
             white-space: nowrap;
-            animation: scrollLeft 90s linear infinite;
+            animation: scrollStoneNames 45s linear infinite;
             will-change: transform;
             transform: translateZ(0);
         }
@@ -286,7 +288,7 @@
         }
 
         /* Animations */
-        @keyframes scrollLeft {
+        @keyframes scrollStoneNames {
             0% {
                 transform: translate3d(0, 0, 0);
             }
@@ -328,10 +330,10 @@
         <!-- Social icons -->
         <div class="social-icons">
             <div class="social-icon">
-                <img src="https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Instagram%20Logo.svg" alt="Instagram">
+                <img src="https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Etsy%20Logo.svg" alt="Etsy">
             </div>
             <div class="social-icon">
-                <img src="https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Etsy%20Logo.svg" alt="Etsy">
+                <img src="https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Instagram%20Logo.svg" alt="Instagram">
             </div>
             <div class="social-icon">
                 <img src="https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Ebay%20Logo.svg" alt="eBay">
