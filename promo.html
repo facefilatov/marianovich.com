@@ -51,7 +51,7 @@
         .social-icons::after {
             content: '';
             position: absolute;
-            bottom: -30px;
+            bottom: -15px;
             left: 50%;
             transform: translateX(-50%);
             width: 100vw;
@@ -121,7 +121,7 @@
             justify-content: center;
             align-items: center;
             position: relative;
-            padding-top: 60px;
+            padding-top: 120px;
             padding-bottom: 0;
         }
 
@@ -138,7 +138,7 @@
             width: 80%;
             max-width: 600px;
             margin: 0 auto;
-            padding: 0;
+            padding: 0 0 30px 0;
             box-sizing: border-box;
             opacity: 0;
             transform: translateX(100vw);
@@ -194,10 +194,10 @@
             height: 150px;
             object-fit: contain;
             top: 50%;
-            transform: translateY(-50%) translateX(calc(100vw + 300px));
+            transform: translateY(-50%) translateX(calc(100vw + 50px));
             will-change: transform;
             backface-visibility: hidden;
-            animation: moveGemstoneSmooth 55s linear infinite;
+            animation: moveGemstoneSmooth 36.67s linear infinite;
         }
 
         .gemstone:nth-child(1) {
@@ -205,23 +205,23 @@
         }
 
         .gemstone:nth-child(2) {
-            animation-delay: -9.17s;
+            animation-delay: -6.11s;
         }
 
         .gemstone:nth-child(3) {
-            animation-delay: -18.33s;
+            animation-delay: -12.22s;
         }
 
         .gemstone:nth-child(4) {
-            animation-delay: -27.5s;
+            animation-delay: -18.33s;
         }
 
         .gemstone:nth-child(5) {
-            animation-delay: -36.67s;
+            animation-delay: -24.44s;
         }
 
         .gemstone:nth-child(6) {
-            animation-delay: -45.83s;
+            animation-delay: -30.56s;
         }
 
         .bottom-section {
@@ -236,7 +236,7 @@
             height: 17px;
             background-image: url('https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Marianovich%20Logo.svg');
             background-repeat: repeat-x;
-            background-size: auto 7px;
+            background-size: 100px 7px;
             background-position: 0 center;
             filter: brightness(0) invert(1);
             animation: scrollBgLeft 40s linear infinite;
@@ -257,12 +257,16 @@
             padding: 5px 0;
         }
 
-        .stone-names-content {
+        .stone-names-track {
             display: flex;
             white-space: nowrap;
-            animation: scrollStoneNames 45s linear infinite;
+            animation: scrollStoneNames 15s linear infinite;
             will-change: transform;
-            transform: translateZ(0);
+        }
+
+        .stone-names-content {
+            display: flex;
+            flex-shrink: 0;
         }
 
         .stone-names-content span {
@@ -290,37 +294,37 @@
         /* Animations */
         @keyframes scrollStoneNames {
             0% {
-                transform: translate3d(0, 0, 0);
+                transform: translateX(0);
             }
             100% {
-                transform: translate3d(-50%, 0, 0);
+                transform: translateX(-50%);
             }
         }
 
         @keyframes scrollBgLeft {
-            from {
+            0% {
                 background-position: 0 center;
             }
-            to {
-                background-position: -100% center;
+            100% {
+                background-position: -100px center;
             }
         }
 
         @keyframes scrollBgRight {
-            from {
-                background-position: -100% center;
-            }
-            to {
+            0% {
                 background-position: 0 center;
+            }
+            100% {
+                background-position: 100px center;
             }
         }
 
         @keyframes moveGemstoneSmooth {
             0% {
-                transform: translateY(-50%) translateX(calc(100vw + 300px));
+                transform: translateY(-50%) translateX(calc(100vw + 50px));
             }
             100% {
-                transform: translateY(-50%) translateX(-300px);
+                transform: translateY(-50%) translateX(calc(-150px - 50px));
             }
         }
     </style>
@@ -364,21 +368,25 @@
 
                 <!-- Stone names -->
                 <div class="stone-names">
-                    <div class="stone-names-content">
-                        <span>Demantoid</span>
-                        <span>Sapphire</span>
-                        <span>Aquamarine</span>
-                        <span>Heliodor</span>
-                        <span>Topaz</span>
-                        <span>Alexandrite</span>
-                        <span>Emerald</span>
-                        <span>Demantoid</span>
-                        <span>Sapphire</span>
-                        <span>Aquamarine</span>
-                        <span>Heliodor</span>
-                        <span>Topaz</span>
-                        <span>Alexandrite</span>
-                        <span>Emerald</span>
+                    <div class="stone-names-track">
+                        <div class="stone-names-content">
+                            <span>Demantoid</span>
+                            <span>Sapphire</span>
+                            <span>Aquamarine</span>
+                            <span>Heliodor</span>
+                            <span>Topaz</span>
+                            <span>Alexandrite</span>
+                            <span>Emerald</span>
+                        </div>
+                        <div class="stone-names-content">
+                            <span>Demantoid</span>
+                            <span>Sapphire</span>
+                            <span>Aquamarine</span>
+                            <span>Heliodor</span>
+                            <span>Topaz</span>
+                            <span>Alexandrite</span>
+                            <span>Emerald</span>
+                        </div>
                     </div>
                 </div>
 
