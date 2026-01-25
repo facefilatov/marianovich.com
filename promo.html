@@ -47,17 +47,21 @@
             z-index: 10;
             align-items: center;
         }
-
+        .social-icons::after {
+    bottom: -30px;  /* 30px под иконками */
+    /* Или: top: 130px; если иконки 100px высотой + 30px отступ */
+}
+/*
         .social-icons::after {
             position: absolute;
-            bottom: -30px;
+            top: -30px;
             left: 50%;
             transform: translateX(-50%);
             width: 100vw;
             height: 1px;
             background: linear-gradient(135deg, rgba(255, 255, 255, 0.03) 0%, rgba(255, 255, 255, 0.08) 50%, rgba(255, 255, 255, 0.03) 100%);
         }
-
+*/
         .social-icon {
             opacity: 0;
             transform: translateY(-100px);
