@@ -93,39 +93,37 @@
         }
 
         .social-icon:nth-child(1) img,
-        .social-icon:nth-child(3) img {
-            width: 80px;
-            height: 80px;
-        }
+.social-icon:nth-child(3) img {
+    width: clamp(50px, 8vw, 80px);   /* Min 50px, max 80px */
+    height: clamp(50px, 8vw, 80px);
+}
 
-        .social-icon:nth-child(2) img {
-            width: 100px;
-            height: 100px;
-        }
-
+.social-icon:nth-child(2) img {
+    width: clamp(70px, 10vw, 100px);  /* Min 70px, max 100px - always 20px larger */
+    height: clamp(70px, 10vw, 100px);
+}
         /* Instagram gradient overlay */
         .social-icon:nth-child(2) {
             position: relative;
         }
 
-        .social-icon:nth-child(2)::after {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100px;
-            height: 100px;
-            background: radial-gradient(circle at 30% 107%, #fdf497 0%, #fdf497 5%, #fd5949 45%, #d6249f 60%, #285AEB 90%);
-            mask-image: url('https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Instagram%20Logo.svg');
-            mask-size: contain;
-            mask-repeat: no-repeat;
-            mask-position: center;
-            -webkit-mask-image: url('https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Instagram%20Logo.svg');
-            -webkit-mask-size: contain;
-            -webkit-mask-repeat: no-repeat;
-            -webkit-mask-position: center;
-        }
-
+       .social-icon:nth-child(2)::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: clamp(70px, 10vw, 100px);   /* Match Instagram img size */
+    height: clamp(70px, 10vw, 100px);
+    background: radial-gradient(circle at 30% 107%, #fdf497 0%, #fdf497 5%, #fd5949 45%, #d6249f 60%, #285AEB 90%);
+    mask-image: url('https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Instagram%20Logo.svg');
+    mask-size: contain;
+    mask-repeat: no-repeat;
+    mask-position: center;
+    -webkit-mask-image: url('https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Instagram%20Logo.svg');
+    -webkit-mask-size: contain;
+    -webkit-mask-repeat: no-repeat;
+    -webkit-mask-position: center;
+}
         .social-icon:nth-child(2) img {
             opacity: 0;
         }
