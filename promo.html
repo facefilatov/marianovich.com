@@ -414,5 +414,24 @@
             <a href="mailto:contact@marianovich.com">contact@marianovich.com</a>
         </div>
     </div>
+
+    <script>
+document.addEventListener('DOMContentLoaded', function() {
+    const viewportWidth = window.innerWidth;
+    const stoneWidth = 150;
+    const gap = viewportWidth * 0.2; // 20vw gap
+    const totalDistance = viewportWidth + stoneWidth + 50 + 200; // distance stone travels
+    const duration = 36.67; // animation duration in seconds
+    
+    // Calculate how long it takes to travel the gap distance
+    const timePerPixel = duration / totalDistance;
+    const delayBetweenStones = (stoneWidth + gap) * timePerPixel;
+    
+    const stones = document.querySelectorAll('.gemstone');
+    stones.forEach((stone, index) => {
+        stone.style.animationDelay = `-${index * delayBetweenStones}s`;
+    });
+});
+</script>
 </body>
 </html>
