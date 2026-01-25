@@ -51,7 +51,7 @@
     content: '';
     position: absolute;
     left: 50%;
-    bottom: 130px; /* линия под иконками */
+    bottom: 30px; /* линия под иконками */
     transform: translateX(-50%);
     width: 100vw;
     height: 1px;
@@ -192,18 +192,35 @@
             filter: brightness(0) invert(1);
         }
 
-        /* Gemstones carousel */
-       .gemstones {
+        /* Gemstones carousel *//* Gemstones carousel */
+.gemstones {
+    width: 100%;
+    height: 200px;
+    position: relative;
+    overflow: hidden;
     display: flex;
-    gap: 20vw; /* 20vw между камнями */
+    align-items: center;
+    margin-bottom: 0;
+}
+
+.gemstones-track {
+    display: flex;
+    gap: 20vw;
     animation: scrollStones 36.67s linear infinite;
+    will-change: transform;
+}
+
+.gemstones-content {
+    display: flex;
+    gap: 20vw;
+    flex-shrink: 0;
 }
 
 .gemstone {
-    flex-shrink: 0;
     width: 150px;
     height: 150px;
     object-fit: contain;
+    flex-shrink: 0;
 }
 
 @keyframes scrollStones {
@@ -211,10 +228,9 @@
         transform: translateX(0);
     }
     100% {
-        transform: translateX(calc(-150px - 20vw)); /* ширина камня + gap */
+        transform: translateX(calc(-100% - 20vw));
     }
 }
-
         .bottom-section {
             width: 100%;
             display: flex;
