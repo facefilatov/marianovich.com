@@ -201,26 +201,26 @@ body {
             align-items: center;
         }
 
-        .logo {
-            width: 80%;
-            max-width: 600px;
-            margin-bottom: 10px;
-            box-sizing: border-box;
-            opacity: 0;
-            transform: translateX(100vw);
-            animation: slideInLogo 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
-        }
+       .logo {
+    width: 80%;
+    max-width: 600px;
+    margin-bottom: 10px;
+    box-sizing: border-box;
+    opacity: 0;
+    transform: translateX(100%);  /* Changed from 100vw to 100% */
+    animation: slideInLogo 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+}
 
-        @keyframes slideInLogo {
-            0% {
-                opacity: 0;
-                transform: translateX(100vw);
-            }
-            100% {
-                opacity: 1;
-                transform: translateX(0);
-            }
-        }
+@keyframes slideInLogo {
+    0% {
+        opacity: 0;
+        transform: translateX(100%);  /* Changed from 100vw */
+    }
+    100% {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
 
         @keyframes slideInSocial {
             0% {
