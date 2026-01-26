@@ -194,18 +194,25 @@
         }
 
         /* Gemstones carousel */
-        .gemstones {
+     /* Wrapper handles the slide-in animation */
+.gemstones-wrapper {
     width: 100%;
-    height: 200px;
-    position: relative;
-    overflow: hidden;
-    display: flex;
-    align-items: center;
-    margin-bottom: 0px;
     opacity: 0;
     transform: translateX(100vw);
     animation: slideInLogo 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
-    animation-delay: 0.74s;  /* 0.1s after first social starts */
+    animation-delay: 0.74s;
+}
+
+/* Gemstones container - remove animation, keep overflow */
+.gemstones {
+    width: 100%;
+    height: 200px;
+    position: relative;
+    overflow: hidden;  /* Keep this for carousel */
+    display: flex;
+    align-items: center;
+    margin-bottom: 0px;
+    /* Remove: opacity, transform, animation */
 }
         .gemstone {
             width: clamp(100px, 15vw, 150px);
@@ -328,9 +335,11 @@
                 </div>
 
                 <!-- Gemstones carousel -->
-                <div class="gemstones">
-                    <div class="gemstones-track">
-                        <div class="gemstones-content">
+                <!-- Gemstones carousel -->
+<div class="gemstones-wrapper">
+    <div class="gemstones">
+        <div class="gemstones-track">
+                  <div class="gemstones-content">
                             <img class="gemstone" src="https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Demantoid.webp" alt="Demantoid">
                             <img class="gemstone" src="https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Sapphire.webp" alt="Sapphire">
                             <img class="gemstone" src="https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Aquamarine.webp" alt="Aquamarine">
@@ -346,9 +355,9 @@
                             <img class="gemstone" src="https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Alexandrite.webp" alt="Alexandrite">
                             <img class="gemstone" src="https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Emerald.webp" alt="Emerald">
                         </div>
-                    </div>
-                </div>
-            </div>
+        </div>
+    </div>
+</div>
 
             <!-- Gemstone Origins Section -->
             <div class="origins-section">
