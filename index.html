@@ -152,26 +152,25 @@
             box-sizing: border-box;
         }
 
-        html {
-            width: 100%;
-            height: 100%;
-            overflow-x: hidden;
-        }
+       html {
+    width: 100%;
+    overflow-x: hidden;
+}
 
         body {
-            font-family: 'Futura Next', 'Futura', 'Trebuchet MS', Arial, sans-serif;
-            background-color: #000;
-            color: #fff;
-            width: 100%;
-            min-height: 100vh;
-            overflow-x: hidden;
-            -webkit-overflow-scrolling: touch;
-        }
+    font-family: 'Futura Next', 'Futura', 'Trebuchet MS', Arial, sans-serif;
+    background-color: #000;
+    color: #fff;
+    width: 100%;
+    overflow-x: hidden;
+    -webkit-overflow-scrolling: touch;
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}
 
-        /* Hide scrollbar for Chrome, Safari and Opera */
-        body::-webkit-scrollbar {
-            display: none;
-        }
+body::-webkit-scrollbar {
+    display: none;
+}
 
         /* Hide scrollbar for IE, Edge and Firefox */
         body {
