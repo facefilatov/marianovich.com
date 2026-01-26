@@ -113,14 +113,24 @@
         }
         
         /* Instagram gradient overlay */
-        /* Instagram parent scales on hover */
+      /* Instagram - apply gradient to link, not parent */
 .social-icon:nth-child(2) {
     position: relative;
     display: inline-block;
+}
+
+.social-icon:nth-child(2) a {
+    display: block;
+    position: relative;
     transition: transform 0.2s ease;
 }
-/* Instagram gradient overlay - ADD THIS BLOCK */
-.social-icon:nth-child(2)::after {
+
+.social-icon:nth-child(2) a:hover {
+    transform: scale(1.1);  /* Scale the link like other social icons */
+}
+
+/* Instagram gradient overlay on the LINK, not parent */
+.social-icon:nth-child(2) a::after {
     content: '';
     position: absolute;
     top: 0;
@@ -142,10 +152,10 @@
     -webkit-mask-position: center;
     pointer-events: none;
 }
-.social-icon:nth-child(2):hover {
-    transform: translateY(0) scale(1.1);
-}
 
+.social-icon:nth-child(2) img {
+    opacity: 0;
+}
 /* Stone names - tiny increase */
 .origin-column a {
     color: #fff;
