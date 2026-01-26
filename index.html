@@ -180,13 +180,14 @@
         }
 
         .container {
-            width: 100%;
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            position: relative;
-            padding-bottom: 20px;
-        }    
+    width: 100%;
+    min-height: 100vh;
+    min-height: 100dvh;  /* Dynamic viewport height - adjusts to mobile browser chrome */
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    padding-bottom: clamp(20px, 5vh, 60px);  /* Responsive bottom padding */
+} 
         
         .social-icons {
             position: absolute;
