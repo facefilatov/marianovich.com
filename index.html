@@ -71,11 +71,7 @@
         window.dataLayer = window.dataLayer || [];
         function gtag(){dataLayer.push(arguments);}
         gtag('js', new Date());
-        gtag('config', 'G-7N9GCV8ZNT', {
-            page_title: 'Marianovich Gems - Home',
-            page_location: window.location.href,
-            send_page_view: true
-        });
+        gtag('config', 'G-7N9GCV8ZNT');
     </script>
     
     <style>
@@ -112,7 +108,7 @@
 
         .container {
             width: 100%;
-            padding-bottom: 100px;
+            padding-bottom: 8px;
         }
         
         .social-icons {
@@ -168,6 +164,10 @@
             height: clamp(25px, 3vw, 35px);
             width: auto;
             display: block;
+        }
+
+        .social-icon:nth-child(2) a {
+            position: relative;
         }
 
         .social-icon:nth-child(2) a::after {
