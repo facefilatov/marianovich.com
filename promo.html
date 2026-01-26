@@ -93,14 +93,16 @@
             animation-delay: 0.84s;
         }
 
-        .social-icon a {
-            display: block;
-            transition: transform 0.2s ease;
-        }
+.social-icon a {
+    display: block;
+    transition: transform 0.2s ease;
+}
 
-        .social-icon a:hover {
-            transform: scale(1.1);
-        }
+/* Hover for Etsy and eBay only (not Instagram) */
+.social-icon:nth-child(1) a:hover,
+.social-icon:nth-child(3) a:hover {
+    transform: scale(1.1);
+}
 
         .social-icon:nth-child(1) img,
         .social-icon:nth-child(2) img,
