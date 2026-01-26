@@ -107,7 +107,11 @@
           width: 100%;
     height: 100%;
  /* Keep square for Instagram    width: clamp(20px, 8vw, 80px);  /* Keep square for Instagram */
-            background: radial-gradient(circle at 30% 107%, #fdf497 0%, #fdf497 5%, #fd5949 45%, #d6249f 60%, #285AEB 90%);
+             background: radial-gradient(
+        circle at 30% 107%, 
+        #fd5949 0%,   /* Orange-Red center */
+        #d6249f 100%  /* Pink-Magenta outer */
+    );
             mask-image: url('https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Instagram%20Logo.svg');
             mask-size: contain;
             mask-repeat: no-repeat;
