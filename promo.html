@@ -47,24 +47,26 @@
             z-index: 10;
             align-items: center;
         }
-    .social-icons::after {
-    content: '';
-    position: absolute;
-    left: 50%;
-    bottom: 15px; /* линия под иконками */
-    transform: translateX(-50%);
-    width: 100vw;
-    height: 1px;
-    background: linear-gradient(
-        135deg,
-        rgba(255, 255, 255, 0.03) 0%,
-        rgba(255, 255, 255, 0.08) 50%,
-        rgba(255, 255, 255, 0.03) 100%
-    );
-    opacity: 0;
-    animation: fadeInLine 0.4s ease-out forwards;
-    animation-delay: 1.3s;  /* Starts after social icons finish (0.84s + 0.4s = 1.24s) */
-}
+        
+        .social-icons::after {
+            content: '';
+            position: absolute;
+            left: 50%;
+            bottom: 15px;
+            transform: translateX(-50%);
+            width: 100vw;
+            height: 1px;
+            background: linear-gradient(
+                135deg,
+                rgba(255, 255, 255, 0.03) 0%,
+                rgba(255, 255, 255, 0.08) 50%,
+                rgba(255, 255, 255, 0.03) 100%
+            );
+            opacity: 0;
+            animation: fadeInLine 0.4s ease-out forwards;
+            animation-delay: 1.3s;
+        }
+        
         .social-icon {
             opacity: 0;
             transform: translateY(-100px);
@@ -84,37 +86,39 @@
         }
 
         .social-icon:nth-child(1) img,
-.social-icon:nth-child(3) img {
-    width: clamp(50px, 8vw, 80px);   /* Min 50px, max 80px */
-    height: clamp(50px, 8vw, 80px);
-}
+        .social-icon:nth-child(3) img {
+            width: clamp(50px, 8vw, 80px);
+            height: clamp(50px, 8vw, 80px);
+        }
 
-.social-icon:nth-child(2) img {
-    width: clamp(70px, 10vw, 100px);  /* Min 70px, max 100px - always 20px larger */
-    height: clamp(70px, 10vw, 100px);
-}
+        .social-icon:nth-child(2) img {
+            width: clamp(70px, 10vw, 100px);
+            height: clamp(70px, 10vw, 100px);
+        }
+        
         /* Instagram gradient overlay */
         .social-icon:nth-child(2) {
             position: relative;
         }
 
-       .social-icon:nth-child(2)::after {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: clamp(70px, 10vw, 100px);   /* Match Instagram img size */
-    height: clamp(70px, 10vw, 100px);
-    background: radial-gradient(circle at 30% 107%, #fdf497 0%, #fdf497 5%, #fd5949 45%, #d6249f 60%, #285AEB 90%);
-    mask-image: url('https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Instagram%20Logo.svg');
-    mask-size: contain;
-    mask-repeat: no-repeat;
-    mask-position: center;
-    -webkit-mask-image: url('https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Instagram%20Logo.svg');
-    -webkit-mask-size: contain;
-    -webkit-mask-repeat: no-repeat;
-    -webkit-mask-position: center;
-}
+        .social-icon:nth-child(2)::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: clamp(70px, 10vw, 100px);
+            height: clamp(70px, 10vw, 100px);
+            background: radial-gradient(circle at 30% 107%, #fdf497 0%, #fdf497 5%, #fd5949 45%, #d6249f 60%, #285AEB 90%);
+            mask-image: url('https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Instagram%20Logo.svg');
+            mask-size: contain;
+            mask-repeat: no-repeat;
+            mask-position: center;
+            -webkit-mask-image: url('https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Instagram%20Logo.svg');
+            -webkit-mask-size: contain;
+            -webkit-mask-repeat: no-repeat;
+            -webkit-mask-position: center;
+        }
+        
         .social-icon:nth-child(2) img {
             opacity: 0;
         }
@@ -124,11 +128,11 @@
             flex: 1;
             display: flex;
             flex-direction: column;
-            justify-content: space-between;
+            justify-content: flex-start;
             align-items: center;
             position: relative;
             padding-top: 120px;
-            padding-bottom: 0;
+            padding-bottom: 40px;
         }
 
         .top-section {
@@ -172,14 +176,15 @@
                 transform: translateY(0);
             }
         }
+        
         @keyframes fadeInLine {
-    from {
-        opacity: 0;
-    }
-    to {
-        opacity: 1;
-    }
-}
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
         
         .logo img {
             width: 100%;
@@ -188,140 +193,112 @@
             filter: brightness(0) invert(1);
         }
 
-        /* Gemstones carousel *//* Gemstones carousel */
         /* Gemstones carousel */
-.gemstones {
-    width: 100%;
-    height: 200px;
-    position: relative;
-    overflow: hidden;
-    display: flex;
-    align-items: center;
-    margin-bottom: 0;
-}
-
-.gemstone {
-    width: clamp(100px, 15vw, 150px);   /* How BIG each stone is */
-    height: clamp(100px, 15vw, 150px);
-    object-fit: contain;
-    flex-shrink: 0;
-}
-
-.gemstones-content {
-    display: flex;
-    gap: clamp(30px, 10vw, 150px);  /* Scales between 30-150px */
-    flex-shrink: 0;
-}
-
-.gemstones-track {
-    display: flex;
-    gap: clamp(30px, 10vw, 150px);  /* Same as content gap */
-    animation: scrollStones 36.67s linear infinite;
-    will-change: transform;
-}
-@keyframes scrollStones {
-    0% {
-        transform: translateX(0);
-    }
-    100% {
-        transform: translateX(-50%);
-    }
-}
-        .bottom-section {
+        .gemstones {
             width: 100%;
-            display: flex;
-            flex-direction: column;
-        }
-
-        /* Scrolling mini-logos lines */
-        .scroll-mini-logos-line {
-            width: 100%;
-            height: 51px;
-            background-image: url('https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Marianovich%20Logo.svg');
-            background-repeat: repeat-x;
-            background-size: 100px 21px;
-            background-position: 0 center;
-            filter: brightness(0) invert(1);
-            animation: scrollBgLeft 20s linear infinite;
-        }
-
-        /* Bottom line scrolls right */
-        .scroll-mini-logos-line:last-of-type {
-            animation: scrollBgRight 20s linear infinite;
-        }
-
-        /* Stone names scrolling */
-        .stone-names {
-            width: 100%;
+            height: 200px;
+            position: relative;
             overflow: hidden;
-            background: linear-gradient(135deg, rgba(255, 255, 255, 0.03) 0%, rgba(255, 255, 255, 0.08) 50%, rgba(255, 255, 255, 0.03) 100%);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            padding: 15px 0;
+            display: flex;
+            align-items: center;
+            margin-bottom: 60px;
         }
 
-        .stone-names-track {
-            display: flex;
-            white-space: nowrap;
-            animation: scrollStoneNames 7.5s linear infinite;
-            will-change: transform;
-            backface-visibility: hidden;
-            transform: translate3d(0, 0, 0);
-        }
-
-        .stone-names-content {
-            display: flex;
+        .gemstone {
+            width: clamp(100px, 15vw, 150px);
+            height: clamp(100px, 15vw, 150px);
+            object-fit: contain;
             flex-shrink: 0;
         }
 
-        .stone-names-content span {
-            font-size: 63px;
-            letter-spacing: 6px;
-            padding: 0 60px;
-            font-weight: 300;
+        .gemstones-content {
+            display: flex;
+            gap: clamp(30px, 10vw, 150px);
+            flex-shrink: 0;
         }
 
-        /* Footer */
-        .footer {
-            position: relative;
-            padding: 45px 0;
+        .gemstones-track {
+            display: flex;
+            gap: clamp(30px, 10vw, 150px);
+            animation: scrollStones 36.67s linear infinite;
+            will-change: transform;
+        }
+        
+        @keyframes scrollStones {
+            0% {
+                transform: translateX(0);
+            }
+            100% {
+                transform: translateX(-50%);
+            }
+        }
+
+        /* Gemstone Origins Section */
+        .origins-section {
             width: 100%;
-            text-align: center;
-            font-size: 42px;
-            letter-spacing: 3px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-top: 40px;
         }
 
-        .footer a {
+        .origins-content {
+            display: flex;
+            justify-content: center;
+            gap: clamp(60px, 10vw, 150px);
+            margin-bottom: 50px;
+            flex-wrap: wrap;
+        }
+
+        .origin-column {
+            text-align: center;
+        }
+
+        .origin-column h3 {
+            font-size: clamp(18px, 2.5vw, 24px);
+            font-weight: 400;
+            margin-bottom: 15px;
+            letter-spacing: 1px;
+        }
+
+        .origin-column p {
+            font-size: clamp(16px, 2.2vw, 22px);
+            font-weight: 300;
+            line-height: 1.6;
+            letter-spacing: 0.5px;
+        }
+
+        /* Separator line */
+        .separator-line {
+            width: 100vw;
+            height: 1px;
+            background: linear-gradient(
+                135deg,
+                rgba(255, 255, 255, 0.03) 0%,
+                rgba(255, 255, 255, 0.08) 50%,
+                rgba(255, 255, 255, 0.03) 100%
+            );
+            margin-bottom: 40px;
+        }
+
+        /* Contact email */
+        .contact-email {
+            font-size: clamp(24px, 3.5vw, 42px);
+            letter-spacing: 2px;
+            margin-bottom: 20px;
+        }
+
+        .contact-email a {
             color: #fff;
             text-decoration: none;
         }
 
-        /* Animations */
-        @keyframes scrollStoneNames {
-            from {
-                transform: translate3d(0, 0, 0);
-            }
-            to {
-                transform: translate3d(-50%, 0, 0);
-            }
-        }
-
-        @keyframes scrollBgLeft {
-            from {
-                background-position: 0 center;
-            }
-            to {
-                background-position: -100px center;
-            }
-        }
-
-        @keyframes scrollBgRight {
-            from {
-                background-position: 0 center;
-            }
-            to {
-                background-position: 100px center;
-            }
+        /* Disclaimer */
+        .disclaimer {
+            font-size: clamp(10px, 1.5vw, 14px);
+            color: #333333;
+            letter-spacing: 1px;
+            padding-bottom: 30px;
         }
     </style>
 </head>
@@ -347,66 +324,56 @@
                     <img src="https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Marianovich%20gems%20Logo.svg" alt="Marianovich Gems">
                 </div>
 
-                <!-- Gemstones carousel --><!-- Gemstones carousel -->
-<div class="gemstones">
-    <div class="gemstones-track">
-        <div class="gemstones-content">
-            <img class="gemstone" src="https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Demantoid.webp" alt="Demantoid">
-            <img class="gemstone" src="https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Sapphire.webp" alt="Sapphire">
-            <img class="gemstone" src="https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Aquamarine.webp" alt="Aquamarine">
-            <img class="gemstone" src="https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Heliodor.webp" alt="Heliodor">
-            <img class="gemstone" src="https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Alexandrite.webp" alt="Alexandrite">
-            <img class="gemstone" src="https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Emerald.webp" alt="Emerald">
-        </div>
-        <div class="gemstones-content">
-            <img class="gemstone" src="https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Demantoid.webp" alt="Demantoid">
-            <img class="gemstone" src="https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Sapphire.webp" alt="Sapphire">
-            <img class="gemstone" src="https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Aquamarine.webp" alt="Aquamarine">
-            <img class="gemstone" src="https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Heliodor.webp" alt="Heliodor">
-            <img class="gemstone" src="https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Alexandrite.webp" alt="Alexandrite">
-            <img class="gemstone" src="https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Emerald.webp" alt="Emerald">
-        </div>
-    </div>
-</div>
-            <div class="bottom-section">
-                <!-- Top scrolling mini-logos line -->
-                <div class="scroll-mini-logos-line"></div>
-
-                <!-- Stone names -->
-                <div class="stone-names">
-                    <div class="stone-names-track">
-                        <div class="stone-names-content">
-                            <span>Demantoid</span>
-                            <span>Sapphire</span>
-                            <span>Aquamarine</span>
-                            <span>Heliodor</span>
-                            <span>Topaz</span>
-                            <span>Alexandrite</span>
-                            <span>Emerald</span>
+                <!-- Gemstones carousel -->
+                <div class="gemstones">
+                    <div class="gemstones-track">
+                        <div class="gemstones-content">
+                            <img class="gemstone" src="https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Demantoid.webp" alt="Demantoid">
+                            <img class="gemstone" src="https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Sapphire.webp" alt="Sapphire">
+                            <img class="gemstone" src="https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Aquamarine.webp" alt="Aquamarine">
+                            <img class="gemstone" src="https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Heliodor.webp" alt="Heliodor">
+                            <img class="gemstone" src="https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Alexandrite.webp" alt="Alexandrite">
+                            <img class="gemstone" src="https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Emerald.webp" alt="Emerald">
                         </div>
-                        <div class="stone-names-content">
-                            <span>Demantoid</span>
-                            <span>Sapphire</span>
-                            <span>Aquamarine</span>
-                            <span>Heliodor</span>
-                            <span>Topaz</span>
-                            <span>Alexandrite</span>
-                            <span>Emerald</span>
+                        <div class="gemstones-content">
+                            <img class="gemstone" src="https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Demantoid.webp" alt="Demantoid">
+                            <img class="gemstone" src="https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Sapphire.webp" alt="Sapphire">
+                            <img class="gemstone" src="https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Aquamarine.webp" alt="Aquamarine">
+                            <img class="gemstone" src="https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Heliodor.webp" alt="Heliodor">
+                            <img class="gemstone" src="https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Alexandrite.webp" alt="Alexandrite">
+                            <img class="gemstone" src="https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Emerald.webp" alt="Emerald">
                         </div>
                     </div>
                 </div>
+            </div>
 
-                <!-- Bottom scrolling mini-logos line -->
-                <div class="scroll-mini-logos-line"></div>
+            <!-- Gemstone Origins Section -->
+            <div class="origins-section">
+                <div class="origins-content">
+                    <div class="origin-column">
+                        <h3>Russian:</h3>
+                        <p>Alexandrite<br>Emerald<br>Demantoid<br>Sapphire</p>
+                    </div>
+                    <div class="origin-column">
+                        <h3>Ukrainian:</h3>
+                        <p>Aquamarine<br>Heliodor<br>Topaz</p>
+                    </div>
+                </div>
+
+                <!-- Separator line -->
+                <div class="separator-line"></div>
+
+                <!-- Contact email -->
+                <div class="contact-email">
+                    <a href="mailto:contact@marianovich.com">contact@marianovich.com</a>
+                </div>
+
+                <!-- Disclaimer -->
+                <div class="disclaimer">
+                    ©2026 Marianovich Gems Inc. All rights reserved.
+                </div>
             </div>
         </div>
-
-        <!-- Footer -->
-        <div class="footer">
-            <a href="mailto:contact@marianovich.com">contact@marianovich.com</a>
-        </div>
     </div>
-
-
 </body>
 </html>
