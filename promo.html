@@ -201,6 +201,7 @@
     transform: translateX(100vw);
     animation: slideInLogo 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
     animation-delay: 0.74s;
+    overflow: visible;  /* Add this line */
 }
 /* Gemstones container - remove animation, keep overflow */
 /* Gemstones carousel */
@@ -227,12 +228,13 @@
             flex-shrink: 0;
         }
 
-        .gemstones-track {
-            display: flex;
-            gap: clamp(30px, 10vw, 150px);
-            animation: scrollStones 36.67s linear infinite;
-            will-change: transform;
-        }
+.gemstones-track {
+    display: flex;
+    gap: clamp(30px, 10vw, 150px);
+    animation: scrollStones 36.67s linear infinite;
+    animation-delay: 1.54s;  /* Start after slide-in completes (0.74s + 0.8s) */
+    will-change: transform;
+}
         
         @keyframes scrollStones {
             0% {
