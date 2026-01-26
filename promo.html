@@ -36,36 +36,33 @@
 }
 
         /* Social icons */
-        .social-icons {
-            position: absolute;
-            top: 0;
-            left: 50%;
-            transform: translateX(-50%);
-            display: flex;
-            flex-direction: row;
-            gap: 30px;
-            z-index: 10;
-            align-items: center;
-        }
+        /* Social icons */
+.social-icons {
+    position: absolute;
+    top: 20px;  /* Add space above - change from 0 to 20px (or more) */
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    flex-direction: row;
+    gap: 30px;
+    z-index: 10;
+    align-items: center;
+    padding-bottom: 20px;  /* Add space below the icons */
+}
         
-        .social-icons::after {
-            content: '';
-            position: absolute;
-            left: 50%;
-            bottom: 15px;
-            transform: translateX(-50%);
-            width: 100%; 
-            height: 1px;
-            background: linear-gradient(
-                135deg,
-                rgba(255, 255, 255, 0.03) 0%,
-                rgba(255, 255, 255, 0.08) 50%,
-                rgba(255, 255, 255, 0.03) 100%
-            );
-            opacity: 0;
-            animation: fadeInLine 0.2s ease-out forwards;
-            animation-delay: 0.9s;
-        }
+ .social-icons::after {
+    content: '';
+    position: absolute;
+    left: 50%;
+    bottom: 0;  /* Change from 15px to 0 to sit at bottom of padding */
+    transform: translateX(-50%);
+    width: 100%;
+    height: 1px;
+    background: linear-gradient(...);
+    opacity: 0;
+    animation: fadeInLine 0.2s ease-out forwards;
+    animation-delay: 0.9s;
+}
         
         .social-icon {
             opacity: 0;
