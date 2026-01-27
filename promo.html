@@ -1,4 +1,4 @@
-111111111<!DOCTYPE html>
+222<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -213,15 +213,16 @@
 
         .gemstones {
             height: 200px;
-            overflow: hidden;
+            overflow-x: auto;
+            overflow-y: hidden;
             display: flex;
             align-items: center;
-            cursor: grab;
-            user-select: none;
+            scrollbar-width: none;
+            -ms-overflow-style: none;
         }
 
-        .gemstones:active {
-            cursor: grabbing;
+        .gemstones::-webkit-scrollbar {
+            display: none;
         }
 
         .gemstones-track {
@@ -430,7 +431,7 @@
                 <div class="separator-line"></div>
 
                 <div class="contact-email">
-                    <a href="mailto:contact@marianovich.com">contact@marianovich.com</a>
+                    <a href="/cdn-cgi/l/email-protection#e5868a8b91848691a58884978c848b8a938c868dcb868a88"><span class="__cf_email__" data-cfemail="690a06071d080a1d2904081b000807061f000a01470a0604">[email&#160;protected]</span></a>
                 </div>
 
                 <div class="disclaimer">
@@ -440,20 +441,39 @@
         </main>
     </div>
 
-    <script>
+    <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
         // Carousel scroll functionality
         const carousel = document.getElementById('gemstones');
         const track = document.getElementById('gemstonesTrack');
         
-        let isDragging = false;
-        let startX;
-        let scrollLeft;
-        let currentTranslate = 0;
+        let scrollOffset = 0;
         let animationId;
         let lastTime = Date.now();
+        let isUserScrolling = false;
+        let scrollTimeout;
         
         // Base speed: pixels per second
         const baseSpeed = 50;
+        
+        // Track user scrolling
+        carousel.addEventListener('scroll', () => {
+            if (!isUserScrolling) {
+                // User just started scrolling
+                scrollOffset = carousel.scrollLeft;
+            }
+            isUserScrolling = true;
+            
+            // Update scroll offset to match user scroll
+            scrollOffset = carousel.scrollLeft;
+            
+            // Clear existing timeout
+            clearTimeout(scrollTimeout);
+            
+            // Set timeout to detect when user stops scrolling
+            scrollTimeout = setTimeout(() => {
+                isUserScrolling = false;
+            }, 150);
+        }, { passive: true });
         
         // Start automatic animation after initial delay
         setTimeout(() => {
@@ -466,20 +486,21 @@
                 const deltaTime = (now - lastTime) / 1000; // Convert to seconds
                 lastTime = now;
                 
-                if (!isDragging) {
-                    currentTranslate -= baseSpeed * deltaTime;
-                    
-                    // Get the width of one content set
-                    const contentWidth = track.querySelector('.gemstones-content').offsetWidth;
-                    const gap = parseFloat(getComputedStyle(track).gap);
-                    const fullWidth = contentWidth + gap;
-                    
-                    // Reset position when scrolled past halfway point
-                    if (Math.abs(currentTranslate) >= fullWidth) {
-                        currentTranslate = currentTranslate % fullWidth;
-                    }
-                    
-                    track.style.transform = `translateX(${currentTranslate}px)`;
+                // Always increment the scroll offset (automatic movement)
+                if (!isUserScrolling) {
+                    scrollOffset += baseSpeed * deltaTime;
+                    carousel.scrollLeft = scrollOffset;
+                }
+                
+                // Get the width of one content set
+                const contentWidth = track.querySelector('.gemstones-content').offsetWidth;
+                const gap = parseFloat(getComputedStyle(track).gap);
+                const fullWidth = contentWidth + gap;
+                
+                // Reset position when scrolled past halfway point (infinite loop)
+                if (scrollOffset >= fullWidth) {
+                    scrollOffset = scrollOffset % fullWidth;
+                    carousel.scrollLeft = scrollOffset;
                 }
                 
                 animationId = requestAnimationFrame(animate);
@@ -487,57 +508,5 @@
             
             animationId = requestAnimationFrame(animate);
         }
-        
-        // Mouse events
-        carousel.addEventListener('mousedown', (e) => {
-            isDragging = true;
-            startX = e.pageX - carousel.offsetLeft;
-            scrollLeft = currentTranslate;
-            carousel.style.cursor = 'grabbing';
-        });
-        
-        carousel.addEventListener('mouseleave', () => {
-            isDragging = false;
-            carousel.style.cursor = 'grab';
-        });
-        
-        carousel.addEventListener('mouseup', () => {
-            isDragging = false;
-            carousel.style.cursor = 'grab';
-        });
-        
-        carousel.addEventListener('mousemove', (e) => {
-            if (!isDragging) return;
-            e.preventDefault();
-            const x = e.pageX - carousel.offsetLeft;
-            const walk = (x - startX) * 2;
-            currentTranslate = scrollLeft + walk;
-        });
-        
-        // Touch events for mobile
-        carousel.addEventListener('touchstart', (e) => {
-            isDragging = true;
-            startX = e.touches[0].pageX - carousel.offsetLeft;
-            scrollLeft = currentTranslate;
-        });
-        
-        carousel.addEventListener('touchend', () => {
-            isDragging = false;
-        });
-        
-        carousel.addEventListener('touchmove', (e) => {
-            if (!isDragging) return;
-            const x = e.touches[0].pageX - carousel.offsetLeft;
-            const walk = (x - startX) * 2;
-            currentTranslate = scrollLeft + walk;
-        });
-        
-        // Prevent click on links when dragging
-        carousel.addEventListener('click', (e) => {
-            if (Math.abs(currentTranslate - scrollLeft) > 5) {
-                e.preventDefault();
-            }
-        }, true);
     </script>
-</body>
-</html>
+        //
