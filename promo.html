@@ -1,4 +1,4 @@
-444<!DOCTYPE html>
+555<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -451,12 +451,18 @@
         let lastTime = Date.now();
         let isUserScrolling = false;
         let scrollTimeout;
+        let isProgrammaticScroll = false;
         
-        // Base speed: pixels per second
-        const baseSpeed = 50;
+        // Base speed: pixels per second (increased from 50)
+        const baseSpeed = 80;
         
         // Track user scrolling
         carousel.addEventListener('scroll', () => {
+            // Ignore scroll events triggered by our own code
+            if (isProgrammaticScroll) {
+                return;
+            }
+            
             isUserScrolling = true;
             
             // Sync auto scroll to current position when user scrolls
@@ -470,7 +476,7 @@
                 isUserScrolling = false;
                 // Re-sync when user stops
                 autoScrollOffset = carousel.scrollLeft;
-            }, 100);
+            }, 150);
         }, { passive: true });
         
         // Start automatic animation after initial delay
@@ -499,8 +505,13 @@
                         autoScrollOffset = autoScrollOffset % fullWidth;
                     }
                     
-                    // Apply the scroll
+                    // Apply the scroll with flag to prevent triggering scroll event
+                    isProgrammaticScroll = true;
                     carousel.scrollLeft = autoScrollOffset;
+                    // Reset flag after a brief moment
+                    setTimeout(() => {
+                        isProgrammaticScroll = false;
+                    }, 0);
                 }
                 
                 animationId = requestAnimationFrame(animate);
