@@ -1,4 +1,4 @@
-333<!DOCTYPE html>
+444<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -451,22 +451,16 @@
         let lastTime = Date.now();
         let isUserScrolling = false;
         let scrollTimeout;
-        let userScrollDelta = 0;
         
         // Base speed: pixels per second
         const baseSpeed = 50;
         
         // Track user scrolling
-        let lastScrollLeft = 0;
         carousel.addEventListener('scroll', () => {
-            const currentScroll = carousel.scrollLeft;
-            userScrollDelta = currentScroll - lastScrollLeft;
-            lastScrollLeft = currentScroll;
-            
             isUserScrolling = true;
             
             // Sync auto scroll to current position when user scrolls
-            autoScrollOffset = currentScroll;
+            autoScrollOffset = carousel.scrollLeft;
             
             // Clear existing timeout
             clearTimeout(scrollTimeout);
@@ -474,7 +468,8 @@
             // Set timeout to detect when user stops scrolling
             scrollTimeout = setTimeout(() => {
                 isUserScrolling = false;
-                userScrollDelta = 0;
+                // Re-sync when user stops
+                autoScrollOffset = carousel.scrollLeft;
             }, 100);
         }, { passive: true });
         
@@ -494,32 +489,18 @@
                 const gap = parseFloat(getComputedStyle(track).gap);
                 const fullWidth = contentWidth + gap;
                 
-                // Always increment the auto scroll offset
-                autoScrollOffset += baseSpeed * deltaTime;
-                
-                // Apply scrolling only when user is not actively scrolling
+                // Only auto-scroll when user is not scrolling
                 if (!isUserScrolling) {
+                    // Increment the auto scroll offset
+                    autoScrollOffset += baseSpeed * deltaTime;
+                    
+                    // Reset position when scrolled past one full content width (infinite loop)
+                    if (autoScrollOffset >= fullWidth) {
+                        autoScrollOffset = autoScrollOffset % fullWidth;
+                    }
+                    
+                    // Apply the scroll
                     carousel.scrollLeft = autoScrollOffset;
-                    lastScrollLeft = autoScrollOffset;
-                }
-                
-                // Reset position when scrolled past one full content width (infinite loop)
-                if (autoScrollOffset >= fullWidth) {
-                    const overflow = autoScrollOffset % fullWidth;
-                    autoScrollOffset = overflow;
-                    if (!isUserScrolling) {
-                        carousel.scrollLeft = overflow;
-                        lastScrollLeft = overflow;
-                    }
-                }
-                
-                // Handle reverse scrolling loop
-                if (autoScrollOffset < 0) {
-                    autoScrollOffset = fullWidth + (autoScrollOffset % fullWidth);
-                    if (!isUserScrolling) {
-                        carousel.scrollLeft = autoScrollOffset;
-                        lastScrollLeft = autoScrollOffset;
-                    }
                 }
                 
                 animationId = requestAnimationFrame(animate);
