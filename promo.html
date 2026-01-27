@@ -1,4 +1,4 @@
-222<!DOCTYPE html>
+333<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -431,7 +431,7 @@
                 <div class="separator-line"></div>
 
                 <div class="contact-email">
-                    <a href="/cdn-cgi/l/email-protection#e5868a8b91848691a58884978c848b8a938c868dcb868a88"><span class="__cf_email__" data-cfemail="690a06071d080a1d2904081b000807061f000a01470a0604">[email&#160;protected]</span></a>
+                    <a href="mailto:contact@marianovich.com">contact@marianovich.com</a>
                 </div>
 
                 <div class="disclaimer">
@@ -441,30 +441,32 @@
         </main>
     </div>
 
-    <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+    <script>
         // Carousel scroll functionality
         const carousel = document.getElementById('gemstones');
         const track = document.getElementById('gemstonesTrack');
         
-        let scrollOffset = 0;
+        let autoScrollOffset = 0;
         let animationId;
         let lastTime = Date.now();
         let isUserScrolling = false;
         let scrollTimeout;
+        let userScrollDelta = 0;
         
         // Base speed: pixels per second
         const baseSpeed = 50;
         
         // Track user scrolling
+        let lastScrollLeft = 0;
         carousel.addEventListener('scroll', () => {
-            if (!isUserScrolling) {
-                // User just started scrolling
-                scrollOffset = carousel.scrollLeft;
-            }
+            const currentScroll = carousel.scrollLeft;
+            userScrollDelta = currentScroll - lastScrollLeft;
+            lastScrollLeft = currentScroll;
+            
             isUserScrolling = true;
             
-            // Update scroll offset to match user scroll
-            scrollOffset = carousel.scrollLeft;
+            // Sync auto scroll to current position when user scrolls
+            autoScrollOffset = currentScroll;
             
             // Clear existing timeout
             clearTimeout(scrollTimeout);
@@ -472,7 +474,8 @@
             // Set timeout to detect when user stops scrolling
             scrollTimeout = setTimeout(() => {
                 isUserScrolling = false;
-            }, 150);
+                userScrollDelta = 0;
+            }, 100);
         }, { passive: true });
         
         // Start automatic animation after initial delay
@@ -486,21 +489,37 @@
                 const deltaTime = (now - lastTime) / 1000; // Convert to seconds
                 lastTime = now;
                 
-                // Always increment the scroll offset (automatic movement)
-                if (!isUserScrolling) {
-                    scrollOffset += baseSpeed * deltaTime;
-                    carousel.scrollLeft = scrollOffset;
-                }
-                
                 // Get the width of one content set
                 const contentWidth = track.querySelector('.gemstones-content').offsetWidth;
                 const gap = parseFloat(getComputedStyle(track).gap);
                 const fullWidth = contentWidth + gap;
                 
-                // Reset position when scrolled past halfway point (infinite loop)
-                if (scrollOffset >= fullWidth) {
-                    scrollOffset = scrollOffset % fullWidth;
-                    carousel.scrollLeft = scrollOffset;
+                // Always increment the auto scroll offset
+                autoScrollOffset += baseSpeed * deltaTime;
+                
+                // Apply scrolling only when user is not actively scrolling
+                if (!isUserScrolling) {
+                    carousel.scrollLeft = autoScrollOffset;
+                    lastScrollLeft = autoScrollOffset;
+                }
+                
+                // Reset position when scrolled past one full content width (infinite loop)
+                if (autoScrollOffset >= fullWidth) {
+                    const overflow = autoScrollOffset % fullWidth;
+                    autoScrollOffset = overflow;
+                    if (!isUserScrolling) {
+                        carousel.scrollLeft = overflow;
+                        lastScrollLeft = overflow;
+                    }
+                }
+                
+                // Handle reverse scrolling loop
+                if (autoScrollOffset < 0) {
+                    autoScrollOffset = fullWidth + (autoScrollOffset % fullWidth);
+                    if (!isUserScrolling) {
+                        carousel.scrollLeft = autoScrollOffset;
+                        lastScrollLeft = autoScrollOffset;
+                    }
                 }
                 
                 animationId = requestAnimationFrame(animate);
@@ -509,4 +528,3 @@
             animationId = requestAnimationFrame(animate);
         }
     </script>
-        //
