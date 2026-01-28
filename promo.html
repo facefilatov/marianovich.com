@@ -1,4 +1,4 @@
-444<!DOCTYPE html>
+5<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -493,11 +493,17 @@
             isTouchScrolling = false;
         }, { passive: true });
         
-        // Start animation after the same delay as before (for social icons)
+        // Make carousel visible and set initial position, THEN start animation
         setTimeout(() => {
-            lastTime = Date.now();
-            gemstonesWrapper.style.opacity = '1'; // Make visible when animation starts
-            startAnimation();
+            // Set initial position
+            track.style.transform = `translate3d(${currentTranslate}px, 0, 0)`;
+            // Make visible
+            gemstonesWrapper.style.opacity = '1';
+            // Small delay to ensure render, then start animation
+            requestAnimationFrame(() => {
+                lastTime = Date.now();
+                startAnimation();
+            });
         }, 740);
         
         function startAnimation() {
