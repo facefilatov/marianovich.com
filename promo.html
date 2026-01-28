@@ -1,4 +1,4 @@
-333<!DOCTYPE html>
+444<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -436,16 +436,16 @@
         const carousel = document.getElementById('gemstones');
         const track = document.getElementById('gemstonesTrack');
         
-        let currentTranslate = 200; // Track starts just off-screen to the right (200px)
+        let currentTranslate = 1500; // Track starts far off-screen to the right
         let animationId;
         let lastTime = Date.now();
         let userScrollDelta = 0;
         
         // Speed configuration
         const normalSpeed = 50; // Final carousel speed
-        const initialSpeed = 400; // Fast initial slide-in (reduced from 1200)
+        const initialSpeed = 800; // High initial slide-in speed
         let currentSpeed = initialSpeed;
-        const deceleration = 0.96; // Speed decay per frame
+        const deceleration = 0.94; // Speed decay per frame (slower decay for longer slide-in)
         
         const gemstonesWrapper = document.querySelector('.gemstones-wrapper');
         
@@ -498,7 +498,7 @@
             lastTime = Date.now();
             gemstonesWrapper.style.opacity = '1'; // Make visible when animation starts
             startAnimation();
-        }, 50);
+        }, 740);
         
         function startAnimation() {
             function animate() {
