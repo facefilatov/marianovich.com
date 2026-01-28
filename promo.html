@@ -1,4 +1,4 @@
-666<!DOCTYPE html>
+888<!DOCTYPE html>
 
 <html lang="en">
 <head>
@@ -210,7 +210,7 @@
         width: 100%;
         opacity: 0;
         transform: translateX(100%);
-        animation: slideIn 0.8s ease-out 0.74s forwards;
+        animation: slideIn 0.8s cubic-bezier(0.4, 0.0, 0.2, 1) 0.74s forwards;
     }
 
     .gemstones {
@@ -495,15 +495,12 @@
         isTouchScrolling = false;
     }, { passive: true });
     
-    // Start carousel when slideIn animation ends (more reliable than setTimeout)
-    carousel.parentElement.addEventListener('animationend', (e) => {
-        if (e.animationName === 'slideIn') {
-            lastTime = Date.now();
-            // Start with slight negative offset to begin movement immediately
-            currentTranslate = -5;
-            startAnimation();
-        }
-    }, { once: true });
+    // Start carousel right after slideIn completes to avoid position conflict
+    // slideIn: 0.74s delay + 0.8s duration = 1.54s completion
+    setTimeout(() => {
+        lastTime = Date.now();
+        startAnimation();
+    }, 1541); // 1ms after slideIn completes
     
     function startAnimation() {
         function animate() {
