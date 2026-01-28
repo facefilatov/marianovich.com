@@ -1,4 +1,4 @@
-555<!DOCTYPE html>
+666<!DOCTYPE html>
 
 <html lang="en">
 <head>
@@ -495,11 +495,15 @@
         isTouchScrolling = false;
     }, { passive: true });
     
-    // Start carousel exactly when slideIn completes
-    setTimeout(() => {
-        lastTime = Date.now();
-        startAnimation();
-    }, 1540);
+    // Start carousel when slideIn animation ends (more reliable than setTimeout)
+    carousel.parentElement.addEventListener('animationend', (e) => {
+        if (e.animationName === 'slideIn') {
+            lastTime = Date.now();
+            // Start with slight negative offset to begin movement immediately
+            currentTranslate = -5;
+            startAnimation();
+        }
+    }, { once: true });
     
     function startAnimation() {
         function animate() {
