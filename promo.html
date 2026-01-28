@@ -1,4 +1,4 @@
-444<!DOCTYPE html>
+76<!DOCTYPE html>
 
 <html lang="en">
 <head>
@@ -495,12 +495,13 @@
         isTouchScrolling = false;
     }, { passive: true });
     
-    // Start carousel right when slideIn completes
+    // Start carousel just before slideIn completes to prevent pause
     // slideIn: 0.74s delay + 0.95s duration = 1.69s completion
+    // Start at 1.66s (30ms before end) for seamless transition
     setTimeout(() => {
         lastTime = Date.now();
         startAnimation();
-    }, 1690);
+    }, 1660);
     
     function startAnimation() {
         function animate() {
