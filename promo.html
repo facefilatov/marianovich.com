@@ -1,4 +1,4 @@
-76<!DOCTYPE html>
+111<!DOCTYPE html>
 
 <html lang="en">
 <head>
@@ -210,7 +210,7 @@
         width: 100%;
         opacity: 0;
         transform: translateX(100%);
-        animation: slideIn 0.95s cubic-bezier(0.4, 0.0, 0.2, 1) 0.74s forwards;
+        animation: slideIn 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) 0.74s forwards;
     }
 
     .gemstones {
@@ -495,13 +495,12 @@
         isTouchScrolling = false;
     }, { passive: true });
     
-    // Start carousel just before slideIn completes to prevent pause
-    // slideIn: 0.74s delay + 0.95s duration = 1.69s completion
-    // Start at 1.66s (30ms before end) for seamless transition
+    // Start carousel 10ms before slideIn completes for seamless pickup
+    // slideIn: 0.74s delay + 0.8s duration = 1.54s completion
     setTimeout(() => {
         lastTime = Date.now();
         startAnimation();
-    }, 1660);
+    }, 1530);
     
     function startAnimation() {
         function animate() {
