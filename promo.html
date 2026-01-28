@@ -1,4 +1,4 @@
-888<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -423,7 +423,7 @@
                 <div class="separator-line"></div>
 
                 <div class="contact-email">
-                    <a href="/cdn-cgi/l/email-protection#32515d5c46535146725f53405b535c5d445b515a1c515d5f"><span class="__cf_email__" data-cfemail="3a5955544e5b594e7a575b48535b54554c53595214595557">[email&#160;protected]</span></a>
+                    <a href="/cdn-cgi/l/email-protection#bdded2d3c9dcdec9fdd0dccfd4dcd3d2cbd4ded593ded2d0"><span class="__cf_email__" data-cfemail="0e6d61607a6f6d7a4e636f7c676f606178676d66206d6163">[email&#160;protected]</span></a>
                 </div>
 
                 <div class="disclaimer">
@@ -491,7 +491,11 @@
         }, { passive: true });
         
         // Start automatic animation after initial delay (same as original)
+        // Delay increased to wait for slideIn animation (0.74s start + 0.8s duration = 1.54s)
         setTimeout(() => {
+            // Initialize position to 0 to ensure smooth start
+            currentTranslate = 0;
+            track.style.transform = `translate3d(0, 0, 0)`;
             startAnimation();
         }, 1540);
         
