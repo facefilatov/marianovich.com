@@ -1,4 +1,4 @@
-888<!DOCTYPE html>
+111<!DOCTYPE html>
 
 <html lang="en">
 <head>
@@ -208,7 +208,6 @@
 
     .gemstones-wrapper {
         width: 100%;
-        opacity: 0;
         transform: translateX(100%);
         animation: slideIn 0.8s cubic-bezier(0.4, 0.0, 0.2, 1) 0.74s forwards;
     }
@@ -303,7 +302,6 @@
 
     @keyframes slideIn {
         to {
-            opacity: 1;
             transform: translateX(0);
         }
     }
@@ -495,12 +493,14 @@
         isTouchScrolling = false;
     }, { passive: true });
     
-    // Start carousel right after slideIn completes to avoid position conflict
+    // Start carousel right when slideIn completes
     // slideIn: 0.74s delay + 0.8s duration = 1.54s completion
     setTimeout(() => {
         lastTime = Date.now();
+        // Pre-move by one frame worth to ensure immediate visible movement
+        currentTranslate = -(baseSpeed * 0.016); // ~0.8px (one 60fps frame)
         startAnimation();
-    }, 1541); // 1ms after slideIn completes
+    }, 1540);
     
     function startAnimation() {
         function animate() {
