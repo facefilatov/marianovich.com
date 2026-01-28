@@ -1,4 +1,4 @@
-111<!DOCTYPE html>
+222<!DOCTYPE html>
 
 <html lang="en">
 <head>
@@ -448,8 +448,10 @@
     let lastTime = Date.now();
     let userScrollDelta = 0;
     
-    // Base speed: pixels per second
+    // Speed with initial boost
     const baseSpeed = 50;
+    let currentSpeed = 150; // Start with 3x speed
+    const speedDecay = 0.95; // Quickly decay to normal speed
     
     // Capture wheel scroll events
     carousel.addEventListener('wheel', (e) => {
@@ -514,8 +516,13 @@
                 userScrollDelta = 0;
             }
             
-            // Apply automatic scrolling
-            currentTranslate -= baseSpeed * deltaTime;
+            // Decay speed from initial boost to normal speed
+            if (currentSpeed > baseSpeed) {
+                currentSpeed = Math.max(baseSpeed, currentSpeed * speedDecay);
+            }
+            
+            // Apply automatic scrolling with current speed
+            currentTranslate -= currentSpeed * deltaTime;
             
             // Get the width of one content set
             const contentWidth = track.querySelector('.gemstones-content').offsetWidth;
