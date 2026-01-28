@@ -1,4 +1,4 @@
-777<!DOCTYPE html>
+888<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -522,5 +522,12 @@
                 
                 // Apply transform with hardware acceleration
                 track.style.transform = `translate3d(${currentTranslate}px, 0, 0)`;
-
-            </script>
+                
+                animationId = requestAnimationFrame(animate);
+            }
+            
+            animationId = requestAnimationFrame(animate);
+        }
+    </script>
+</body>
+</html>
