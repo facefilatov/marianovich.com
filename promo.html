@@ -1,4 +1,4 @@
-222<!DOCTYPE html>
+444<!DOCTYPE html>
 
 <html lang="en">
 <head>
@@ -208,9 +208,9 @@
 
     .gemstones-wrapper {
         width: 100%;
-        opacity: 0;
+        opacity: 1;
         transform: translateX(100%);
-        animation: slideIn 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) 0.74s forwards;
+        will-change: transform;
     }
 
     .gemstones {
@@ -443,15 +443,19 @@
     const carousel = document.getElementById('gemstones');
     const track = document.getElementById('gemstonesTrack');
     
-    let currentTranslate = 0;
+    let currentTranslate = window.innerWidth; // Start off-screen to the right
+    let wrapperTranslate = 100; // Wrapper starts at 100% (off-screen right)
     let animationId;
     let lastTime = Date.now();
     let userScrollDelta = 0;
     
-    // Speed with initial boost
-    const baseSpeed = 50;
-    let currentSpeed = 150; // Start with 3x speed
-    const speedDecay = 0.95; // Quickly decay to normal speed
+    // Speed configuration
+    const normalSpeed = 50; // Final carousel speed
+    const initialSpeed = 1200; // Very fast initial slide-in
+    let currentSpeed = initialSpeed;
+    const deceleration = 0.96; // Speed decay per frame
+    
+    const gemstonesWrapper = document.querySelector('.gemstones-wrapper');
     
     // Capture wheel scroll events
     carousel.addEventListener('wheel', (e) => {
@@ -497,12 +501,11 @@
         isTouchScrolling = false;
     }, { passive: true });
     
-    // Start carousel 10ms before slideIn completes for seamless pickup
-    // slideIn: 0.74s delay + 0.8s duration = 1.54s completion
+    // Start animation after the same delay as before (for social icons)
     setTimeout(() => {
         lastTime = Date.now();
         startAnimation();
-    }, 1530);
+    }, 740);
     
     function startAnimation() {
         function animate() {
@@ -516,12 +519,24 @@
                 userScrollDelta = 0;
             }
             
-            // Decay speed from initial boost to normal speed
-            if (currentSpeed > baseSpeed) {
-                currentSpeed = Math.max(baseSpeed, currentSpeed * speedDecay);
+            // Decelerate from initial speed to normal speed
+            if (currentSpeed > normalSpeed) {
+                currentSpeed *= deceleration;
+                if (currentSpeed < normalSpeed) {
+                    currentSpeed = normalSpeed;
+                }
             }
             
-            // Apply automatic scrolling with current speed
+            // Slide wrapper in from right (only while wrapperTranslate > 0)
+            if (wrapperTranslate > 0) {
+                wrapperTranslate -= (currentSpeed / 10) * deltaTime; // Slide in at 1/10th carousel speed
+                if (wrapperTranslate < 0) {
+                    wrapperTranslate = 0;
+                }
+                gemstonesWrapper.style.transform = `translateX(${wrapperTranslate}%)`;
+            }
+            
+            // Apply scrolling with current speed
             currentTranslate -= currentSpeed * deltaTime;
             
             // Get the width of one content set
