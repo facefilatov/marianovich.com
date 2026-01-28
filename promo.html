@@ -1,4 +1,5 @@
-222<! DOCTYPE html>
+333
+<!DOCTYPE html>
 
 <html lang="en">
 <head>
@@ -210,7 +211,7 @@
         width: 100%;
         opacity: 0;
         transform: translateX(100%);
-        animation: slideIn 0.8s cubic-bezier(0.4, 0.0, 0.2, 1) 0.74s forwards;
+        animation: slideIn 1.2s cubic-bezier(0.4, 0.0, 0.6, 1) 0.74s forwards;
     }
 
     .gemstones {
@@ -495,16 +496,13 @@
         isTouchScrolling = false;
     }, { passive: true });
     
-    // Start carousel immediately when slideIn completes using event listener
-    const gemstonesWrapper = document.querySelector('.gemstones-wrapper');
-    gemstonesWrapper.addEventListener('animationend', () => {
+    // Start carousel before slideIn completes so they overlap smoothly
+    // slideIn: 0.74s delay + 1.2s duration = 1.94s completion
+    // Start at 1.7s so carousel begins while slideIn is finishing
+    setTimeout(() => {
         lastTime = Date.now();
-        // Apply first transform immediately
-        currentTranslate = -(baseSpeed * 0.016);
-        track.style.transform = `translate3d(${currentTranslate}px, 0, 0)`;
-        // Then start the animation loop
         startAnimation();
-    }, { once: true });
+    }, 1700);
     
     function startAnimation() {
         function animate() {
@@ -526,9 +524,13 @@
             const gap = parseFloat(getComputedStyle(track).gap);
             const fullWidth = contentWidth + gap;
             
-            // Reset position when scrolled past halfway point (same as original)
-            if (Math.abs(currentTranslate) >= fullWidth) {
+            // Reset position for infinite loop in both directions
+            if (currentTranslate <= -fullWidth) {
+                // Scrolling left (negative direction)
                 currentTranslate = currentTranslate % fullWidth;
+            } else if (currentTranslate >= 0) {
+                // Scrolling right (positive direction)
+                currentTranslate = currentTranslate - fullWidth;
             }
             
             // Apply transform with hardware acceleration
