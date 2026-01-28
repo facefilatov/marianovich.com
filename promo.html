@@ -1,4 +1,4 @@
-111<!DOCTYPE html>
+222<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -446,9 +446,6 @@
         // Base speed: pixels per second (same as original)
         const baseSpeed = 50;
         
-        // Set initial transform immediately to prevent visual jump
-        track.style.transform = `translate3d(0, 0, 0)`;
-        
         // Capture wheel scroll events
         carousel.addEventListener('wheel', (e) => {
             e.preventDefault();
@@ -496,6 +493,8 @@
         // Start automatic animation after initial delay (same as original)
         // Delay increased to wait for slideIn animation (0.74s start + 0.8s duration = 1.54s)
         setTimeout(() => {
+            // Reset lastTime to current time when animation actually starts
+            lastTime = Date.now();
             startAnimation();
         }, 1540);
         
