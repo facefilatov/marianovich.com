@@ -1,4 +1,4 @@
-666<!DOCTYPE html>
+777<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -423,7 +423,7 @@
                 <div class="separator-line"></div>
 
                 <div class="contact-email">
-                    <a href="mailto:contact@marianovich.com">contact@marianovich.com</a>
+                    <a href="/cdn-cgi/l/email-protection#32515d5c46535146725f53405b535c5d445b515a1c515d5f"><span class="__cf_email__" data-cfemail="3a5955544e5b594e7a575b48535b54554c53595214595557">[email&#160;protected]</span></a>
                 </div>
 
                 <div class="disclaimer">
@@ -433,7 +433,7 @@
         </main>
     </div>
 
-    <script>
+    <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
         // Carousel scroll functionality - using original transform-based animation
         const carousel = document.getElementById('gemstones');
         const track = document.getElementById('gemstonesTrack');
@@ -442,8 +442,6 @@
         let animationId;
         let lastTime = Date.now();
         let userScrollDelta = 0;
-        let isScrolling = false;
-        let scrollTimeout;
         
         // Base speed: pixels per second (same as original)
         const baseSpeed = 50;
@@ -452,35 +450,44 @@
         carousel.addEventListener('wheel', (e) => {
             e.preventDefault();
             userScrollDelta += e.deltaX || e.deltaY;
-            isScrolling = true;
-            
-            clearTimeout(scrollTimeout);
-            scrollTimeout = setTimeout(() => {
-                isScrolling = false;
-            }, 150);
         }, { passive: false });
         
-        // Touch scrolling support
+        // Touch scrolling support with vertical scroll prevention
         let touchStartX = 0;
-        let touchCurrentX = 0;
+        let touchStartY = 0;
+        let isTouchScrolling = false;
         
         carousel.addEventListener('touchstart', (e) => {
             touchStartX = e.touches[0].clientX;
-            isScrolling = true;
+            touchStartY = e.touches[0].clientY;
+            isTouchScrolling = false;
         }, { passive: true });
         
         carousel.addEventListener('touchmove', (e) => {
-            touchCurrentX = e.touches[0].clientX;
+            const touchCurrentX = e.touches[0].clientX;
+            const touchCurrentY = e.touches[0].clientY;
+            
+            const deltaX = Math.abs(touchCurrentX - touchStartX);
+            const deltaY = Math.abs(touchCurrentY - touchStartY);
+            
+            // Determine if this is a horizontal scroll
+            if (!isTouchScrolling) {
+                isTouchScrolling = true;
+                // If horizontal movement is greater than vertical, prevent vertical scroll
+                if (deltaX > deltaY) {
+                    e.preventDefault();
+                }
+            } else if (deltaX > deltaY) {
+                e.preventDefault();
+            }
+            
             const delta = touchStartX - touchCurrentX;
             userScrollDelta += delta;
             touchStartX = touchCurrentX;
-        }, { passive: true });
+        }, { passive: false });
         
         carousel.addEventListener('touchend', () => {
-            clearTimeout(scrollTimeout);
-            scrollTimeout = setTimeout(() => {
-                isScrolling = false;
-            }, 150);
+            isTouchScrolling = false;
         }, { passive: true });
         
         // Start automatic animation after initial delay (same as original)
@@ -494,8 +501,8 @@
                 const deltaTime = (now - lastTime) / 1000;
                 lastTime = now;
                 
-                // Apply user scroll delta
-                if (userScrollDelta !== 0) {
+                // Apply user scroll delta smoothly
+                if (Math.abs(userScrollDelta) > 0.01) {
                     currentTranslate -= userScrollDelta;
                     userScrollDelta = 0;
                 }
@@ -513,14 +520,7 @@
                     currentTranslate = currentTranslate % fullWidth;
                 }
                 
-                // Apply transform (same as original)
-                track.style.transform = `translateX(${currentTranslate}px)`;
-                
-                animationId = requestAnimationFrame(animate);
-            }
-            
-            animationId = requestAnimationFrame(animate);
-        }
-    </script>
-</body>
-</html>
+                // Apply transform with hardware acceleration
+                track.style.transform = `translate3d(${currentTranslate}px, 0, 0)`;
+
+            </script>
