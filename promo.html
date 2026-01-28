@@ -1,4 +1,4 @@
-555<!DOCTYPE html>
+666<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -213,16 +213,9 @@
 
         .gemstones {
             height: 200px;
-            overflow-x: auto;
-            overflow-y: hidden;
+            overflow: hidden;
             display: flex;
             align-items: center;
-            scrollbar-width: none;
-            -ms-overflow-style: none;
-        }
-
-        .gemstones::-webkit-scrollbar {
-            display: none;
         }
 
         .gemstones-track {
@@ -242,7 +235,6 @@
             height: clamp(100px, 15vw, 150px);
             object-fit: contain;
             display: block;
-            pointer-events: none;
         }
 
         .origins-section {
@@ -442,44 +434,56 @@
     </div>
 
     <script>
-        // Carousel scroll functionality
+        // Carousel scroll functionality - using original transform-based animation
         const carousel = document.getElementById('gemstones');
         const track = document.getElementById('gemstonesTrack');
         
-        let autoScrollOffset = 0;
+        let currentTranslate = 0;
         let animationId;
         let lastTime = Date.now();
-        let isUserScrolling = false;
+        let userScrollDelta = 0;
+        let isScrolling = false;
         let scrollTimeout;
-        let isProgrammaticScroll = false;
         
-        // Base speed: pixels per second (increased from 50)
-        const baseSpeed = 80;
+        // Base speed: pixels per second (same as original)
+        const baseSpeed = 50;
         
-        // Track user scrolling
-        carousel.addEventListener('scroll', () => {
-            // Ignore scroll events triggered by our own code
-            if (isProgrammaticScroll) {
-                return;
-            }
+        // Capture wheel scroll events
+        carousel.addEventListener('wheel', (e) => {
+            e.preventDefault();
+            userScrollDelta += e.deltaX || e.deltaY;
+            isScrolling = true;
             
-            isUserScrolling = true;
-            
-            // Sync auto scroll to current position when user scrolls
-            autoScrollOffset = carousel.scrollLeft;
-            
-            // Clear existing timeout
             clearTimeout(scrollTimeout);
-            
-            // Set timeout to detect when user stops scrolling
             scrollTimeout = setTimeout(() => {
-                isUserScrolling = false;
-                // Re-sync when user stops
-                autoScrollOffset = carousel.scrollLeft;
+                isScrolling = false;
+            }, 150);
+        }, { passive: false });
+        
+        // Touch scrolling support
+        let touchStartX = 0;
+        let touchCurrentX = 0;
+        
+        carousel.addEventListener('touchstart', (e) => {
+            touchStartX = e.touches[0].clientX;
+            isScrolling = true;
+        }, { passive: true });
+        
+        carousel.addEventListener('touchmove', (e) => {
+            touchCurrentX = e.touches[0].clientX;
+            const delta = touchStartX - touchCurrentX;
+            userScrollDelta += delta;
+            touchStartX = touchCurrentX;
+        }, { passive: true });
+        
+        carousel.addEventListener('touchend', () => {
+            clearTimeout(scrollTimeout);
+            scrollTimeout = setTimeout(() => {
+                isScrolling = false;
             }, 150);
         }, { passive: true });
         
-        // Start automatic animation after initial delay
+        // Start automatic animation after initial delay (same as original)
         setTimeout(() => {
             startAnimation();
         }, 1540);
@@ -487,32 +491,30 @@
         function startAnimation() {
             function animate() {
                 const now = Date.now();
-                const deltaTime = (now - lastTime) / 1000; // Convert to seconds
+                const deltaTime = (now - lastTime) / 1000;
                 lastTime = now;
+                
+                // Apply user scroll delta
+                if (userScrollDelta !== 0) {
+                    currentTranslate -= userScrollDelta;
+                    userScrollDelta = 0;
+                }
+                
+                // Apply automatic scrolling (always running, just like original)
+                currentTranslate -= baseSpeed * deltaTime;
                 
                 // Get the width of one content set
                 const contentWidth = track.querySelector('.gemstones-content').offsetWidth;
                 const gap = parseFloat(getComputedStyle(track).gap);
                 const fullWidth = contentWidth + gap;
                 
-                // Only auto-scroll when user is not scrolling
-                if (!isUserScrolling) {
-                    // Increment the auto scroll offset
-                    autoScrollOffset += baseSpeed * deltaTime;
-                    
-                    // Reset position when scrolled past one full content width (infinite loop)
-                    if (autoScrollOffset >= fullWidth) {
-                        autoScrollOffset = autoScrollOffset % fullWidth;
-                    }
-                    
-                    // Apply the scroll with flag to prevent triggering scroll event
-                    isProgrammaticScroll = true;
-                    carousel.scrollLeft = autoScrollOffset;
-                    // Reset flag after a brief moment
-                    setTimeout(() => {
-                        isProgrammaticScroll = false;
-                    }, 0);
+                // Reset position when scrolled past halfway point (same as original)
+                if (Math.abs(currentTranslate) >= fullWidth) {
+                    currentTranslate = currentTranslate % fullWidth;
                 }
+                
+                // Apply transform (same as original)
+                track.style.transform = `translateX(${currentTranslate}px)`;
                 
                 animationId = requestAnimationFrame(animate);
             }
@@ -520,3 +522,5 @@
             animationId = requestAnimationFrame(animate);
         }
     </script>
+</body>
+</html>
