@@ -1,4 +1,4 @@
-666<!DOCTYPE html>
+111<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -206,7 +206,7 @@
 
         .gemstones-wrapper {
             width: 100%;
-            opacity: 1;
+            opacity: 0;
         }
 
         .gemstones {
@@ -447,6 +447,8 @@
         let currentSpeed = initialSpeed;
         const deceleration = 0.96; // Speed decay per frame
         
+        const gemstonesWrapper = document.querySelector('.gemstones-wrapper');
+        
         // Capture wheel scroll events
         carousel.addEventListener('wheel', (e) => {
             e.preventDefault();
@@ -494,6 +496,7 @@
         // Start animation after the same delay as before (for social icons)
         setTimeout(() => {
             lastTime = Date.now();
+            gemstonesWrapper.style.opacity = '1'; // Make visible when animation starts
             startAnimation();
         }, 740);
         
