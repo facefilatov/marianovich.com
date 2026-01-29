@@ -1,4 +1,4 @@
-777<!DOCTYPE html>
+888<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -211,27 +211,35 @@
             animation: slideIn 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) 0.74s forwards;
         }
 
-        .gemstones {
-    height: 200px;
-    overflow-x: hidden; /* only horizontal */
-    overflow-y: hidden; /* prevent vertical scroll */
+.gemstones {
+    overflow: hidden;
     display: flex;
     align-items: center;
+    height: 200px;
 }
 
+.gemstones-track {
+    display: flex;
+    gap: clamp(30px, 10vw, 150px);
+    animation: scroll 20s linear infinite; /* infinite horizontal scroll */
+}
 
-  /*   .gemstones-track {
-            display: flex;
-            gap: clamp(30px, 10vw, 150px);
-            animation: scroll 36.67s linear 1.54s infinite;
-            will-change: transform;
-        }
-*/
-        .gemstones-content {
-            display: flex;
-            gap: clamp(30px, 10vw, 150px);
-            flex-shrink: 0;
-        }
+.gemstones-content {
+    display: flex;
+    gap: clamp(30px, 10vw, 150px);
+    flex-shrink: 0;
+}
+
+/* Keyframes for horizontal scroll */
+@keyframes scroll {
+    0% {
+        transform: translateX(0);
+    }
+    100% {
+        transform: translateX(-50%); /* assumes duplicated content */
+    }
+}
+
 
         .gemstone {
             width: clamp(100px, 15vw, 150px);
@@ -329,11 +337,7 @@
             }
         }
         
-        @keyframes scroll {
-            to {
-                transform: translateX(-50%);
-            }
-        }
+
     </style>
 </head>
 <body>
@@ -441,53 +445,7 @@
             </section>
         </main>
     </div>
-  <script>
-const container = document.querySelector('.gemstones');
-const track = document.querySelector('.gemstones-track');
-
-// Duplicate content for infinite scroll
-track.innerHTML += track.innerHTML;
-
-let scrollPos = 0;
-const speed = 0.5; // auto-scroll speed in px/frame
-
-// Mouse wheel horizontal scrolling
-container.addEventListener('wheel', (e) => {
-    e.preventDefault();
-    scrollPos += e.deltaY; // use deltaY for horizontal scroll
-});
-
-// Animation loop for infinite scroll
-function animate() {
-    scrollPos += speed;
-
-    // Wrap around for infinite effect
-    if (scrollPos >= track.scrollWidth / 2) {
-        scrollPos = 0;
-    } else if (scrollPos < 0) {
-        scrollPos = track.scrollWidth / 2;
-    }
-
-    container.scrollLeft = scrollPos;
-    requestAnimationFrame(animate);
-}
-
-requestAnimationFrame(animate);
-
-// Touch support
-let touchStartX = 0;
-let scrollStartX = 0;
-
-container.addEventListener('touchstart', (e) => {
-    touchStartX = e.touches[0].pageX;
-    scrollStartX = scrollPos;
-});
-
-container.addEventListener('touchmove', (e) => {
-    const touchX = e.touches[0].pageX;
-    scrollPos = scrollStartX - (touchX - touchStartX);
-});
-</script>
+  
 
 
 
