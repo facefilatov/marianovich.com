@@ -1,4 +1,4 @@
-8<!DOCTYPE html>
+9<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -206,6 +206,8 @@
 
         .gemstones-wrapper {
             width: 100%;
+            opacity: 0;
+            transition: opacity 0.1s;
         }
 
         .gemstones {
@@ -444,19 +446,34 @@
         const carousel = document.getElementById('gemstones');
         const track = document.getElementById('gemstonesTrack');
         
-        let currentTranslate = window.innerWidth; // Start off-screen right
+        // Animation variables
+        let currentTranslate = 2000; // Start FAR off-screen to the right (in pixels)
         let animationId;
-        let lastTime = Date.now();
+        let lastTime;
         let userScrollDelta = 0;
+        let isAnimating = false;
         
-        const normalSpeed = 50;
-        const initialSpeed = 600;
-        let currentSpeed = initialSpeed;
-        const targetPosition = -window.innerWidth * 0.2; // Stop decelerating at -20vw
+        // Speed configuration
+        const normalSpeed = 50; // Target constant speed in px/s
+        const initialSpeed = 800; // Starting speed in px/s
         
-        // Start animation at 740ms
+        // Calculate where first stone should be at 20% from left
+        const viewportWidth = window.innerWidth;
+        const targetPosition = -(viewportWidth * 0.2); // -20% of viewport width
+        
+        const gemstonesWrapper = document.querySelector('.gemstones-wrapper');
+        
+        // Start at 740ms (after social icons)
         setTimeout(() => {
+            // Make wrapper visible
+            gemstonesWrapper.style.opacity = '1';
+            
+            // Set initial position off-screen
+            track.style.transform = `translate3d(${currentTranslate}px, 0, 0)`;
+            
+            // Start animation
             lastTime = Date.now();
+            isAnimating = true;
             startAnimation();
         }, 740);
         
@@ -505,6 +522,8 @@
         
         function startAnimation() {
             function animate() {
+                if (!isAnimating) return;
+                
                 const now = Date.now();
                 const deltaTime = (now - lastTime) / 1000;
                 lastTime = now;
@@ -515,25 +534,26 @@
                     userScrollDelta = 0;
                 }
                 
-                // Decelerate until reaching target position
+                // Calculate current speed based on position
+                let currentSpeed;
+                
                 if (currentTranslate > targetPosition) {
-                    // Still sliding in - use high speed and decelerate
-                    currentTranslate -= currentSpeed * deltaTime;
+                    // Still in slide-in phase - decelerate from initialSpeed to normalSpeed
+                    // Calculate progress from start (2000) to target (targetPosition)
+                    const totalDistance = 2000 - targetPosition;
+                    const remainingDistance = currentTranslate - targetPosition;
+                    const progress = 1 - (remainingDistance / totalDistance); // 0 to 1
                     
-                    // Decelerate as we approach target
-                    const distanceToTarget = currentTranslate - targetPosition;
-                    const decelerationFactor = Math.min(1, distanceToTarget / window.innerWidth);
-                    currentSpeed = normalSpeed + (initialSpeed - normalSpeed) * decelerationFactor;
-                    
-                    // Clamp to target if we overshoot
-                    if (currentTranslate < targetPosition) {
-                        currentTranslate = targetPosition;
-                        currentSpeed = normalSpeed;
-                    }
+                    // Ease-out deceleration: fast at start, slow at end
+                    const easeProgress = 1 - Math.pow(1 - progress, 3); // cubic ease-out
+                    currentSpeed = initialSpeed - (initialSpeed - normalSpeed) * easeProgress;
                 } else {
-                    // Past target - constant normal speed
-                    currentTranslate -= normalSpeed * deltaTime;
+                    // Past target - constant speed
+                    currentSpeed = normalSpeed;
                 }
+                
+                // Move the track
+                currentTranslate -= currentSpeed * deltaTime;
                 
                 // Get the width of one content set
                 const contentWidth = track.querySelector('.gemstones-content').offsetWidth;
