@@ -1,4 +1,4 @@
-444<!DOCTYPE html>
+555<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -206,6 +206,9 @@
 
         .gemstones-wrapper {
             width: 100%;
+            opacity: 0;
+            transform: translateX(100%);
+            animation: slideIn 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) 0.74s forwards;
         }
 
         .gemstones {
@@ -218,6 +221,7 @@
         .gemstones-track {
             display: flex;
             gap: clamp(30px, 10vw, 150px);
+            animation: scroll 36.67s linear 1.54s infinite;
             will-change: transform;
         }
 
@@ -302,15 +306,6 @@
                 transform: translateX(0);
             }
         }
-        
-        @keyframes carouselSlideIn {
-            0% {
-                transform: translateX(100vw);
-            }
-            100% {
-                transform: translateX(-20vw);
-            }
-        }
 
         @keyframes slideInSocial {
             0% {
@@ -329,6 +324,12 @@
         @keyframes fadeIn {
             to {
                 opacity: 1;
+            }
+        }
+        
+        @keyframes scroll {
+            to {
+                transform: translateX(-50%);
             }
         }
     </style>
@@ -359,8 +360,8 @@
             </div>
 
             <div class="gemstones-wrapper">
-                <div class="gemstones" id="gemstones">
-                    <div class="gemstones-track" id="gemstonesTrack">
+                <div class="gemstones">
+                    <div class="gemstones-track">
                         <div class="gemstones-content">
                             <a href="https://www.etsy.com/shop/marianovich?search_query=demantoid" target="_blank" rel="noopener noreferrer">
                                 <img class="gemstone" src="https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Demantoid.webp" alt="Demantoid Garnet" width="150" height="150">
@@ -429,7 +430,7 @@
                 <div class="separator-line"></div>
 
                 <div class="contact-email">
-                    <a href="/cdn-cgi/l/email-protection#89eae6e7fde8eafdc9e4e8fbe0e8e7e6ffe0eae1a7eae6e4"><span class="__cf_email__" data-cfemail="9cfff3f2e8fdffe8dcf1fdeef5fdf2f3eaf5fff4b2fff3f1">[email&#160;protected]</span></a>
+                    <a href="mailto:contact@marianovich.com">contact@marianovich.com</a>
                 </div>
 
                 <div class="disclaimer">
@@ -438,144 +439,28 @@
             </section>
         </main>
     </div>
+    <script>
+const gemstones = document.querySelector('.gemstones');
 
-    <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
-        // Carousel scroll functionality - using original transform-based animation
-        const carousel = document.getElementById('gemstones');
-        const track = document.getElementById('gemstonesTrack');
-        
-        // Animation variables
-        const carousel = document.getElementById('gemstones');
-        let currentTranslate = window.innerWidth + 300; // Start well off-screen right
-        let animationId;
-        let lastTime;
-        let userScrollDelta = 0;
-        let isAnimating = false;
-        let hasCompletedFirstPass = false;
-        let currentSpeed = 1200; // HIGH initial speed for visible deceleration
-        
-        // Speed configuration
-        const normalSpeed = 50;
-        const deceleration = 0.94; // Geometric deceleration factor
-        
-        // Target: first stone at 2vw from left edge
-        const viewportWidth = window.innerWidth;
-        const targetPosition = -(viewportWidth * 0.02);
-        
-        // Start at 740ms
-        setTimeout(() => {
-            track.style.transform = `translate3d(${currentTranslate}px, 0, 0)`;
-            lastTime = Date.now();
-            isAnimating = true;
-            startAnimation();
-        }, 740);
-        
-        // Capture wheel scroll events
-        carousel.addEventListener('wheel', (e) => {
-            e.preventDefault();
-            userScrollDelta += e.deltaX || e.deltaY;
-        }, { passive: false });
-        
-        // Touch scrolling support with vertical scroll prevention
-        let touchStartX = 0;
-        let touchStartY = 0;
-        let isTouchScrolling = false;
-        
-        carousel.addEventListener('touchstart', (e) => {
-            touchStartX = e.touches[0].clientX;
-            touchStartY = e.touches[0].clientY;
-            isTouchScrolling = false;
-        }, { passive: true });
-        
-        carousel.addEventListener('touchmove', (e) => {
-            const touchCurrentX = e.touches[0].clientX;
-            const touchCurrentY = e.touches[0].clientY;
-            
-            const deltaX = Math.abs(touchCurrentX - touchStartX);
-            const deltaY = Math.abs(touchCurrentY - touchStartY);
-            
-            // Determine if this is a horizontal scroll
-            if (!isTouchScrolling) {
-                isTouchScrolling = true;
-                if (deltaX > deltaY) {
-                    e.preventDefault();
-                }
-            } else if (deltaX > deltaY) {
-                e.preventDefault();
-            }
-            
-            const delta = touchStartX - touchCurrentX;
-            userScrollDelta += delta;
-            touchStartX = touchCurrentX;
-        }, { passive: false });
-        
-        carousel.addEventListener('touchend', () => {
-            isTouchScrolling = false;
-        }, { passive: true });
-        
-        function startAnimation() {
-            function animate() {
-                if (!isAnimating) return;
-                
-                const now = Date.now();
-                const deltaTime = (now - lastTime) / 1000;
-                lastTime = now;
-                
-                // Apply user scroll delta - ALWAYS allow right scroll, left only after first pass
-                if (Math.abs(userScrollDelta) > 0.01) {
-                    if (userScrollDelta < 0 || hasCompletedFirstPass) {
-                        // Scrolling right (negative delta) OR left after first pass
-                        currentTranslate -= userScrollDelta;
-                    }
-                    userScrollDelta = 0;
-                }
-                
-                // Geometric deceleration until reaching target
-                if (currentTranslate > targetPosition) {
-                    // Still decelerating - multiply by deceleration factor
-                    if (currentSpeed > normalSpeed) {
-                        currentSpeed *= deceleration;
-                        if (currentSpeed < normalSpeed) {
-                            currentSpeed = normalSpeed;
-                        }
-                    }
-                } else {
-                    // Past target - lock to normal speed
-                    currentSpeed = normalSpeed;
-                }
-                
-                // Move the track
-                currentTranslate -= currentSpeed * deltaTime;
-                
-                // Get the width of one content set
-                const contentWidth = track.querySelector('.gemstones-content').offsetWidth;
-                const gap = parseFloat(getComputedStyle(track).gap);
-                const fullWidth = contentWidth + gap;
-                
-                // Check if carousel has completed first pass (scrolled past left edge)
-                if (!hasCompletedFirstPass && currentTranslate <= -fullWidth) {
-                    hasCompletedFirstPass = true;
-                }
-                
-                // Reset position for infinite loop (only after first pass is complete)
-                if (hasCompletedFirstPass) {
-                    if (currentTranslate <= -fullWidth) {
-                        // Scrolling left (negative direction) - loop
-                        currentTranslate = currentTranslate % fullWidth;
-                    } else if (currentTranslate >= 0) {
-                        // Scrolling right (positive direction) - loop
-                        currentTranslate = currentTranslate - fullWidth;
-                    }
-                }
-                
-                // Apply transform with hardware acceleration
-                track.style.transform = `translate3d(${currentTranslate}px, 0, 0)`;
-                
-                animationId = requestAnimationFrame(animate);
-            }
-            
-            animationId = requestAnimationFrame(animate);
-        }
-    </script>
+gemstones.addEventListener('wheel', (e) => {
+    e.preventDefault(); // prevent vertical scroll
+    gemstones.scrollLeft += e.deltaY; // scroll horizontally
+});
+
+// Touch swipe
+let touchStartX = 0;
+let scrollStartX = 0;
+
+gemstones.addEventListener('touchstart', (e) => {
+    touchStartX = e.touches[0].pageX;
+    scrollStartX = gemstones.scrollLeft;
+});
+
+gemstones.addEventListener('touchmove', (e) => {
+    const touchX = e.touches[0].pageX;
+    gemstones.scrollLeft = scrollStartX - (touchX - touchStartX);
+});
+</script>
+
 </body>
 </html>
