@@ -1,4 +1,4 @@
-444<!DOCTYPE html>
+555<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -219,7 +219,6 @@
             align-items: center;
             scrollbar-width: none;
             -ms-overflow-style: none;
-            scroll-behavior: smooth;
         }
 
         .gemstones::-webkit-scrollbar {
@@ -483,36 +482,43 @@
             const firstSet = track.querySelector('.gemstones-content');
             const setWidth = firstSet.offsetWidth;
             
-            // Start at the middle set (second set)
+            // Start at the middle set (second set) - allows scrolling left immediately
             carousel.scrollLeft = setWidth;
             
-            // Infinite scroll - reset position when reaching edges
-            let isAdjusting = false;
+            // Infinite scroll - seamlessly loop without interrupting
+            let lastScroll = carousel.scrollLeft;
+            let isRepositioning = false;
+            
             carousel.addEventListener('scroll', () => {
-                if (isAdjusting) return;
+                if (isRepositioning) return;
                 
                 const currentScroll = carousel.scrollLeft;
-                const maxScroll = carousel.scrollWidth - carousel.clientWidth;
+                const scrollWidth = carousel.scrollWidth;
+                const clientWidth = carousel.clientWidth;
                 
-                // If scrolled near the end, jump back to middle
-                if (currentScroll >= setWidth * 2 - 100) {
-                    isAdjusting = true;
-                    carousel.scrollLeft = setWidth;
-                    setTimeout(() => { isAdjusting = false; }, 50);
+                // If scrolled to the very end, jump to beginning + offset
+                if (currentScroll >= scrollWidth - clientWidth - 10) {
+                    isRepositioning = true;
+                    carousel.scrollLeft = setWidth + (currentScroll - (setWidth * 2));
+                    requestAnimationFrame(() => { isRepositioning = false; });
                 }
-                // If scrolled near the beginning, jump forward to middle
-                else if (currentScroll <= 100) {
-                    isAdjusting = true;
-                    carousel.scrollLeft = setWidth;
-                    setTimeout(() => { isAdjusting = false; }, 50);
+                // If scrolled to the very beginning, jump to middle + offset  
+                else if (currentScroll <= 10) {
+                    isRepositioning = true;
+                    carousel.scrollLeft = setWidth + currentScroll;
+                    requestAnimationFrame(() => { isRepositioning = false; });
                 }
-            });
+                
+                lastScroll = currentScroll;
+            }, { passive: true });
         });
         
-        // Enable horizontal wheel scrolling (animation continues)
+        // Enable both vertical AND horizontal wheel scrolling
         carousel.addEventListener('wheel', (e) => {
             e.preventDefault();
-            carousel.scrollLeft += e.deltaY;
+            // Use deltaY (vertical scroll) OR deltaX (horizontal scroll)
+            const delta = Math.abs(e.deltaX) > Math.abs(e.deltaY) ? e.deltaX : e.deltaY;
+            carousel.scrollLeft += delta;
         }, { passive: false });
     </script>
 </body>
