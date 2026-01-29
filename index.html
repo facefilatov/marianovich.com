@@ -213,15 +213,21 @@
 
         .gemstones {
             height: 200px;
-            overflow: hidden;
+            overflow-x: auto;
+            overflow-y: hidden;
             display: flex;
             align-items: center;
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+        }
+
+        .gemstones::-webkit-scrollbar {
+            display: none;
         }
 
         .gemstones-track {
             display: flex;
             gap: clamp(30px, 10vw, 150px);
-            animation: scroll 36.67s linear 1.54s infinite;
             will-change: transform;
         }
 
@@ -326,12 +332,6 @@
                 opacity: 1;
             }
         }
-        
-        @keyframes scroll {
-            to {
-                transform: translateX(-50%);
-            }
-        }
     </style>
 </head>
 <body>
@@ -360,8 +360,9 @@
             </div>
 
             <div class="gemstones-wrapper">
-                <div class="gemstones">
-                    <div class="gemstones-track">
+                <div class="gemstones" id="gemstones">
+                    <div class="gemstones-track" id="gemstonesTrack">
+                        <!-- First set (for scrolling left) -->
                         <div class="gemstones-content">
                             <a href="https://www.etsy.com/shop/marianovich?search_query=demantoid" target="_blank" rel="noopener noreferrer">
                                 <img class="gemstone" src="https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Demantoid.webp" alt="Demantoid Garnet" width="150" height="150">
@@ -382,6 +383,28 @@
                                 <img class="gemstone" src="https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Emerald.webp" alt="Emerald" width="150" height="150">
                             </a>
                         </div>
+                        <!-- Second set (main view) -->
+                        <div class="gemstones-content">
+                            <a href="https://www.etsy.com/shop/marianovich?search_query=demantoid" target="_blank" rel="noopener noreferrer">
+                                <img class="gemstone" src="https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Demantoid.webp" alt="Demantoid Garnet" width="150" height="150">
+                            </a>
+                            <a href="https://www.etsy.com/shop/marianovich?search_query=sapphire" target="_blank" rel="noopener noreferrer">
+                                <img class="gemstone" src="https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Sapphire.webp" alt="Natural Sapphire" width="150" height="150">
+                            </a>
+                            <a href="https://www.etsy.com/shop/marianovich?search_query=aquamarine" target="_blank" rel="noopener noreferrer">
+                                <img class="gemstone" src="https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Aquamarine.webp" alt="Aquamarine" width="150" height="150">
+                            </a>
+                            <a href="https://www.etsy.com/shop/marianovich?search_query=heliodor" target="_blank" rel="noopener noreferrer">
+                                <img class="gemstone" src="https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Heliodor.webp" alt="Heliodor" width="150" height="150">
+                            </a>
+                            <a href="https://www.etsy.com/shop/marianovich?search_query=alexandrite" target="_blank" rel="noopener noreferrer">
+                                <img class="gemstone" src="https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Alexandrite.webp" alt="Alexandrite" width="150" height="150">
+                            </a>
+                            <a href="https://www.etsy.com/shop/marianovich?search_query=emerald" target="_blank" rel="noopener noreferrer">
+                                <img class="gemstone" src="https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Emerald.webp" alt="Emerald" width="150" height="150">
+                            </a>
+                        </div>
+                        <!-- Third set (for scrolling right) -->
                         <div class="gemstones-content">
                             <a href="https://www.etsy.com/shop/marianovich?search_query=demantoid" target="_blank" rel="noopener noreferrer">
                                 <img class="gemstone" src="https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Demantoid.webp" alt="Demantoid Garnet" width="150" height="150">
@@ -439,5 +462,104 @@
             </section>
         </main>
     </div>
+
+    <script>
+        const carousel = document.getElementById('gemstones');
+        const track = document.getElementById('gemstonesTrack');
+        
+        let autoScrollSpeed = 1.2; // pixels per frame (matches ~36.67s for full carousel)
+        let isUserScrolling = false;
+        let userScrollTimeout;
+        let animationFrame;
+        
+        // Initialize immediately when DOM is ready
+        function initCarousel() {
+            const firstSet = track.querySelector('.gemstones-content');
+            if (!firstSet) {
+                // Try again if elements aren't ready
+                setTimeout(initCarousel, 100);
+                return;
+            }
+            
+            const setWidth = firstSet.offsetWidth;
+            
+            // Start at the middle set (second set) - allows scrolling left immediately
+            carousel.scrollLeft = setWidth;
+            
+            // Auto-scroll animation
+            function autoScroll() {
+                if (!isUserScrolling) {
+                    carousel.scrollLeft += autoScrollSpeed;
+                }
+                
+                // Check for infinite loop reset
+                const currentScroll = carousel.scrollLeft;
+                const scrollWidth = carousel.scrollWidth;
+                const clientWidth = carousel.clientWidth;
+                
+                // Seamless loop: when reaching end of second set, jump to start of second set
+                if (currentScroll >= setWidth * 2) {
+                    carousel.scrollLeft = setWidth;
+                }
+                // When reaching start of first set, jump to start of second set
+                else if (currentScroll <= 0) {
+                    carousel.scrollLeft = setWidth;
+                }
+                
+                animationFrame = requestAnimationFrame(autoScroll);
+            }
+            
+            // Start auto-scroll after initial delay (1.54s to match original)
+            setTimeout(() => {
+                autoScroll();
+            }, 1540);
+        }
+        
+        // Start when DOM is ready
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', initCarousel);
+        } else {
+            initCarousel();
+        }
+        
+        // Enable both vertical AND horizontal wheel scrolling
+        carousel.addEventListener('wheel', (e) => {
+            e.preventDefault();
+            
+            // Pause auto-scroll temporarily when user scrolls
+            isUserScrolling = true;
+            clearTimeout(userScrollTimeout);
+            userScrollTimeout = setTimeout(() => {
+                isUserScrolling = false;
+            }, 150); // Resume auto-scroll 150ms after user stops
+            
+            // Use deltaY (vertical scroll) OR deltaX (horizontal scroll)
+            const delta = Math.abs(e.deltaX) > Math.abs(e.deltaY) ? e.deltaX : e.deltaY;
+            carousel.scrollLeft += delta;
+        }, { passive: false });
+        
+        // Also detect touch/mouse scrolling
+        carousel.addEventListener('touchstart', () => {
+            isUserScrolling = true;
+        });
+        
+        carousel.addEventListener('touchend', () => {
+            clearTimeout(userScrollTimeout);
+            userScrollTimeout = setTimeout(() => {
+                isUserScrolling = false;
+            }, 150);
+        });
+        
+        carousel.addEventListener('mousedown', () => {
+            isUserScrolling = true;
+        });
+        
+        carousel.addEventListener('mouseup', () => {
+            clearTimeout(userScrollTimeout);
+            userScrollTimeout = setTimeout(() => {
+                isUserScrolling = false;
+            }, 150);
+        });
+    </script>
 </body>
 </html>
