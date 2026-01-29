@@ -1,4 +1,4 @@
-7<!DOCTYPE html>
+8<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -219,7 +219,6 @@
             display: flex;
             gap: clamp(30px, 10vw, 150px);
             will-change: transform;
-            animation: carouselSlideIn 0.8s cubic-bezier(0.25, 0.1, 0.25, 1) 0.74s forwards;
         }
 
         .gemstones-content {
@@ -445,30 +444,21 @@
         const carousel = document.getElementById('gemstones');
         const track = document.getElementById('gemstonesTrack');
         
-        let currentTranslate = 0;
+        let currentTranslate = window.innerWidth; // Start off-screen right
         let animationId;
         let lastTime = Date.now();
         let userScrollDelta = 0;
-        let animationStarted = false;
         
-        const baseSpeed = 50;
+        const normalSpeed = 50;
+        const initialSpeed = 600;
+        let currentSpeed = initialSpeed;
+        const targetPosition = -window.innerWidth * 0.2; // Stop decelerating at -20vw
         
-        // Listen for when CSS slide-in animation completes
-        track.addEventListener('animationend', (e) => {
-            if (e.animationName === 'carouselSlideIn' && !animationStarted) {
-                animationStarted = true;
-                // Get current position from CSS animation end state
-                const computedStyle = window.getComputedStyle(track);
-                const matrix = new DOMParser().parseFromString(
-                    computedStyle.transform, 'text/html'
-                ).documentElement.textContent;
-                
-                // Start from -20vw (where CSS animation ended)
-                currentTranslate = -window.innerWidth * 0.2;
-                lastTime = Date.now();
-                startAnimation();
-            }
-        });
+        // Start animation at 740ms
+        setTimeout(() => {
+            lastTime = Date.now();
+            startAnimation();
+        }, 740);
         
         // Capture wheel scroll events
         carousel.addEventListener('wheel', (e) => {
@@ -525,8 +515,25 @@
                     userScrollDelta = 0;
                 }
                 
-                // Apply constant scrolling
-                currentTranslate -= baseSpeed * deltaTime;
+                // Decelerate until reaching target position
+                if (currentTranslate > targetPosition) {
+                    // Still sliding in - use high speed and decelerate
+                    currentTranslate -= currentSpeed * deltaTime;
+                    
+                    // Decelerate as we approach target
+                    const distanceToTarget = currentTranslate - targetPosition;
+                    const decelerationFactor = Math.min(1, distanceToTarget / window.innerWidth);
+                    currentSpeed = normalSpeed + (initialSpeed - normalSpeed) * decelerationFactor;
+                    
+                    // Clamp to target if we overshoot
+                    if (currentTranslate < targetPosition) {
+                        currentTranslate = targetPosition;
+                        currentSpeed = normalSpeed;
+                    }
+                } else {
+                    // Past target - constant normal speed
+                    currentTranslate -= normalSpeed * deltaTime;
+                }
                 
                 // Get the width of one content set
                 const contentWidth = track.querySelector('.gemstones-content').offsetWidth;
