@@ -1,4 +1,4 @@
-333<!DOCTYPE html>
+444<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -336,6 +336,9 @@
         }
         
         @keyframes scroll {
+            from {
+                transform: translateX(0);
+            }
             to {
                 transform: translateX(calc(-100% / 3));
             }
@@ -475,54 +478,42 @@
         const carousel = document.getElementById('gemstones');
         const track = document.getElementById('gemstonesTrack');
         
-        let userInteracting = false;
-        let scrollTimeout;
+        // Wait for images to load before positioning
+        window.addEventListener('load', () => {
+            const firstSet = track.querySelector('.gemstones-content');
+            const setWidth = firstSet.offsetWidth;
+            
+            // Start at the middle set (second set)
+            carousel.scrollLeft = setWidth;
+            
+            // Infinite scroll - reset position when reaching edges
+            let isAdjusting = false;
+            carousel.addEventListener('scroll', () => {
+                if (isAdjusting) return;
+                
+                const currentScroll = carousel.scrollLeft;
+                const maxScroll = carousel.scrollWidth - carousel.clientWidth;
+                
+                // If scrolled near the end, jump back to middle
+                if (currentScroll >= setWidth * 2 - 100) {
+                    isAdjusting = true;
+                    carousel.scrollLeft = setWidth;
+                    setTimeout(() => { isAdjusting = false; }, 50);
+                }
+                // If scrolled near the beginning, jump forward to middle
+                else if (currentScroll <= 100) {
+                    isAdjusting = true;
+                    carousel.scrollLeft = setWidth;
+                    setTimeout(() => { isAdjusting = false; }, 50);
+                }
+            });
+        });
         
-        // Pause animation on user interaction
+        // Enable horizontal wheel scrolling (animation continues)
         carousel.addEventListener('wheel', (e) => {
             e.preventDefault();
-            
-            // Pause animation
-            track.style.animationPlayState = 'paused';
-            userInteracting = true;
-            
-            // Scroll manually
             carousel.scrollLeft += e.deltaY;
-            
-            // Resume animation after user stops scrolling
-            clearTimeout(scrollTimeout);
-            scrollTimeout = setTimeout(() => {
-                track.style.animationPlayState = 'running';
-                userInteracting = false;
-            }, 1000);
         }, { passive: false });
-        
-        // Also pause on touch/mouse interaction
-        carousel.addEventListener('touchstart', () => {
-            track.style.animationPlayState = 'paused';
-            userInteracting = true;
-        });
-        
-        carousel.addEventListener('touchend', () => {
-            clearTimeout(scrollTimeout);
-            scrollTimeout = setTimeout(() => {
-                track.style.animationPlayState = 'running';
-                userInteracting = false;
-            }, 1000);
-        });
-        
-        carousel.addEventListener('mousedown', () => {
-            track.style.animationPlayState = 'paused';
-            userInteracting = true;
-        });
-        
-        carousel.addEventListener('mouseup', () => {
-            clearTimeout(scrollTimeout);
-            scrollTimeout = setTimeout(() => {
-                track.style.animationPlayState = 'running';
-                userInteracting = false;
-            }, 1000);
-        });
     </script>
 </body>
 </html>
