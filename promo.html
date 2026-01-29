@@ -1,4 +1,4 @@
-555<!DOCTYPE html>
+666<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -218,13 +218,13 @@
             align-items: center;
         }
 
-        .gemstones-track {
+  /*   .gemstones-track {
             display: flex;
             gap: clamp(30px, 10vw, 150px);
             animation: scroll 36.67s linear 1.54s infinite;
             will-change: transform;
         }
-
+*/
         .gemstones-content {
             display: flex;
             gap: clamp(30px, 10vw, 150px);
@@ -439,28 +439,53 @@
             </section>
         </main>
     </div>
-    <script>
-const gemstones = document.querySelector('.gemstones');
+   <script>
+const gemstonesTrack = document.querySelector('.gemstones-track');
+const gemstonesContainer = document.querySelector('.gemstones');
 
-gemstones.addEventListener('wheel', (e) => {
-    e.preventDefault(); // prevent vertical scroll
-    gemstones.scrollLeft += e.deltaY; // scroll horizontally
+// Duplicate content for infinite scroll
+gemstonesTrack.innerHTML += gemstonesTrack.innerHTML;
+
+let scrollSpeed = 0.5; // auto-scroll speed in px per frame
+let currentScroll = 0;
+
+// Handle manual wheel/touch
+gemstonesContainer.addEventListener('wheel', (e) => {
+    e.preventDefault();
+    currentScroll += e.deltaY; // scroll horizontally
 });
 
-// Touch swipe
 let touchStartX = 0;
 let scrollStartX = 0;
 
-gemstones.addEventListener('touchstart', (e) => {
+gemstonesContainer.addEventListener('touchstart', (e) => {
     touchStartX = e.touches[0].pageX;
-    scrollStartX = gemstones.scrollLeft;
+    scrollStartX = currentScroll;
 });
 
-gemstones.addEventListener('touchmove', (e) => {
+gemstonesContainer.addEventListener('touchmove', (e) => {
     const touchX = e.touches[0].pageX;
-    gemstones.scrollLeft = scrollStartX - (touchX - touchStartX);
+    currentScroll = scrollStartX - (touchX - touchStartX);
 });
+
+// Animation loop
+function animateScroll() {
+    currentScroll += scrollSpeed;
+
+    // Loop infinitely
+    if (currentScroll >= gemstonesTrack.scrollWidth / 2) {
+        currentScroll = 0;
+    } else if (currentScroll < 0) {
+        currentScroll = gemstonesTrack.scrollWidth / 2;
+    }
+
+    gemstonesContainer.scrollLeft = currentScroll;
+    requestAnimationFrame(animateScroll);
+}
+
+requestAnimationFrame(animateScroll);
 </script>
+
 
 </body>
 </html>
