@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+444<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -213,7 +213,6 @@
             overflow: hidden;
             display: flex;
             align-items: center;
-            opacity: 0;
         }
 
         .gemstones-track {
@@ -466,7 +465,6 @@
         // Start at 740ms
         setTimeout(() => {
             track.style.transform = `translate3d(${currentTranslate}px, 0, 0)`;
-            carousel.style.opacity = '1'; // Make visible immediately
             lastTime = Date.now();
             isAnimating = true;
             startAnimation();
