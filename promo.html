@@ -1,325 +1,189 @@
-444<!DOCTYPE html>
+555<!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Marianovich Gems</title>
 
 <style>
 @font-face {
-  font-family: "Futura Next";
-  src: url("https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/fonts/Futura%20Next%20Regular.woff2")
-    format("woff2");
+  font-family: 'Futura Next';
+  src: url('https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/fonts/Futura%20Next%20Regular.woff2') format('woff2');
+  font-weight: 400;
   font-display: swap;
 }
 
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
-
-html,
-body {
-  background: #000;
-  color: #fff;
-  font-family: "Futura Next", Arial, sans-serif;
-  overflow-x: hidden;
-}
-
-/* ---------- SOCIALS ---------- */
+* { margin:0; padding:0; box-sizing:border-box; }
+html,body { width:100%; overflow-x:hidden; background:#000; color:#fff; font-family:'Futura Next', Arial, sans-serif; }
 
 .social-icons {
-  position: absolute;
-  top: 25px;
-  left: 50%;
-  transform: translateX(-50%);
-  display: flex;
-  gap: 30px;
-  z-index: 10;
+  position:absolute;
+  top:25px;
+  left:50%;
+  transform:translateX(-50%);
+  display:flex;
+  gap:30px;
+  z-index:10;
 }
+.social-icon { opacity:0; transform:translateY(-100px); }
+.social-icon:nth-child(1){animation:jump .4s cubic-bezier(.34,1.56,.64,1) .64s forwards;}
+.social-icon:nth-child(2){animation:jump .4s cubic-bezier(.34,1.56,.64,1) .74s forwards;}
+.social-icon:nth-child(3){animation:jump .4s cubic-bezier(.34,1.56,.64,1) .84s forwards;}
 
-.social-icon {
-  opacity: 0;
-  transform: translateY(-100px);
-}
+.social-icon img { height:35px; }
 
-.social-icon:nth-child(1) {
-  animation: socialJump 0.45s cubic-bezier(0.34, 1.56, 0.64, 1) 0.64s forwards;
-}
-.social-icon:nth-child(2) {
-  animation: socialJump 0.45s cubic-bezier(0.34, 1.56, 0.64, 1) 0.74s forwards;
-}
-.social-icon:nth-child(3) {
-  animation: socialJump 0.45s cubic-bezier(0.34, 1.56, 0.64, 1) 0.84s forwards;
-}
-
-.social-icon img {
-  height: 30px;
-  display: block;
-}
-
-/* Instagram gradient */
-.social-icon:nth-child(2) img {
-  opacity: 0;
-}
-.social-icon:nth-child(2) a {
-  position: relative;
-  display: block;
-}
-.social-icon:nth-child(2) a::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: radial-gradient(
-    circle at 30% 107%,
-    #fd5949 0%,
-    #d6249f 60%
-  );
-  -webkit-mask: url("https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Instagram%20Logo.svg")
-    center / contain no-repeat;
-  mask: url("https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Instagram%20Logo.svg")
-    center / contain no-repeat;
-}
-
-@keyframes socialJump {
-  0% {
-    opacity: 0;
-    transform: translateY(-100px);
-  }
-  65% {
-    transform: translateY(10px);
-  }
-  100% {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-/* ---------- MAIN ---------- */
-
-.main-content {
-  padding-top: 120px;
-  text-align: center;
+.social-icon:nth-child(2) a::after{
+  content:'';
+  position:absolute;
+  inset:0;
+  background:radial-gradient(circle at 30% 107%,#fd5949,#d6249f);
+  -webkit-mask:url('https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Instagram%20Logo.svg') center/contain no-repeat;
 }
 
 .logo {
-  width: 80%;
-  max-width: 600px;
-  margin: auto;
-  opacity: 0;
-  transform: translateX(100%);
-  animation: logoIn 0.8s forwards;
+  margin-top:120px;
+  opacity:0;
+  transform:translateX(100%);
+  animation:logoIn .8s cubic-bezier(.25,.46,.45,.94) forwards;
 }
+.logo img { width:80%; max-width:600px; filter:invert(1); }
 
-.logo img {
-  width: 100%;
-  filter: brightness(0) invert(1);
-}
-
-@keyframes logoIn {
-  to {
-    opacity: 1;
-    transform: translateX(0);
-  }
-}
-
-/* ---------- GEMSTONES ---------- */
-
+.gemstones-wrapper { opacity:0; transition:opacity .1s; }
 .gemstones {
-  height: 200px;
-  overflow: hidden;
-  display: flex;
-  align-items: center;
+  height:200px;
+  overflow:hidden;
+  display:flex;
+  align-items:center;
 }
-
 .gemstones-track {
-  display: flex;
-  gap: clamp(30px, 10vw, 150px);
-  will-change: transform;
+  display:flex;
+  gap:clamp(30px,10vw,150px);
+  will-change:transform;
+  transform:translate3d(120vw,0,0); /* CRITICAL: offscreen before paint */
 }
-
 .gemstones-content {
-  display: flex;
-  gap: clamp(30px, 10vw, 150px);
-  flex-shrink: 0;
+  display:flex;
+  gap:clamp(30px,10vw,150px);
+  flex-shrink:0;
 }
-
 .gemstone {
-  width: clamp(100px, 15vw, 150px);
-  height: clamp(100px, 15vw, 150px);
-  object-fit: contain;
+  width:clamp(100px,15vw,150px);
+  height:clamp(100px,15vw,150px);
+  object-fit:contain;
 }
 
-/* ---------- ORIGINS (UNCHANGED) ---------- */
-
-.origins-section {
-  margin-top: 40px;
-}
-
+.origins-section { margin-top:40px; }
 .origins-content {
-  display: flex;
-  justify-content: center;
-  gap: clamp(60px, 10vw, 150px);
-  flex-wrap: wrap;
-  opacity: 0;
-  animation: fadeIn 0.8s ease-out 1.54s forwards;
+  display:flex;
+  justify-content:center;
+  gap:clamp(60px,10vw,150px);
+  opacity:0;
+  animation:fadeIn .8s ease-out 1.54s forwards;
 }
-
-.origin-column h3 {
-  font-weight: 400;
-  margin-bottom: 15px;
-}
-
-.origin-column a {
-  color: #fff;
-  text-decoration: none;
-}
+.origin-column h3 { font-size:24px; margin-bottom:15px; }
+.origin-column p { font-size:22px; line-height:1.6; }
 
 .separator-line {
-  height: 1px;
-  background: linear-gradient(
-    135deg,
-    rgba(255, 255, 255, 0.03),
-    rgba(255, 255, 255, 0.08),
-    rgba(255, 255, 255, 0.03)
-  );
-  margin: 10px 0;
+  height:1px;
+  background:linear-gradient(135deg,rgba(255,255,255,.03),rgba(255,255,255,.08),rgba(255,255,255,.03));
+  margin:10px 0;
 }
 
-.contact-email {
-  font-size: 10pt;
-}
-.disclaimer {
-  font-size: 8pt;
-  color: #333;
-}
+.contact-email { font-size:10pt; }
+.disclaimer { font-size:8pt; color:#333; }
 
-@keyframes fadeIn {
-  to {
-    opacity: 1;
-  }
+@keyframes jump {
+  0%{opacity:0;transform:translateY(-100px);}
+  60%{transform:translateY(10px);}
+  100%{opacity:1;transform:translateY(0);}
 }
+@keyframes logoIn { to{opacity:1;transform:none;} }
+@keyframes fadeIn { to{opacity:1;} }
 </style>
 </head>
 
 <body>
+
 <div class="social-icons">
-  <div class="social-icon">
-    <a href="#"><img src="https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Etsy%20Logo.svg" /></a>
-  </div>
-  <div class="social-icon">
-    <a href="#"><img src="https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Instagram%20Logo.svg" /></a>
-  </div>
-  <div class="social-icon">
-    <a href="#"><img src="https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Ebay%20Logo.svg" /></a>
+  <div class="social-icon"><a href="#"><img src="https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Etsy%20Logo.svg"></a></div>
+  <div class="social-icon"><a href="#"><img src="https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Instagram%20Logo.svg"></a></div>
+  <div class="social-icon"><a href="#"><img src="https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Ebay%20Logo.svg"></a></div>
+</div>
+
+<div class="logo">
+  <img src="https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Marianovich%20gems%20Logo.svg">
+</div>
+
+<div class="gemstones-wrapper">
+  <div class="gemstones" id="carousel">
+    <div class="gemstones-track" id="track">
+      <div class="gemstones-content">
+        <img class="gemstone" src="https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Demantoid.webp">
+        <img class="gemstone" src="https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Sapphire.webp">
+        <img class="gemstone" src="https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Aquamarine.webp">
+        <img class="gemstone" src="https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Heliodor.webp">
+        <img class="gemstone" src="https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Alexandrite.webp">
+        <img class="gemstone" src="https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Emerald.webp">
+      </div>
+      <div class="gemstones-content">
+        <img class="gemstone" src="https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Demantoid.webp">
+        <img class="gemstone" src="https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Sapphire.webp">
+        <img class="gemstone" src="https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Aquamarine.webp">
+        <img class="gemstone" src="https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Heliodor.webp">
+        <img class="gemstone" src="https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Alexandrite.webp">
+        <img class="gemstone" src="https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Emerald.webp">
+      </div>
+    </div>
   </div>
 </div>
 
-<main class="main-content">
-  <div class="logo">
-    <img src="https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Marianovich%20gems%20Logo.svg" />
-  </div>
-
-  <div class="gemstones">
-    <div class="gemstones-track" id="track">
-      <div class="gemstones-content">
-        <img class="gemstone" src="https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Demantoid.webp" />
-        <img class="gemstone" src="https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Sapphire.webp" />
-        <img class="gemstone" src="https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Aquamarine.webp" />
-        <img class="gemstone" src="https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Heliodor.webp" />
-        <img class="gemstone" src="https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Alexandrite.webp" />
-        <img class="gemstone" src="https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Emerald.webp" />
-      </div>
-      <div class="gemstones-content">
-        <img class="gemstone" src="https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Demantoid.webp" />
-        <img class="gemstone" src="https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Sapphire.webp" />
-        <img class="gemstone" src="https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Aquamarine.webp" />
-        <img class="gemstone" src="https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Heliodor.webp" />
-        <img class="gemstone" src="https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Alexandrite.webp" />
-        <img class="gemstone" src="https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Emerald.webp" />
-      </div>
-    </div>
-  </div>
-
-  <section class="origins-section">
-    <div class="origins-content">
-      <div class="origin-column">
-        <h3>Russian:</h3>
-        Alexandrite<br />Emerald<br />Demantoid<br />Sapphire
-      </div>
-      <div class="origin-column">
-        <h3>Ukrainian:</h3>
-        Aquamarine<br />Heliodor<br />Topaz
-      </div>
-    </div>
-    <div class="separator-line"></div>
-    <div class="contact-email">[email&nbsp;protected]</div>
-    <div class="disclaimer">©2026 Marianovich Gems Inc.</div>
-  </section>
-</main>
-
 <script>
-(() => {
-  const track = document.getElementById("track");
+const wrapper = document.querySelector('.gemstones-wrapper');
+const track = document.getElementById('track');
+const carousel = document.getElementById('carousel');
 
-  /* ===== ORIGINAL LOGIC (UNCHANGED) ===== */
-  const SPEED = 50;
-  let x = 0;
-  let wheelDelta = 0;
+let x = window.innerWidth * 1.2;
+let speed = 900;
+const targetSpeed = 50;
+const decay = 0.92;
+let slidingIn = true;
+let scrollDelta = 0;
+let last = null;
 
-  window.addEventListener(
-    "wheel",
-    (e) => {
-      wheelDelta += e.deltaX || e.deltaY;
-    },
-    { passive: true }
-  );
+setTimeout(()=>wrapper.style.opacity='1',740);
 
-  /* ===== SLIDE-IN (ONE-TIME) ===== */
-  let slidingIn = true;
-  let slideX = window.innerWidth + 300;
-  let slideSpeed = 900;
-  const DECAY = 0.92;
+carousel.addEventListener('wheel',e=>{
+  e.preventDefault();
+  scrollDelta += e.deltaX || e.deltaY;
+},{passive:false});
 
-  let last = null;
+function loop(t){
+  if(!last) last=t;
+  const dt=(t-last)/1000;
+  last=t;
 
-  function animate(t) {
-    if (!last) last = t;
-    const dt = (t - last) / 1000;
-    last = t;
-
-    if (slidingIn) {
-      slideSpeed *= DECAY;
-      slideX -= slideSpeed * dt;
-
-      if (slideSpeed <= SPEED) {
-        slidingIn = false;
-        x = slideX; // exact handoff
-      }
-
-      track.style.transform = `translate3d(${slideX}px,0,0)`;
-      requestAnimationFrame(animate);
-      return;
+  if(slidingIn){
+    speed*=decay;
+    x-=speed*dt;
+    if(speed<=targetSpeed){
+      slidingIn=false;
+      speed=targetSpeed;
     }
-
-    /* ===== ORIGINAL BEHAVIOR CONTINUES ===== */
-    x -= SPEED * dt + wheelDelta;
-    wheelDelta = 0;
-
-    const contentWidth =
-      track.children[0].offsetWidth +
-      parseFloat(getComputedStyle(track).gap);
-
-    if (x <= -contentWidth) x += contentWidth;
-    if (x > 0) x -= contentWidth;
-
-    track.style.transform = `translate3d(${x}px,0,0)`;
-    requestAnimationFrame(animate);
+  } else {
+    x-=speed*dt + scrollDelta;
+    scrollDelta=0;
   }
 
-  requestAnimationFrame(animate);
-})();
+  const w = track.children[0].offsetWidth + parseFloat(getComputedStyle(track).gap);
+  if(x<=-w) x+=w;
+  if(x>0) x-=w;
+
+  track.style.transform=`translate3d(${x}px,0,0)`;
+  requestAnimationFrame(loop);
+}
+
+requestAnimationFrame(loop);
 </script>
+
 </body>
 </html>
