@@ -1,11 +1,10 @@
-777<!DOCTYPE html>
+888<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Marianovich Gems - Collector's Grade Natural Gemstones</title>
 <style>
-/* ===== FONT ===== */
 @font-face {
   font-family: 'Futura Next';
   src: url('https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/fonts/Futura%20Next%20Regular.woff2') format('woff2');
@@ -14,7 +13,6 @@
   font-display: swap;
 }
 
-/* ===== RESET ===== */
 * { margin:0; padding:0; box-sizing:border-box; }
 html,body { width:100%; overflow-x:hidden; }
 body {
@@ -23,10 +21,8 @@ body {
   color:#fff;
 }
 
-/* ===== CONTAINER ===== */
 .container { width:100%; padding-bottom:8px; }
 
-/* ===== SOCIAL ICONS ===== */
 .social-icons {
   position:absolute;
   top:25px;
@@ -55,7 +51,6 @@ body {
 }
 .social-icon:nth-child(2) img { opacity:0; }
 
-/* ===== MAIN CONTENT ===== */
 .main-content { padding-top:120px; text-align:center; }
 
 .logo {
@@ -68,7 +63,6 @@ body {
 }
 .logo img { width:100%; filter:brightness(0) invert(1); }
 
-/* ===== GEMSTONES CAROUSEL ===== */
 .gemstones-wrapper { width:100%; opacity:0; transition:opacity .1s; }
 .gemstones {
   height:200px;
@@ -81,7 +75,7 @@ body {
   display:flex;
   gap:clamp(30px,10vw,150px);
   will-change:transform;
-  transform:translate3d(120vw,0,0); /* start offscreen right */
+  transform:translate3d(120vw,0,0);
 }
 .gemstones-content {
   display:flex;
@@ -94,7 +88,6 @@ body {
   object-fit:contain;
 }
 
-/* ===== ORIGINS ===== */
 .origins-section { margin-top:40px; }
 .origins-content {
   display:flex;
@@ -105,37 +98,20 @@ body {
   opacity:0;
   animation:fadeIn .8s ease-out 1.54s forwards;
 }
-.origin-column h3 {
-  font-size:clamp(18px,2.5vw,24px);
-  font-weight:400;
-  margin-bottom:15px;
-}
-.origin-column p {
-  font-size:clamp(16px,2.2vw,22px);
-  line-height:1.6;
-}
-.separator-line {
-  height:1px;
-  background:linear-gradient(135deg,rgba(255,255,255,.03),rgba(255,255,255,.08),rgba(255,255,255,.03));
-  margin-bottom:10px;
-}
+.origin-column h3 { font-size:clamp(18px,2.5vw,24px); font-weight:400; margin-bottom:15px; }
+.origin-column p { font-size:clamp(16px,2.2vw,22px); line-height:1.6; }
+.separator-line { height:1px; background:linear-gradient(135deg,rgba(255,255,255,.03),rgba(255,255,255,.08),rgba(255,255,255,.03)); margin-bottom:10px; }
 .contact-email { font-size:10pt; }
 .disclaimer { font-size:8pt; color:#333; }
 
-/* ===== KEYFRAMES ===== */
 @keyframes slideIn { to{opacity:1;transform:none;} }
-@keyframes slideInSocial {
-  0%{opacity:0;transform:translateY(-100px);}
-  60%{transform:translateY(10px);}
-  100%{opacity:1;transform:translateY(0);}
-}
+@keyframes slideInSocial { 0%{opacity:0;transform:translateY(-100px);} 60%{transform:translateY(10px);} 100%{opacity:1;transform:translateY(0);} }
 @keyframes fadeIn { to{opacity:1;} }
 </style>
 </head>
 <body>
 
 <div class="container">
-  <!-- SOCIAL ICONS -->
   <div class="social-icons">
     <div class="social-icon"><a href="#"><img src="https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Etsy%20Logo.svg"></a></div>
     <div class="social-icon"><a href="#"><img src="https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Instagram%20Logo.svg"></a></div>
@@ -147,7 +123,6 @@ body {
       <img src="https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Marianovich%20gems%20Logo.svg">
     </div>
 
-    <!-- GEMSTONES CAROUSEL -->
     <div class="gemstones-wrapper">
       <div class="gemstones" id="gemstones">
         <div class="gemstones-track" id="gemstonesTrack">
@@ -171,7 +146,6 @@ body {
       </div>
     </div>
 
-    <!-- ORIGINS / EMAIL / DISCLAIMER -->
     <section class="origins-section">
       <div class="origins-content">
         <div class="origin-column"><h3>Russian:</h3><p>Alexandrite<br>Emerald<br>Demantoid<br>Sapphire</p></div>
@@ -185,28 +159,24 @@ body {
 </div>
 
 <script>
-/* ===== GEMSTONE SLIDE-IN + SCROLL ===== */
 const track = document.getElementById('gemstonesTrack');
 const wrapper = document.querySelector('.gemstones-wrapper');
+
 wrapper.style.opacity='1';
 
 let viewportWidth = window.innerWidth;
 let firstStone = track.querySelector('.gemstone');
-let targetX = viewportWidth * 0.2; // first stone should be 20vw from left
-let startX = viewportWidth + firstStone.offsetWidth; // start offscreen right
+let targetX = viewportWidth * 0.2;
+let startX = viewportWidth + firstStone.offsetWidth;
 let currentX = startX;
 
-// Slide-in speed
-let speed = 1200; // initial high speed (px/s)
-const decay = 0.92; // geometric decay per frame
-const normalSpeed = 50; // after reaching targetX
-
-// Infinite scroll tracking
+let speed = 1200;
+const decay = 0.92;
+const normalSpeed = 50;
 let lastTime;
 let slidingIn = true;
-
-// Touch & wheel scroll
 let userDelta = 0;
+
 const carousel = document.getElementById('gemstones');
 carousel.addEventListener('wheel', e=>{ e.preventDefault(); userDelta+=e.deltaX||e.deltaY;},{passive:false});
 let touchStartX=0; let isTouching=false;
@@ -218,14 +188,17 @@ carousel.addEventListener('touchmove', e=>{
 },{passive:false});
 carousel.addEventListener('touchend', ()=>{ isTouching=false; });
 
+// Start animation AFTER socials are half done (~840ms)
+setTimeout(()=>{ requestAnimationFrame(animate); }, 840);
+
 function animate(t){
   if(!lastTime) lastTime=t;
   const dt=(t-lastTime)/1000;
   lastTime=t;
 
   if(slidingIn){
-    currentX -= speed * dt;
-    speed *= Math.pow(decay, dt*60); // geometric decay
+    currentX -= speed*dt;
+    speed *= Math.pow(decay, dt*60);
     if(currentX <= targetX){
       slidingIn=false;
       currentX = targetX;
@@ -243,8 +216,8 @@ function animate(t){
   track.style.transform=`translate3d(${currentX}px,0,0)`;
   requestAnimationFrame(animate);
 }
-requestAnimationFrame(animate);
 </script>
 
 </body>
 </html>
+
