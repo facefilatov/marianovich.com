@@ -1,4 +1,4 @@
-666<!DOCTYPE html>
+777<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -212,11 +212,13 @@
         }
 
         .gemstones {
-            height: 200px;
-            overflow: hidden;
-            display: flex;
-            align-items: center;
-        }
+    height: 200px;
+    overflow-x: hidden; /* only horizontal */
+    overflow-y: hidden; /* prevent vertical scroll */
+    display: flex;
+    align-items: center;
+}
+
 
   /*   .gemstones-track {
             display: flex;
@@ -439,52 +441,54 @@
             </section>
         </main>
     </div>
-   <script>
-const gemstonesTrack = document.querySelector('.gemstones-track');
-const gemstonesContainer = document.querySelector('.gemstones');
+  <script>
+const container = document.querySelector('.gemstones');
+const track = document.querySelector('.gemstones-track');
 
 // Duplicate content for infinite scroll
-gemstonesTrack.innerHTML += gemstonesTrack.innerHTML;
+track.innerHTML += track.innerHTML;
 
-let scrollSpeed = 0.5; // auto-scroll speed in px per frame
-let currentScroll = 0;
+let scrollPos = 0;
+const speed = 0.5; // auto-scroll speed in px/frame
 
-// Handle manual wheel/touch
-gemstonesContainer.addEventListener('wheel', (e) => {
+// Mouse wheel horizontal scrolling
+container.addEventListener('wheel', (e) => {
     e.preventDefault();
-    currentScroll += e.deltaY; // scroll horizontally
+    scrollPos += e.deltaY; // use deltaY for horizontal scroll
 });
 
+// Animation loop for infinite scroll
+function animate() {
+    scrollPos += speed;
+
+    // Wrap around for infinite effect
+    if (scrollPos >= track.scrollWidth / 2) {
+        scrollPos = 0;
+    } else if (scrollPos < 0) {
+        scrollPos = track.scrollWidth / 2;
+    }
+
+    container.scrollLeft = scrollPos;
+    requestAnimationFrame(animate);
+}
+
+requestAnimationFrame(animate);
+
+// Touch support
 let touchStartX = 0;
 let scrollStartX = 0;
 
-gemstonesContainer.addEventListener('touchstart', (e) => {
+container.addEventListener('touchstart', (e) => {
     touchStartX = e.touches[0].pageX;
-    scrollStartX = currentScroll;
+    scrollStartX = scrollPos;
 });
 
-gemstonesContainer.addEventListener('touchmove', (e) => {
+container.addEventListener('touchmove', (e) => {
     const touchX = e.touches[0].pageX;
-    currentScroll = scrollStartX - (touchX - touchStartX);
+    scrollPos = scrollStartX - (touchX - touchStartX);
 });
-
-// Animation loop
-function animateScroll() {
-    currentScroll += scrollSpeed;
-
-    // Loop infinitely
-    if (currentScroll >= gemstonesTrack.scrollWidth / 2) {
-        currentScroll = 0;
-    } else if (currentScroll < 0) {
-        currentScroll = gemstonesTrack.scrollWidth / 2;
-    }
-
-    gemstonesContainer.scrollLeft = currentScroll;
-    requestAnimationFrame(animateScroll);
-}
-
-requestAnimationFrame(animateScroll);
 </script>
+
 
 
 </body>
