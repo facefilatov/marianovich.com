@@ -1,4 +1,4 @@
-222<!DOCTYPE html>
+333<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -229,6 +229,7 @@
         .gemstones-track {
             display: flex;
             gap: clamp(30px, 10vw, 150px);
+            animation: scroll 55s linear 1.54s infinite;
             will-change: transform;
         }
 
@@ -331,6 +332,12 @@
         @keyframes fadeIn {
             to {
                 opacity: 1;
+            }
+        }
+        
+        @keyframes scroll {
+            to {
+                transform: translateX(calc(-100% / 3));
             }
         }
     </style>
@@ -465,45 +472,57 @@
     </div>
 
     <script>
-        // Initialize carousel position to the middle set
         const carousel = document.getElementById('gemstones');
         const track = document.getElementById('gemstonesTrack');
         
-        // Wait for images to load before positioning
-        window.addEventListener('load', () => {
-            // Calculate the width of one complete set
-            const firstSet = track.querySelector('.gemstones-content');
-            const setWidth = firstSet.offsetWidth;
-            
-            // Position to start at the middle set (second set)
-            carousel.scrollLeft = setWidth;
-            
-            // Infinite scroll logic
-            let isScrolling;
-            carousel.addEventListener('scroll', () => {
-                clearTimeout(isScrolling);
-                
-                isScrolling = setTimeout(() => {
-                    const maxScroll = carousel.scrollWidth - carousel.clientWidth;
-                    const currentScroll = carousel.scrollLeft;
-                    
-                    // If scrolled too far right, jump back to middle
-                    if (currentScroll >= setWidth * 2 - 50) {
-                        carousel.scrollLeft = setWidth;
-                    }
-                    // If scrolled too far left, jump forward to middle
-                    else if (currentScroll <= 50) {
-                        carousel.scrollLeft = setWidth;
-                    }
-                }, 50);
-            });
-        });
+        let userInteracting = false;
+        let scrollTimeout;
         
-        // Enable horizontal wheel scrolling
+        // Pause animation on user interaction
         carousel.addEventListener('wheel', (e) => {
             e.preventDefault();
+            
+            // Pause animation
+            track.style.animationPlayState = 'paused';
+            userInteracting = true;
+            
+            // Scroll manually
             carousel.scrollLeft += e.deltaY;
+            
+            // Resume animation after user stops scrolling
+            clearTimeout(scrollTimeout);
+            scrollTimeout = setTimeout(() => {
+                track.style.animationPlayState = 'running';
+                userInteracting = false;
+            }, 1000);
         }, { passive: false });
+        
+        // Also pause on touch/mouse interaction
+        carousel.addEventListener('touchstart', () => {
+            track.style.animationPlayState = 'paused';
+            userInteracting = true;
+        });
+        
+        carousel.addEventListener('touchend', () => {
+            clearTimeout(scrollTimeout);
+            scrollTimeout = setTimeout(() => {
+                track.style.animationPlayState = 'running';
+                userInteracting = false;
+            }, 1000);
+        });
+        
+        carousel.addEventListener('mousedown', () => {
+            track.style.animationPlayState = 'paused';
+            userInteracting = true;
+        });
+        
+        carousel.addEventListener('mouseup', () => {
+            clearTimeout(scrollTimeout);
+            scrollTimeout = setTimeout(() => {
+                track.style.animationPlayState = 'running';
+                userInteracting = false;
+            }, 1000);
+        });
     </script>
 </body>
 </html>
