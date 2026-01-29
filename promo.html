@@ -1,4 +1,4 @@
-6<!DOCTYPE html>
+7<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -206,7 +206,6 @@
 
         .gemstones-wrapper {
             width: 100%;
-            opacity: 0;
         }
 
         .gemstones {
@@ -220,6 +219,7 @@
             display: flex;
             gap: clamp(30px, 10vw, 150px);
             will-change: transform;
+            animation: carouselSlideIn 0.8s cubic-bezier(0.25, 0.1, 0.25, 1) 0.74s forwards;
         }
 
         .gemstones-content {
@@ -301,6 +301,15 @@
             to {
                 opacity: 1;
                 transform: translateX(0);
+            }
+        }
+        
+        @keyframes carouselSlideIn {
+            0% {
+                transform: translateX(100vw);
+            }
+            100% {
+                transform: translateX(-20vw);
             }
         }
 
@@ -436,18 +445,30 @@
         const carousel = document.getElementById('gemstones');
         const track = document.getElementById('gemstonesTrack');
         
-        let currentTranslate = 1500; // Track starts far off-screen to the right
+        let currentTranslate = 0;
         let animationId;
         let lastTime = Date.now();
         let userScrollDelta = 0;
+        let animationStarted = false;
         
-        // Speed configuration
-        const normalSpeed = 50; // Final carousel speed
-        const initialSpeed = 800; // High initial slide-in speed
-        let currentSpeed = initialSpeed;
-        const deceleration = 0.94; // Speed decay per frame (slower decay for longer slide-in)
+        const baseSpeed = 50;
         
-        const gemstonesWrapper = document.querySelector('.gemstones-wrapper');
+        // Listen for when CSS slide-in animation completes
+        track.addEventListener('animationend', (e) => {
+            if (e.animationName === 'carouselSlideIn' && !animationStarted) {
+                animationStarted = true;
+                // Get current position from CSS animation end state
+                const computedStyle = window.getComputedStyle(track);
+                const matrix = new DOMParser().parseFromString(
+                    computedStyle.transform, 'text/html'
+                ).documentElement.textContent;
+                
+                // Start from -20vw (where CSS animation ended)
+                currentTranslate = -window.innerWidth * 0.2;
+                lastTime = Date.now();
+                startAnimation();
+            }
+        });
         
         // Capture wheel scroll events
         carousel.addEventListener('wheel', (e) => {
@@ -476,7 +497,6 @@
             // Determine if this is a horizontal scroll
             if (!isTouchScrolling) {
                 isTouchScrolling = true;
-                // If horizontal movement is greater than vertical, prevent vertical scroll
                 if (deltaX > deltaY) {
                     e.preventDefault();
                 }
@@ -493,41 +513,20 @@
             isTouchScrolling = false;
         }, { passive: true });
         
-        // Make carousel visible and set initial position, THEN start animation
-        setTimeout(() => {
-            // Set initial position
-            track.style.transform = `translate3d(${currentTranslate}px, 0, 0)`;
-            // Make visible
-            gemstonesWrapper.style.opacity = '1';
-            // Small delay to ensure render, then start animation
-            requestAnimationFrame(() => {
-                lastTime = Date.now();
-                startAnimation();
-            });
-        }, 740);
-        
         function startAnimation() {
             function animate() {
                 const now = Date.now();
                 const deltaTime = (now - lastTime) / 1000;
                 lastTime = now;
                 
-                // Apply user scroll delta smoothly
+                // Apply user scroll delta
                 if (Math.abs(userScrollDelta) > 0.01) {
                     currentTranslate -= userScrollDelta;
                     userScrollDelta = 0;
                 }
                 
-                // Decelerate from initial speed to normal speed
-                if (currentSpeed > normalSpeed) {
-                    currentSpeed *= deceleration;
-                    if (currentSpeed < normalSpeed) {
-                        currentSpeed = normalSpeed;
-                    }
-                }
-                
-                // Apply scrolling with current speed
-                currentTranslate -= currentSpeed * deltaTime;
+                // Apply constant scrolling
+                currentTranslate -= baseSpeed * deltaTime;
                 
                 // Get the width of one content set
                 const contentWidth = track.querySelector('.gemstones-content').offsetWidth;
