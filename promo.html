@@ -1,4 +1,4 @@
-999<!DOCTYPE html>
+111<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -206,8 +206,6 @@
 
         .gemstones-wrapper {
             width: 100%;
-            opacity: 0;
-            transition: opacity 0.1s;
         }
 
         .gemstones {
@@ -447,31 +445,27 @@
         const track = document.getElementById('gemstonesTrack');
         
         // Animation variables
-        let currentTranslate = 2000; // Start FAR off-screen to the right (in pixels)
+        let currentTranslate = window.innerWidth + 200; // Start with first stone just off-screen right
         let animationId;
         let lastTime;
         let userScrollDelta = 0;
         let isAnimating = false;
+        let hasCompletedFirstPass = false; // Track if carousel has gone past left edge once
         
         // Speed configuration
         const normalSpeed = 50; // Target constant speed in px/s
         const initialSpeed = 800; // Starting speed in px/s
         
-        // Calculate where first stone should be at 20% from left
+        // Target: first stone at 2vw from left edge
         const viewportWidth = window.innerWidth;
-        const targetPosition = -(viewportWidth * 0.2); // -20% of viewport width
-        
-        const gemstonesWrapper = document.querySelector('.gemstones-wrapper');
+        const targetPosition = -(viewportWidth * 0.02); // -2vw
         
         // Start at 740ms (after social icons)
         setTimeout(() => {
-            // Make wrapper visible
-            gemstonesWrapper.style.opacity = '1';
-            
-            // Set initial position off-screen
+            // Set initial position - first stone off-screen right
             track.style.transform = `translate3d(${currentTranslate}px, 0, 0)`;
             
-            // Start animation
+            // Start animation immediately
             lastTime = Date.now();
             isAnimating = true;
             startAnimation();
@@ -530,17 +524,21 @@
                 
                 // Apply user scroll delta
                 if (Math.abs(userScrollDelta) > 0.01) {
-                    currentTranslate -= userScrollDelta;
+                    // Only allow scrolling right, or left if carousel has completed first pass
+                    if (userScrollDelta < 0 || hasCompletedFirstPass) {
+                        currentTranslate -= userScrollDelta;
+                    }
                     userScrollDelta = 0;
                 }
                 
                 // Calculate current speed based on position
                 let currentSpeed;
                 
-                if (currentTranslate > targetPosition) {
+                const startPosition = viewportWidth + 200;
+                
+                if (currentTranslate > targetPosition && !hasCompletedFirstPass) {
                     // Still in slide-in phase - decelerate from initialSpeed to normalSpeed
-                    // Calculate progress from start (2000) to target (targetPosition)
-                    const totalDistance = 2000 - targetPosition;
+                    const totalDistance = startPosition - targetPosition;
                     const remainingDistance = currentTranslate - targetPosition;
                     const progress = 1 - (remainingDistance / totalDistance); // 0 to 1
                     
@@ -560,13 +558,20 @@
                 const gap = parseFloat(getComputedStyle(track).gap);
                 const fullWidth = contentWidth + gap;
                 
-                // Reset position for infinite loop in both directions
-                if (currentTranslate <= -fullWidth) {
-                    // Scrolling left (negative direction)
-                    currentTranslate = currentTranslate % fullWidth;
-                } else if (currentTranslate >= 0) {
-                    // Scrolling right (positive direction)
-                    currentTranslate = currentTranslate - fullWidth;
+                // Check if carousel has completed first pass (scrolled past left edge)
+                if (!hasCompletedFirstPass && currentTranslate <= -fullWidth) {
+                    hasCompletedFirstPass = true;
+                }
+                
+                // Reset position for infinite loop (only after first pass is complete)
+                if (hasCompletedFirstPass) {
+                    if (currentTranslate <= -fullWidth) {
+                        // Scrolling left (negative direction) - loop
+                        currentTranslate = currentTranslate % fullWidth;
+                    } else if (currentTranslate >= 0) {
+                        // Scrolling right (positive direction) - loop
+                        currentTranslate = currentTranslate - fullWidth;
+                    }
                 }
                 
                 // Apply transform with hardware acceleration
