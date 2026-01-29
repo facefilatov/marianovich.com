@@ -1,65 +1,67 @@
-111<!DOCTYPE html>
+222<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Marianovich Gems - Collector's Grade Natural Gemstones</title>
 <style>
-  body {
-    margin: 0;
-    background: #000;
-    font-family: 'Futura Next', Arial, sans-serif;
-    overflow-x: hidden;
-    color: #fff;
-  }
+/* ====== Основные стили ====== */
+body {
+  margin: 0;
+  background: #000;
+  font-family: 'Futura Next', Arial, sans-serif;
+  overflow-x: hidden;
+  color: #fff;
+}
 
-  .gemstones-wrapper {
-    width: 100%;
-    overflow: hidden;
-    padding: 60px 0;
-  }
+.gemstones-wrapper {
+  width: 100%;
+  overflow: hidden;
+  padding: 60px 0;
+}
 
-  .gemstones {
-    display: flex;
-    align-items: center;
-    cursor: grab;
-  }
+.gemstones {
+  display: flex;
+  align-items: center;
+  cursor: grab;
+}
 
-  .gemstones-track {
-    display: flex;
-    gap: clamp(30px,10vw,150px);
-    will-change: transform;
-  }
+.gemstones-track {
+  display: flex;
+  gap: clamp(30px,10vw,150px);
+  will-change: transform;
+}
 
-  .gemstones-content {
-    display: flex;
-    gap: clamp(30px,10vw,150px);
-    flex-shrink: 0;
-  }
+.gemstones-content {
+  display: flex;
+  gap: clamp(30px,10vw,150px);
+  flex-shrink: 0;
+}
 
-  .gemstone {
-    width: clamp(100px,15vw,150px);
-    height: clamp(100px,15vw,150px);
-    object-fit: contain;
-    opacity: 0;
-    transform: translateX(100%);
-    animation: slideIn 0.8s cubic-bezier(0.25,0.46,0.45,0.94) forwards;
-  }
+.gemstone {
+  width: clamp(100px,15vw,150px);
+  height: clamp(100px,15vw,150px);
+  object-fit: contain;
+  opacity: 0;
+  transform: translateX(100%);
+  animation: slideIn 0.8s cubic-bezier(0.25,0.46,0.45,0.94) forwards;
+}
 
-  /* Instagram gradient overlay */
-  .instagram a::after {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: radial-gradient(circle at 30% 107%, #fd5949 0%, #d6249f 100%);
-    -webkit-mask: url('https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Instagram%20Logo.svg') center/contain no-repeat;
-    mask: url('https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Instagram%20Logo.svg') center/contain no-repeat;
-    pointer-events: none;
-  }
+/* Instagram gradient overlay */
+.instagram a::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 30% 107%, #fd5949 0%, #d6249f 100%);
+  -webkit-mask: url('https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Instagram%20Logo.svg') center/contain no-repeat;
+  mask: url('https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Instagram%20Logo.svg') center/contain no-repeat;
+  pointer-events: none;
+}
 
-  @keyframes slideIn {
-    to {opacity: 1; transform: translateX(0);}
-  }
+/* Анимация входа */
+@keyframes slideIn {
+  to {opacity: 1; transform: translateX(0);}
+}
 </style>
 </head>
 <body>
@@ -67,6 +69,7 @@
 <div class="gemstones-wrapper">
   <div class="gemstones" id="gemstones">
     <div class="gemstones-track" id="track">
+      <!-- Первый дубликат -->
       <div class="gemstones-content">
         <a href="#"><img class="gemstone" src="https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Demantoid.webp" alt="Demantoid"></a>
         <a href="#"><img class="gemstone" src="https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Sapphire.webp" alt="Sapphire"></a>
@@ -75,6 +78,7 @@
         <a href="#"><img class="gemstone" src="https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Alexandrite.webp" alt="Alexandrite"></a>
         <a href="#"><img class="gemstone" src="https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Emerald.webp" alt="Emerald"></a>
       </div>
+      <!-- Второй дубликат -->
       <div class="gemstones-content">
         <a href="#"><img class="gemstone" src="https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Demantoid.webp" alt="Demantoid"></a>
         <a href="#"><img class="gemstone" src="https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Sapphire.webp" alt="Sapphire"></a>
@@ -88,36 +92,34 @@
 </div>
 
 <script>
-  const track = document.getElementById('track');
-  let isDown = false;
-  let startX;
-  let scrollLeft;
+// ====== drag + wheel scroll ======
+const track = document.getElementById('gemstones');
+let isDown = false;
+let startX;
+let scrollLeft;
+const speed = 0.5;
 
-  const speed = 0.5; // drag speed multiplier
+track.addEventListener('mousedown', e => {
+  isDown = true;
+  startX = e.pageX - track.offsetLeft;
+  scrollLeft = track.scrollLeft;
+  track.style.cursor = 'grabbing';
+});
+track.addEventListener('mouseleave', () => {isDown = false; track.style.cursor='grab';});
+track.addEventListener('mouseup', () => {isDown = false; track.style.cursor='grab';});
+track.addEventListener('mousemove', e => {
+  if(!isDown) return;
+  e.preventDefault();
+  const x = e.pageX - track.offsetLeft;
+  const walk = (x - startX) * speed;
+  track.scrollLeft = scrollLeft - walk;
+});
 
-  // drag functionality
-  track.parentElement.addEventListener('mousedown', (e) => {
-    isDown = true;
-    startX = e.pageX - track.parentElement.offsetLeft;
-    scrollLeft = track.parentElement.scrollLeft;
-    track.parentElement.style.cursor = 'grabbing';
-  });
-
-  track.parentElement.addEventListener('mouseleave', () => {isDown = false; track.parentElement.style.cursor='grab';});
-  track.parentElement.addEventListener('mouseup', () => {isDown = false; track.parentElement.style.cursor='grab';});
-  track.parentElement.addEventListener('mousemove', (e) => {
-    if(!isDown) return;
-    e.preventDefault();
-    const x = e.pageX - track.parentElement.offsetLeft;
-    const walk = (x - startX) * speed;
-    track.parentElement.scrollLeft = scrollLeft - walk;
-  });
-
-  // wheel scroll support
-  track.parentElement.addEventListener('wheel', (e) => {
-    e.preventDefault();
-    track.parentElement.scrollLeft += e.deltaY;
-  });
+// wheel scroll
+track.addEventListener('wheel', e => {
+  e.preventDefault();
+  track.scrollLeft += e.deltaY;
+});
 </script>
 
 </body>
