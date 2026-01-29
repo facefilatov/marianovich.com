@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+222<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -467,14 +467,20 @@
         const carousel = document.getElementById('gemstones');
         const track = document.getElementById('gemstonesTrack');
         
-        let autoScrollSpeed = 0.5; // pixels per frame (adjust for speed)
+        let autoScrollSpeed = 1.2; // pixels per frame (matches ~36.67s for full carousel)
         let isUserScrolling = false;
         let userScrollTimeout;
         let animationFrame;
         
-        // Wait for images to load before positioning
-        window.addEventListener('load', () => {
+        // Initialize immediately when DOM is ready
+        function initCarousel() {
             const firstSet = track.querySelector('.gemstones-content');
+            if (!firstSet) {
+                // Try again if elements aren't ready
+                setTimeout(initCarousel, 100);
+                return;
+            }
+            
             const setWidth = firstSet.offsetWidth;
             
             // Start at the middle set (second set) - allows scrolling left immediately
@@ -507,12 +513,14 @@
             setTimeout(() => {
                 autoScroll();
             }, 1540);
-            
-            // Detect user scrolling
-            carousel.addEventListener('scroll', () => {
-                // Don't interfere with auto-scroll
-            }, { passive: true });
-        });
+        }
+        
+        // Start when DOM is ready
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', initCarousel);
+        } else {
+            initCarousel();
+        }
         
         // Enable both vertical AND horizontal wheel scrolling
         carousel.addEventListener('wheel', (e) => {
