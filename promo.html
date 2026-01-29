@@ -1,4 +1,4 @@
-222<!DOCTYPE html>
+333<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -466,6 +466,7 @@
         // Start at 740ms
         setTimeout(() => {
             track.style.transform = `translate3d(${currentTranslate}px, 0, 0)`;
+            carousel.style.opacity = '1'; // Make visible immediately
             lastTime = Date.now();
             isAnimating = true;
             startAnimation();
@@ -547,11 +548,6 @@
                 
                 // Move the track
                 currentTranslate -= currentSpeed * deltaTime;
-                
-                // Show carousel once first stone enters viewport (currentTranslate < viewportWidth)
-                if (carousel.style.opacity === '0' && currentTranslate < viewportWidth) {
-                    carousel.style.opacity = '1';
-                }
                 
                 // Get the width of one content set
                 const contentWidth = track.querySelector('.gemstones-content').offsetWidth;
