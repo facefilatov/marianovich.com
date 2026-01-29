@@ -1,4 +1,4 @@
-111<!DOCTYPE html>
+222<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -213,6 +213,7 @@
             overflow: hidden;
             display: flex;
             align-items: center;
+            opacity: 0;
         }
 
         .gemstones-track {
@@ -445,27 +446,26 @@
         const track = document.getElementById('gemstonesTrack');
         
         // Animation variables
-        let currentTranslate = window.innerWidth + 200; // Start with first stone just off-screen right
+        const carousel = document.getElementById('gemstones');
+        let currentTranslate = window.innerWidth + 300; // Start well off-screen right
         let animationId;
         let lastTime;
         let userScrollDelta = 0;
         let isAnimating = false;
-        let hasCompletedFirstPass = false; // Track if carousel has gone past left edge once
+        let hasCompletedFirstPass = false;
+        let currentSpeed = 1200; // HIGH initial speed for visible deceleration
         
         // Speed configuration
-        const normalSpeed = 50; // Target constant speed in px/s
-        const initialSpeed = 800; // Starting speed in px/s
+        const normalSpeed = 50;
+        const deceleration = 0.94; // Geometric deceleration factor
         
         // Target: first stone at 2vw from left edge
         const viewportWidth = window.innerWidth;
-        const targetPosition = -(viewportWidth * 0.02); // -2vw
+        const targetPosition = -(viewportWidth * 0.02);
         
-        // Start at 740ms (after social icons)
+        // Start at 740ms
         setTimeout(() => {
-            // Set initial position - first stone off-screen right
             track.style.transform = `translate3d(${currentTranslate}px, 0, 0)`;
-            
-            // Start animation immediately
             lastTime = Date.now();
             isAnimating = true;
             startAnimation();
@@ -522,36 +522,36 @@
                 const deltaTime = (now - lastTime) / 1000;
                 lastTime = now;
                 
-                // Apply user scroll delta
+                // Apply user scroll delta - ALWAYS allow right scroll, left only after first pass
                 if (Math.abs(userScrollDelta) > 0.01) {
-                    // Only allow scrolling right, or left if carousel has completed first pass
                     if (userScrollDelta < 0 || hasCompletedFirstPass) {
+                        // Scrolling right (negative delta) OR left after first pass
                         currentTranslate -= userScrollDelta;
                     }
                     userScrollDelta = 0;
                 }
                 
-                // Calculate current speed based on position
-                let currentSpeed;
-                
-                const startPosition = viewportWidth + 200;
-                
-                if (currentTranslate > targetPosition && !hasCompletedFirstPass) {
-                    // Still in slide-in phase - decelerate from initialSpeed to normalSpeed
-                    const totalDistance = startPosition - targetPosition;
-                    const remainingDistance = currentTranslate - targetPosition;
-                    const progress = 1 - (remainingDistance / totalDistance); // 0 to 1
-                    
-                    // Ease-out deceleration: fast at start, slow at end
-                    const easeProgress = 1 - Math.pow(1 - progress, 3); // cubic ease-out
-                    currentSpeed = initialSpeed - (initialSpeed - normalSpeed) * easeProgress;
+                // Geometric deceleration until reaching target
+                if (currentTranslate > targetPosition) {
+                    // Still decelerating - multiply by deceleration factor
+                    if (currentSpeed > normalSpeed) {
+                        currentSpeed *= deceleration;
+                        if (currentSpeed < normalSpeed) {
+                            currentSpeed = normalSpeed;
+                        }
+                    }
                 } else {
-                    // Past target - constant speed
+                    // Past target - lock to normal speed
                     currentSpeed = normalSpeed;
                 }
                 
                 // Move the track
                 currentTranslate -= currentSpeed * deltaTime;
+                
+                // Show carousel once first stone enters viewport (currentTranslate < viewportWidth)
+                if (carousel.style.opacity === '0' && currentTranslate < viewportWidth) {
+                    carousel.style.opacity = '1';
+                }
                 
                 // Get the width of one content set
                 const contentWidth = track.querySelector('.gemstones-content').offsetWidth;
