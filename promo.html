@@ -1,4 +1,4 @@
-111<!DOCTYPE html>
+222<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -438,23 +438,25 @@
             let animationFrame;
             let lastTime = 0;
             let setWidth = 0;
+            let currentVelocity = 0;
             
-            // Easing function for smooth animations
-            function easeOutCubic(t) {
-                return 1 - Math.pow(1 - t, 3);
+            // Smoother easing function
+            function easeOutQuart(t) {
+                return 1 - Math.pow(1 - t, 4);
             }
             
             // JS-based slide-in animation for logo
             function animateLogo() {
                 const duration = 800;
-                const startTime = performance.now();
+                let startTime = null;
                 
                 function animate(currentTime) {
+                    if (!startTime) startTime = currentTime;
                     const elapsed = currentTime - startTime;
                     const progress = Math.min(elapsed / duration, 1);
-                    const eased = easeOutCubic(progress);
+                    const eased = easeOutQuart(progress);
                     
-                    logo.style.opacity = eased;
+                    logo.style.opacity = String(eased);
                     logo.style.transform = `translateX(${100 - (100 * eased)}%)`;
                     
                     if (progress < 1) {
@@ -468,27 +470,34 @@
             // JS-based slide-in animation for gemstones wrapper
             function animateGemstones() {
                 const duration = 800;
-                const delay = 740; // 0.74s delay
-                const startTime = performance.now() + delay;
+                const delay = 740;
+                let startTime = null;
+                let delayComplete = false;
                 
                 function animate(currentTime) {
-                    if (currentTime < startTime) {
-                        requestAnimationFrame(animate);
-                        return;
+                    if (!startTime) startTime = currentTime;
+                    
+                    if (!delayComplete) {
+                        if (currentTime - startTime < delay) {
+                            requestAnimationFrame(animate);
+                            return;
+                        }
+                        delayComplete = true;
+                        startTime = currentTime;
                     }
                     
                     const elapsed = currentTime - startTime;
                     const progress = Math.min(elapsed / duration, 1);
-                    const eased = easeOutCubic(progress);
+                    const eased = easeOutQuart(progress);
                     
-                    gemstonesWrapper.style.opacity = eased;
+                    gemstonesWrapper.style.opacity = String(eased);
                     gemstonesWrapper.style.transform = `translateX(${100 - (100 * eased)}%)`;
                     
                     if (progress < 1) {
                         requestAnimationFrame(animate);
                     } else {
                         // Immediately start carousel after animation completes
-                        initCarousel();
+                        setTimeout(() => initCarousel(), 16); // One frame delay
                     }
                 }
                 
@@ -500,37 +509,35 @@
                 socialIcons.forEach((icon, index) => {
                     const duration = 400;
                     const delay = 640 + (index * 100);
-                    const startTime = performance.now() + delay;
+                    let startTime = null;
+                    let delayComplete = false;
                     
                     function animate(currentTime) {
-                        if (currentTime < startTime) {
-                            requestAnimationFrame(animate);
-                            return;
+                        if (!startTime) startTime = currentTime;
+                        
+                        if (!delayComplete) {
+                            if (currentTime - startTime < delay) {
+                                requestAnimationFrame(animate);
+                                return;
+                            }
+                            delayComplete = true;
+                            startTime = currentTime;
                         }
                         
                         const elapsed = currentTime - startTime;
                         const progress = Math.min(elapsed / duration, 1);
                         
                         // Custom easing for bounce effect
-                        let eased;
-                        if (progress < 0.6) {
-                            eased = easeOutCubic(progress / 0.6);
-                        } else {
-                            const bounceProgress = (progress - 0.6) / 0.4;
-                            eased = 1 + (0.1 * Math.sin(bounceProgress * Math.PI));
-                        }
-                        
-                        icon.style.opacity = Math.min(progress * 2, 1);
-                        
-                        // Slide from -100px to +10px (60% mark) then to 0
                         let yPos;
                         if (progress < 0.6) {
-                            yPos = -100 + (110 * easeOutCubic(progress / 0.6));
+                            const bounceProgress = progress / 0.6;
+                            yPos = -100 + (110 * easeOutQuart(bounceProgress));
                         } else {
                             const bounceProgress = (progress - 0.6) / 0.4;
                             yPos = 10 - (10 * bounceProgress);
                         }
                         
+                        icon.style.opacity = String(Math.min(progress * 2.5, 1));
                         icon.style.transform = `translateY(${yPos}px)`;
                         
                         if (progress < 1) {
@@ -544,19 +551,25 @@
                 // Animate the separator line
                 const separatorDelay = 900;
                 const separatorDuration = 200;
-                const separatorStart = performance.now() + separatorDelay;
+                let startTime = null;
+                let delayComplete = false;
                 
                 function animateSeparator(currentTime) {
-                    if (currentTime < separatorStart) {
-                        requestAnimationFrame(animateSeparator);
-                        return;
+                    if (!startTime) startTime = currentTime;
+                    
+                    if (!delayComplete) {
+                        if (currentTime - startTime < separatorDelay) {
+                            requestAnimationFrame(animateSeparator);
+                            return;
+                        }
+                        delayComplete = true;
+                        startTime = currentTime;
                     }
                     
-                    const elapsed = currentTime - separatorStart;
+                    const elapsed = currentTime - startTime;
                     const progress = Math.min(elapsed / separatorDuration, 1);
                     
-                    // Target the ::after pseudo-element through a custom property
-                    socialIconsAfter.style.setProperty('--separator-opacity', progress);
+                    socialIconsAfter.style.setProperty('--separator-opacity', String(progress));
                     
                     if (progress < 1) {
                         requestAnimationFrame(animateSeparator);
@@ -579,18 +592,25 @@
             function animateOrigins() {
                 const duration = 800;
                 const delay = 1540;
-                const startTime = performance.now() + delay;
+                let startTime = null;
+                let delayComplete = false;
                 
                 function animate(currentTime) {
-                    if (currentTime < startTime) {
-                        requestAnimationFrame(animate);
-                        return;
+                    if (!startTime) startTime = currentTime;
+                    
+                    if (!delayComplete) {
+                        if (currentTime - startTime < delay) {
+                            requestAnimationFrame(animate);
+                            return;
+                        }
+                        delayComplete = true;
+                        startTime = currentTime;
                     }
                     
                     const elapsed = currentTime - startTime;
                     const progress = Math.min(elapsed / duration, 1);
                     
-                    originsContent.style.opacity = progress;
+                    originsContent.style.opacity = String(progress);
                     
                     if (progress < 1) {
                         requestAnimationFrame(animate);
@@ -605,17 +625,19 @@
                 const firstSet = track.querySelector('.gemstones-content');
                 if (!firstSet) return;
                 
-                setWidth = firstSet.offsetWidth + parseFloat(getComputedStyle(firstSet.parentElement).gap || 0);
+                // Calculate set width including gap
+                const gap = parseFloat(getComputedStyle(track).gap || 0);
+                setWidth = firstSet.offsetWidth + gap;
                 
-                // Start at middle set - no visible jump needed
+                // Start at middle set
                 carousel.scrollLeft = setWidth;
-                lastTime = 0;
+                lastTime = performance.now();
                 
-                // Start auto-scroll immediately
+                // Start auto-scroll
                 autoScroll(performance.now());
             }
             
-            // Seamless auto-scroll with infinite loop
+            // Seamless auto-scroll with infinite loop - completely invisible reset
             function autoScroll(currentTime) {
                 if (!lastTime) lastTime = currentTime;
                 const deltaTime = currentTime - lastTime;
@@ -624,27 +646,36 @@
                 if (!isUserScrolling) {
                     const scrollAmount = autoScrollSpeed * (deltaTime / 16.67);
                     carousel.scrollLeft += scrollAmount;
+                    currentVelocity = scrollAmount;
+                } else {
+                    currentVelocity = 0;
                 }
                 
-                // Seamless infinite loop - check boundaries and reset invisibly
+                // Seamless infinite loop - instant reset when exactly at boundary
                 const currentScroll = carousel.scrollLeft;
-                const scrollThreshold = setWidth * 0.1; // 10% buffer zone
                 
-                // When near end of second set, jump back to start of second set
-                if (currentScroll >= setWidth * 2 - scrollThreshold) {
-                    const offset = currentScroll - (setWidth * 2);
-                    carousel.scrollLeft = setWidth + offset;
+                // Reset at exact boundaries for truly seamless loop
+                if (currentScroll >= setWidth * 2) {
+                    carousel.scrollLeft = setWidth + (currentScroll - setWidth * 2);
                 }
-                // When near start of first set, jump forward to start of second set
-                else if (currentScroll <= scrollThreshold) {
-                    const offset = currentScroll;
-                    carousel.scrollLeft = setWidth + offset;
+                else if (currentScroll < setWidth) {
+                    carousel.scrollLeft = setWidth + currentScroll;
                 }
                 
                 animationFrame = requestAnimationFrame(autoScroll);
             }
             
-            // Handle user interaction
+            // Handle user interaction - smoother response
+            let lastScrollLeft = carousel.scrollLeft;
+            let scrollMomentum = 0;
+            
+            carousel.addEventListener('scroll', () => {
+                if (isUserScrolling) {
+                    scrollMomentum = carousel.scrollLeft - lastScrollLeft;
+                    lastScrollLeft = carousel.scrollLeft;
+                }
+            }, { passive: true });
+            
             carousel.addEventListener('wheel', (e) => {
                 e.preventDefault();
                 isUserScrolling = true;
@@ -655,37 +686,40 @@
                 
                 userScrollTimeout = setTimeout(() => {
                     isUserScrolling = false;
+                    lastTime = performance.now();
                 }, 150);
             }, { passive: false });
             
             carousel.addEventListener('touchstart', () => {
                 isUserScrolling = true;
+                lastScrollLeft = carousel.scrollLeft;
             }, { passive: true });
             
             carousel.addEventListener('touchend', () => {
                 clearTimeout(userScrollTimeout);
                 userScrollTimeout = setTimeout(() => {
                     isUserScrolling = false;
-                    lastTime = 0;
+                    lastTime = performance.now();
                 }, 150);
             }, { passive: true });
             
             carousel.addEventListener('mousedown', () => {
                 isUserScrolling = true;
+                lastScrollLeft = carousel.scrollLeft;
             });
             
             carousel.addEventListener('mouseup', () => {
                 clearTimeout(userScrollTimeout);
                 userScrollTimeout = setTimeout(() => {
                     isUserScrolling = false;
-                    lastTime = 0;
+                    lastTime = performance.now();
                 }, 150);
             });
             
             // Handle visibility change
             document.addEventListener('visibilitychange', () => {
                 if (!document.hidden) {
-                    lastTime = 0;
+                    lastTime = performance.now();
                 }
             });
             
@@ -697,10 +731,13 @@
             }
             
             function startAnimations() {
-                animateLogo();
-                animateGemstones();
-                animateSocialIcons();
-                animateOrigins();
+                // Force immediate execution
+                requestAnimationFrame(() => {
+                    animateLogo();
+                    animateGemstones();
+                    animateSocialIcons();
+                    animateOrigins();
+                });
             }
         })();
     </script>
