@@ -1,4 +1,4 @@
-333<!DOCTYPE html>
+444<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -444,10 +444,17 @@
             let startX = 0;
             let lastX = 0;
             let velocity = 0;
+            let lastMoveTime = 0;
+            let carouselInitialized = false;
             
             // Smoother easing function
             function easeOutQuart(t) {
                 return 1 - Math.pow(1 - t, 4);
+            }
+            
+            // Easing for inertia
+            function easeOutCubic(t) {
+                return 1 - Math.pow(1 - t, 3);
             }
             
             // JS-based slide-in animation for logo
@@ -501,8 +508,8 @@
                     if (progress < 1) {
                         requestAnimationFrame(animate);
                     } else {
-                        // Start carousel after animation completes
-                        setTimeout(() => initCarousel(), 50);
+                        // Immediately initialize and start carousel
+                        initCarousel();
                     }
                 }
                 
@@ -626,6 +633,9 @@
             
             // Initialize carousel with transform-based animation
             function initCarousel() {
+                if (carouselInitialized) return;
+                carouselInitialized = true;
+                
                 const firstSet = track.querySelector('.gemstones-content');
                 if (!firstSet) return;
                 
@@ -637,7 +647,7 @@
                 trackPosition = -setWidth;
                 updateTrackPosition();
                 
-                // Start auto-scroll
+                // Start auto-scroll immediately
                 animate();
             }
             
@@ -646,44 +656,62 @@
                 track.style.transform = `translateX(${trackPosition}px)`;
             }
             
-            // Seamless infinite loop animation
+            // Seamless infinite loop animation with inertia support
             function animate() {
                 if (!isUserInteracting) {
+                    // Apply auto-scroll
                     trackPosition -= autoScrollSpeed;
+                } else if (!isDragging && Math.abs(velocity) > 0.1) {
+                    // Apply inertia when not dragging but still has velocity
+                    trackPosition += velocity;
+                    velocity *= 0.95; // Deceleration factor
                     
-                    // Seamless loop: reset position when we've scrolled one full set
-                    if (trackPosition <= -setWidth * 2) {
-                        trackPosition += setWidth;
+                    // Stop when velocity is very small
+                    if (Math.abs(velocity) < 0.1) {
+                        velocity = 0;
                     }
-                    else if (trackPosition >= 0) {
-                        trackPosition -= setWidth;
-                    }
-                    
-                    updateTrackPosition();
                 }
                 
+                // Seamless loop: reset position when we've scrolled one full set
+                if (trackPosition <= -setWidth * 2) {
+                    trackPosition += setWidth;
+                }
+                else if (trackPosition >= 0) {
+                    trackPosition -= setWidth;
+                }
+                
+                updateTrackPosition();
                 animationFrame = requestAnimationFrame(animate);
             }
             
-            // Mouse/Touch drag handlers
+            // Mouse/Touch drag handlers with inertia calculation
             function handleDragStart(e) {
                 isDragging = true;
                 isUserInteracting = true;
                 startX = e.type.includes('mouse') ? e.pageX : e.touches[0].pageX;
                 lastX = startX;
                 velocity = 0;
+                lastMoveTime = performance.now();
                 carousel.style.cursor = 'grabbing';
+                
+                clearTimeout(userInteractionTimeout);
             }
             
             function handleDragMove(e) {
                 if (!isDragging) return;
                 
                 e.preventDefault();
+                const currentTime = performance.now();
                 const currentX = e.type.includes('mouse') ? e.pageX : e.touches[0].pageX;
                 const diff = currentX - lastX;
+                const timeDiff = currentTime - lastMoveTime;
+                
+                // Calculate velocity for inertia
+                if (timeDiff > 0) {
+                    velocity = diff / timeDiff * 16; // Normalize to 60fps
+                }
                 
                 trackPosition += diff;
-                velocity = diff;
                 
                 // Keep within bounds for seamless loop
                 if (trackPosition <= -setWidth * 2) {
@@ -699,6 +727,7 @@
                 
                 updateTrackPosition();
                 lastX = currentX;
+                lastMoveTime = currentTime;
             }
             
             function handleDragEnd() {
@@ -707,11 +736,13 @@
                 isDragging = false;
                 carousel.style.cursor = 'grab';
                 
-                // Resume auto-scroll after a delay
+                // Keep isUserInteracting true to allow inertia
+                // Resume auto-scroll after inertia completes
                 clearTimeout(userInteractionTimeout);
                 userInteractionTimeout = setTimeout(() => {
                     isUserInteracting = false;
-                }, 150);
+                    velocity = 0;
+                }, 1000); // Longer timeout to allow inertia to complete
             }
             
             // Mouse events
@@ -724,12 +755,16 @@
             carousel.addEventListener('touchmove', handleDragMove, { passive: false });
             carousel.addEventListener('touchend', handleDragEnd, { passive: true });
             
-            // Wheel scroll
+            // Wheel scroll with inertia
             carousel.addEventListener('wheel', (e) => {
                 e.preventDefault();
                 isUserInteracting = true;
+                isDragging = false;
                 
                 const delta = Math.abs(e.deltaX) > Math.abs(e.deltaY) ? e.deltaX : e.deltaY;
+                
+                // Apply wheel delta and set velocity for inertia
+                velocity = -delta * 0.5;
                 trackPosition -= delta;
                 
                 // Keep within bounds for seamless loop
@@ -745,7 +780,8 @@
                 clearTimeout(userInteractionTimeout);
                 userInteractionTimeout = setTimeout(() => {
                     isUserInteracting = false;
-                }, 150);
+                    velocity = 0;
+                }, 500);
             }, { passive: false });
             
             // Handle visibility change
@@ -754,7 +790,7 @@
                     if (animationFrame) {
                         cancelAnimationFrame(animationFrame);
                     }
-                } else {
+                } else if (carouselInitialized) {
                     animate();
                 }
             });
