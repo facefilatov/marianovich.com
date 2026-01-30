@@ -1,4 +1,4 @@
-777<!DOCTYPE html>
+888<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -193,7 +193,6 @@
         .gemstones-wrapper {
             width: 100%;
             opacity: 0;
-            transform: translateX(100%);
         }
 
         .gemstones {
@@ -424,7 +423,7 @@
     </div>
 
     <script>
-        // Pure JavaScript animations with smooth slide-in to carousel transition
+        // Unified animation system - slide-in flows directly into carousel scroll
         (function() {
             const carousel = document.getElementById('gemstones');
             const track = document.getElementById('gemstonesTrack');
@@ -438,12 +437,11 @@
             const SLIDE_IN_START = 740;
             const SLIDE_IN_DURATION = 800;
             const SLIDE_IN_END = SLIDE_IN_START + SLIDE_IN_DURATION; // 1540ms
-            const TRANSITION_DURATION = 300; // Blend period from slide-in to auto-scroll
             
             let isUserInteracting = false;
             let userInteractionTimeout;
             let animationFrame;
-            let trackPosition = 0;
+            let carouselScrollDistance = 0; // Total distance carousel has scrolled
             let setWidth = 0;
             let isDragging = false;
             let startX = 0;
@@ -452,23 +450,25 @@
             let lastMoveTime = 0;
             let carouselInitialized = false;
             let globalStartTime = null;
+            let slideInTotalDistance = 0;
             
-            // Smoother easing function
+            // Easing functions
             function easeOutQuart(t) {
                 return 1 - Math.pow(1 - t, 4);
             }
             
-            // Ease in function for smooth acceleration
-            function easeInQuad(t) {
-                return t * t;
+            function easeOutCubic(t) {
+                return 1 - Math.pow(1 - t, 3);
             }
             
-            // Update track position using transform
+            // Update track position
             function updateTrackPosition() {
-                track.style.transform = `translateX(${trackPosition}px)`;
+                const basePosition = -setWidth; // Start at middle set
+                const totalOffset = basePosition + carouselScrollDistance;
+                track.style.transform = `translateX(${totalOffset}px)`;
             }
             
-            // Initialize carousel early
+            // Initialize carousel
             function initCarousel() {
                 if (carouselInitialized) return;
                 carouselInitialized = true;
@@ -479,48 +479,26 @@
                     return;
                 }
                 
-                // Calculate set width including gap
                 const gap = parseFloat(getComputedStyle(track).gap || 0);
                 setWidth = firstSet.offsetWidth + gap;
                 
-                // Start at middle set (negative because we're using translateX)
-                trackPosition = -setWidth;
+                // Calculate how far the slide-in will move
+                slideInTotalDistance = window.innerWidth || gemstonesWrapper.offsetWidth;
+                
                 updateTrackPosition();
             }
             
-            // Calculate instantaneous velocity during slide-in animation
-            function getSlideInVelocity(elapsed) {
-                if (elapsed < SLIDE_IN_START || elapsed >= SLIDE_IN_END) {
-                    return 0;
-                }
-                
-                const progress = (elapsed - SLIDE_IN_START) / SLIDE_IN_DURATION;
-                
-                // Derivative of easeOutQuart: 4(1-t)^3
-                const t = 1 - progress;
-                const derivative = -4 * Math.pow(t, 3);
-                
-                // Convert to pixels per frame (assuming 60fps)
-                // The slide-in moves 100% of wrapper width in 800ms
-                const wrapperWidth = gemstonesWrapper.offsetWidth || window.innerWidth;
-                const totalDistance = wrapperWidth;
-                const pixelsPerMs = totalDistance / SLIDE_IN_DURATION;
-                const pixelsPerFrame = pixelsPerMs * (1000 / 60);
-                
-                return derivative * pixelsPerFrame;
-            }
-            
-            // Main animation loop - runs continuously
+            // Main animation loop
             function mainAnimationLoop(currentTime) {
                 if (!globalStartTime) globalStartTime = currentTime;
                 const elapsed = currentTime - globalStartTime;
                 
-                // Initialize carousel early (at 1400ms, before slide-in completes at 1540ms)
+                // Initialize carousel early
                 if (!carouselInitialized && elapsed >= 1400) {
                     initCarousel();
                 }
                 
-                // Run logo slide-in animation
+                // Logo slide-in
                 if (elapsed < 800) {
                     const logoProgress = elapsed / 800;
                     const logoEased = easeOutQuart(logoProgress);
@@ -531,18 +509,15 @@
                     logo.style.transform = 'translateX(0)';
                 }
                 
-                // Run gemstones slide-in animation
+                // Gemstones slide-in (using opacity only, position handled by carousel)
                 if (elapsed >= SLIDE_IN_START && elapsed < SLIDE_IN_END) {
                     const gemstonesProgress = (elapsed - SLIDE_IN_START) / SLIDE_IN_DURATION;
-                    const gemstonesEased = easeOutQuart(gemstonesProgress);
-                    gemstonesWrapper.style.opacity = String(gemstonesEased);
-                    gemstonesWrapper.style.transform = `translateX(${100 - (100 * gemstonesEased)}%)`;
+                    gemstonesWrapper.style.opacity = String(gemstonesProgress);
                 } else if (elapsed >= SLIDE_IN_END) {
                     gemstonesWrapper.style.opacity = '1';
-                    gemstonesWrapper.style.transform = 'translateX(0)';
                 }
                 
-                // Run social icons animation
+                // Social icons animation
                 socialIcons.forEach((icon, index) => {
                     const iconDelay = 640 + (index * 100);
                     const iconEnd = iconDelay + 400;
@@ -567,7 +542,7 @@
                     }
                 });
                 
-                // Run separator animation
+                // Separator animation
                 if (elapsed >= 900 && elapsed < 1100) {
                     const separatorProgress = (elapsed - 900) / 200;
                     socialIconsAfter.style.setProperty('--separator-opacity', String(separatorProgress));
@@ -575,7 +550,7 @@
                     socialIconsAfter.style.setProperty('--separator-opacity', '1');
                 }
                 
-                // Run origins fade-in animation
+                // Origins fade-in
                 if (elapsed >= SLIDE_IN_END && elapsed < SLIDE_IN_END + 800) {
                     const originsProgress = (elapsed - SLIDE_IN_END) / 800;
                     originsContent.style.opacity = String(originsProgress);
@@ -583,33 +558,32 @@
                     originsContent.style.opacity = '1';
                 }
                 
-                // Run carousel with smooth transition from slide-in
+                // Unified carousel movement (includes slide-in)
                 if (carouselInitialized && setWidth > 0) {
-                    let currentSpeed = 0;
-                    
-                    // During slide-in: track follows wrapper movement
-                    if (elapsed < SLIDE_IN_END) {
-                        currentSpeed = getSlideInVelocity(elapsed);
-                    }
-                    // Transition period: blend from slide-in velocity to auto-scroll
-                    else if (elapsed < SLIDE_IN_END + TRANSITION_DURATION) {
-                        const transitionProgress = (elapsed - SLIDE_IN_END) / TRANSITION_DURATION;
-                        const transitionEased = easeInQuad(transitionProgress);
-                        
-                        const slideInEndVelocity = getSlideInVelocity(SLIDE_IN_END - 1);
-                        currentSpeed = slideInEndVelocity + (TARGET_AUTO_SCROLL_SPEED - slideInEndVelocity) * transitionEased;
-                    }
-                    // Normal auto-scroll
-                    else {
-                        currentSpeed = TARGET_AUTO_SCROLL_SPEED;
-                    }
-                    
-                    // Apply movement
                     if (!isUserInteracting) {
-                        trackPosition -= currentSpeed;
+                        // During slide-in phase: move at slide-in speed
+                        if (elapsed >= SLIDE_IN_START && elapsed < SLIDE_IN_END) {
+                            const progress = (elapsed - SLIDE_IN_START) / SLIDE_IN_DURATION;
+                            const easedProgress = easeOutCubic(progress);
+                            
+                            // Move from right (full distance) to 0
+                            const targetDistance = slideInTotalDistance * (1 - easedProgress);
+                            carouselScrollDistance = targetDistance;
+                        }
+                        // After slide-in: continue at constant auto-scroll speed
+                        else if (elapsed >= SLIDE_IN_END) {
+                            // Continue scrolling from where slide-in ended
+                            const timeSinceSlideIn = elapsed - SLIDE_IN_END;
+                            const autoScrollDistance = (timeSinceSlideIn / 1000) * (TARGET_AUTO_SCROLL_SPEED * 60);
+                            carouselScrollDistance = -autoScrollDistance;
+                        }
+                        // Before slide-in starts: position off-screen
+                        else {
+                            carouselScrollDistance = slideInTotalDistance;
+                        }
                     } else if (!isDragging && Math.abs(velocity) > 0.1) {
-                        // Apply inertia when not dragging but still has velocity
-                        trackPosition += velocity;
+                        // User inertia
+                        carouselScrollDistance += velocity;
                         velocity *= 0.95;
                         
                         if (Math.abs(velocity) < 0.1) {
@@ -617,12 +591,12 @@
                         }
                     }
                     
-                    // Seamless loop: reset position when we've scrolled one full set
-                    if (trackPosition <= -setWidth * 2) {
-                        trackPosition += setWidth;
+                    // Seamless loop wrapping
+                    while (carouselScrollDistance < -setWidth) {
+                        carouselScrollDistance += setWidth;
                     }
-                    else if (trackPosition >= 0) {
-                        trackPosition -= setWidth;
+                    while (carouselScrollDistance > setWidth) {
+                        carouselScrollDistance -= setWidth;
                     }
                     
                     updateTrackPosition();
@@ -631,7 +605,7 @@
                 animationFrame = requestAnimationFrame(mainAnimationLoop);
             }
             
-            // Mouse/Touch drag handlers with inertia calculation
+            // Drag handlers
             function handleDragStart(e) {
                 isDragging = true;
                 isUserInteracting = true;
@@ -653,26 +627,13 @@
                 const diff = currentX - lastX;
                 const timeDiff = currentTime - lastMoveTime;
                 
-                // Calculate velocity for inertia
                 if (timeDiff > 0) {
-                    velocity = diff / timeDiff * 16; // Normalize to 60fps
+                    velocity = diff / timeDiff * 16;
                 }
                 
-                trackPosition += diff;
-                
-                // Keep within bounds for seamless loop
-                if (trackPosition <= -setWidth * 2) {
-                    trackPosition += setWidth;
-                    startX += setWidth;
-                    lastX += setWidth;
-                }
-                else if (trackPosition >= 0) {
-                    trackPosition -= setWidth;
-                    startX -= setWidth;
-                    lastX -= setWidth;
-                }
-                
+                carouselScrollDistance += diff;
                 updateTrackPosition();
+                
                 lastX = currentX;
                 lastMoveTime = currentTime;
             }
@@ -683,7 +644,6 @@
                 isDragging = false;
                 carousel.style.cursor = 'grab';
                 
-                // Keep isUserInteracting true to allow inertia
                 clearTimeout(userInteractionTimeout);
                 userInteractionTimeout = setTimeout(() => {
                     isUserInteracting = false;
@@ -691,36 +651,23 @@
                 }, 1000);
             }
             
-            // Mouse events
+            // Event listeners
             carousel.addEventListener('mousedown', handleDragStart);
             document.addEventListener('mousemove', handleDragMove);
             document.addEventListener('mouseup', handleDragEnd);
             
-            // Touch events
             carousel.addEventListener('touchstart', handleDragStart, { passive: true });
             carousel.addEventListener('touchmove', handleDragMove, { passive: false });
             carousel.addEventListener('touchend', handleDragEnd, { passive: true });
             
-            // Wheel scroll with inertia
             carousel.addEventListener('wheel', (e) => {
                 e.preventDefault();
                 isUserInteracting = true;
                 isDragging = false;
                 
                 const delta = Math.abs(e.deltaX) > Math.abs(e.deltaY) ? e.deltaX : e.deltaY;
-                
-                // Apply wheel delta and set velocity for inertia
                 velocity = -delta * 0.5;
-                trackPosition -= delta;
-                
-                // Keep within bounds for seamless loop
-                if (trackPosition <= -setWidth * 2) {
-                    trackPosition += setWidth;
-                }
-                else if (trackPosition >= 0) {
-                    trackPosition -= setWidth;
-                }
-                
+                carouselScrollDistance -= delta;
                 updateTrackPosition();
                 
                 clearTimeout(userInteractionTimeout);
@@ -730,7 +677,7 @@
                 }, 500);
             }, { passive: false });
             
-            // Add CSS variable support for separator
+            // CSS variable support
             const style = document.createElement('style');
             style.textContent = `
                 .social-icons::after {
@@ -739,7 +686,7 @@
             `;
             document.head.appendChild(style);
             
-            // Handle visibility change
+            // Visibility handling
             document.addEventListener('visibilitychange', () => {
                 if (document.hidden) {
                     if (animationFrame) {
@@ -751,7 +698,7 @@
                 }
             });
             
-            // Start main animation loop immediately
+            // Start animation
             if (document.readyState === 'loading') {
                 document.addEventListener('DOMContentLoaded', () => {
                     mainAnimationLoop(performance.now());
