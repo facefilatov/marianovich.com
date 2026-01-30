@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+111<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -131,24 +131,11 @@
             height: 1px;
             background: linear-gradient(135deg, rgba(255, 255, 255, 0.03) 0%, rgba(255, 255, 255, 0.08) 50%, rgba(255, 255, 255, 0.03) 100%);
             opacity: 0;
-            animation: fadeIn 0.2s ease-out 0.9s forwards;
         }
         
         .social-icon {
             opacity: 0;
             transform: translateY(-100px);
-        }
-
-        .social-icon:nth-child(1) {
-            animation: slideInSocial 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) 0.64s forwards;
-        }
-
-        .social-icon:nth-child(2) {
-            animation: slideInSocial 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) 0.74s forwards;
-        }
-
-        .social-icon:nth-child(3) {
-            animation: slideInSocial 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) 0.84s forwards;
         }
 
         .social-icon a {
@@ -195,7 +182,6 @@
             margin: 0 auto 10px;
             opacity: 0;
             transform: translateX(100%);
-            animation: slideIn 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
         }
 
         .logo img {
@@ -208,7 +194,6 @@
             width: 100%;
             opacity: 0;
             transform: translateX(100%);
-            animation: slideIn 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) 0.74s forwards;
         }
 
         .gemstones {
@@ -256,7 +241,6 @@
             margin-bottom: 30px;
             flex-wrap: wrap;
             opacity: 0;
-            animation: fadeIn 0.8s ease-out 1.54s forwards;
         }
 
         .origin-column h3 {
@@ -305,33 +289,6 @@
             font-size: 8pt;
             color: #333;
             letter-spacing: 1px;
-        }
-
-        @keyframes slideIn {
-            to {
-                opacity: 1;
-                transform: translateX(0);
-            }
-        }
-
-        @keyframes slideInSocial {
-            0% {
-                opacity: 0;
-                transform: translateY(-100px);
-            }
-            60% {
-                transform: translateY(10px);
-            }
-            100% {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-        
-        @keyframes fadeIn {
-            to {
-                opacity: 1;
-            }
         }
     </style>
 </head>
@@ -465,119 +422,287 @@
     </div>
 
     <script>
-        const carousel = document.getElementById('gemstones');
-        const track = document.getElementById('gemstonesTrack');
-        
-        let autoScrollSpeed = 1.2; // pixels per frame (matches ~36.67s for full carousel)
-        let isUserScrolling = false;
-        let userScrollTimeout;
-        let animationFrame;
-        let lastTime = 0;
-        
-        // Initialize immediately when DOM is ready
-        function initCarousel() {
-            const firstSet = track.querySelector('.gemstones-content');
-            if (!firstSet) {
-                // Try again if elements aren't ready
-                setTimeout(initCarousel, 100);
-                return;
+        // Pure JavaScript animations - no CSS animations
+        (function() {
+            const carousel = document.getElementById('gemstones');
+            const track = document.getElementById('gemstonesTrack');
+            const logo = document.querySelector('.logo');
+            const gemstonesWrapper = document.querySelector('.gemstones-wrapper');
+            const socialIcons = document.querySelectorAll('.social-icon');
+            const socialIconsAfter = document.querySelector('.social-icons');
+            const originsContent = document.querySelector('.origins-content');
+            
+            let autoScrollSpeed = 1.2;
+            let isUserScrolling = false;
+            let userScrollTimeout;
+            let animationFrame;
+            let lastTime = 0;
+            let setWidth = 0;
+            
+            // Easing function for smooth animations
+            function easeOutCubic(t) {
+                return 1 - Math.pow(1 - t, 3);
             }
             
-            const setWidth = firstSet.offsetWidth;
+            // JS-based slide-in animation for logo
+            function animateLogo() {
+                const duration = 800;
+                const startTime = performance.now();
+                
+                function animate(currentTime) {
+                    const elapsed = currentTime - startTime;
+                    const progress = Math.min(elapsed / duration, 1);
+                    const eased = easeOutCubic(progress);
+                    
+                    logo.style.opacity = eased;
+                    logo.style.transform = `translateX(${100 - (100 * eased)}%)`;
+                    
+                    if (progress < 1) {
+                        requestAnimationFrame(animate);
+                    }
+                }
+                
+                requestAnimationFrame(animate);
+            }
             
-            // Start at the middle set (second set) - allows scrolling left immediately
-            carousel.scrollLeft = setWidth;
+            // JS-based slide-in animation for gemstones wrapper
+            function animateGemstones() {
+                const duration = 800;
+                const delay = 740; // 0.74s delay
+                const startTime = performance.now() + delay;
+                
+                function animate(currentTime) {
+                    if (currentTime < startTime) {
+                        requestAnimationFrame(animate);
+                        return;
+                    }
+                    
+                    const elapsed = currentTime - startTime;
+                    const progress = Math.min(elapsed / duration, 1);
+                    const eased = easeOutCubic(progress);
+                    
+                    gemstonesWrapper.style.opacity = eased;
+                    gemstonesWrapper.style.transform = `translateX(${100 - (100 * eased)}%)`;
+                    
+                    if (progress < 1) {
+                        requestAnimationFrame(animate);
+                    } else {
+                        // Immediately start carousel after animation completes
+                        initCarousel();
+                    }
+                }
+                
+                requestAnimationFrame(animate);
+            }
             
-            // Auto-scroll animation with delta time for smooth performance
+            // JS-based social icons animation
+            function animateSocialIcons() {
+                socialIcons.forEach((icon, index) => {
+                    const duration = 400;
+                    const delay = 640 + (index * 100);
+                    const startTime = performance.now() + delay;
+                    
+                    function animate(currentTime) {
+                        if (currentTime < startTime) {
+                            requestAnimationFrame(animate);
+                            return;
+                        }
+                        
+                        const elapsed = currentTime - startTime;
+                        const progress = Math.min(elapsed / duration, 1);
+                        
+                        // Custom easing for bounce effect
+                        let eased;
+                        if (progress < 0.6) {
+                            eased = easeOutCubic(progress / 0.6);
+                        } else {
+                            const bounceProgress = (progress - 0.6) / 0.4;
+                            eased = 1 + (0.1 * Math.sin(bounceProgress * Math.PI));
+                        }
+                        
+                        icon.style.opacity = Math.min(progress * 2, 1);
+                        
+                        // Slide from -100px to +10px (60% mark) then to 0
+                        let yPos;
+                        if (progress < 0.6) {
+                            yPos = -100 + (110 * easeOutCubic(progress / 0.6));
+                        } else {
+                            const bounceProgress = (progress - 0.6) / 0.4;
+                            yPos = 10 - (10 * bounceProgress);
+                        }
+                        
+                        icon.style.transform = `translateY(${yPos}px)`;
+                        
+                        if (progress < 1) {
+                            requestAnimationFrame(animate);
+                        }
+                    }
+                    
+                    requestAnimationFrame(animate);
+                });
+                
+                // Animate the separator line
+                const separatorDelay = 900;
+                const separatorDuration = 200;
+                const separatorStart = performance.now() + separatorDelay;
+                
+                function animateSeparator(currentTime) {
+                    if (currentTime < separatorStart) {
+                        requestAnimationFrame(animateSeparator);
+                        return;
+                    }
+                    
+                    const elapsed = currentTime - separatorStart;
+                    const progress = Math.min(elapsed / separatorDuration, 1);
+                    
+                    // Target the ::after pseudo-element through a custom property
+                    socialIconsAfter.style.setProperty('--separator-opacity', progress);
+                    
+                    if (progress < 1) {
+                        requestAnimationFrame(animateSeparator);
+                    }
+                }
+                
+                // Add CSS variable support for separator
+                const style = document.createElement('style');
+                style.textContent = `
+                    .social-icons::after {
+                        opacity: var(--separator-opacity, 0) !important;
+                    }
+                `;
+                document.head.appendChild(style);
+                
+                requestAnimationFrame(animateSeparator);
+            }
+            
+            // JS-based fade-in for origins
+            function animateOrigins() {
+                const duration = 800;
+                const delay = 1540;
+                const startTime = performance.now() + delay;
+                
+                function animate(currentTime) {
+                    if (currentTime < startTime) {
+                        requestAnimationFrame(animate);
+                        return;
+                    }
+                    
+                    const elapsed = currentTime - startTime;
+                    const progress = Math.min(elapsed / duration, 1);
+                    
+                    originsContent.style.opacity = progress;
+                    
+                    if (progress < 1) {
+                        requestAnimationFrame(animate);
+                    }
+                }
+                
+                requestAnimationFrame(animate);
+            }
+            
+            // Initialize carousel with seamless infinite scrolling
+            function initCarousel() {
+                const firstSet = track.querySelector('.gemstones-content');
+                if (!firstSet) return;
+                
+                setWidth = firstSet.offsetWidth + parseFloat(getComputedStyle(firstSet.parentElement).gap || 0);
+                
+                // Start at middle set - no visible jump needed
+                carousel.scrollLeft = setWidth;
+                lastTime = 0;
+                
+                // Start auto-scroll immediately
+                autoScroll(performance.now());
+            }
+            
+            // Seamless auto-scroll with infinite loop
             function autoScroll(currentTime) {
                 if (!lastTime) lastTime = currentTime;
                 const deltaTime = currentTime - lastTime;
                 lastTime = currentTime;
                 
                 if (!isUserScrolling) {
-                    // Use delta time to ensure consistent speed across devices
-                    const scrollAmount = autoScrollSpeed * (deltaTime / 16.67); // Normalize to 60fps
+                    const scrollAmount = autoScrollSpeed * (deltaTime / 16.67);
                     carousel.scrollLeft += scrollAmount;
                 }
                 
-                // Check for infinite loop reset
+                // Seamless infinite loop - check boundaries and reset invisibly
                 const currentScroll = carousel.scrollLeft;
+                const scrollThreshold = setWidth * 0.1; // 10% buffer zone
                 
-                // Seamless loop: when reaching end of second set, jump to start of second set
-                if (currentScroll >= setWidth * 2) {
-                    carousel.scrollLeft = setWidth;
+                // When near end of second set, jump back to start of second set
+                if (currentScroll >= setWidth * 2 - scrollThreshold) {
+                    const offset = currentScroll - (setWidth * 2);
+                    carousel.scrollLeft = setWidth + offset;
                 }
-                // When reaching start of first set, jump to start of second set
-                else if (currentScroll <= 0) {
-                    carousel.scrollLeft = setWidth;
+                // When near start of first set, jump forward to start of second set
+                else if (currentScroll <= scrollThreshold) {
+                    const offset = currentScroll;
+                    carousel.scrollLeft = setWidth + offset;
                 }
                 
                 animationFrame = requestAnimationFrame(autoScroll);
             }
             
-            // Start auto-scroll after slide-in animation completes (0.8s + 0.74s = 1.54s, add buffer)
-            setTimeout(() => {
-                // Force a reflow to ensure iOS Safari is ready
-                carousel.offsetHeight;
-                lastTime = 0;
-                autoScroll(performance.now());
-            }, 1640); // Slightly longer delay to ensure slide-in completes
-        }
-        
-        // Start when DOM is ready
-        if (document.readyState === 'loading') {
-            document.addEventListener('DOMContentLoaded', initCarousel);
-        } else {
-            initCarousel();
-        }
-        
-        // Enable both vertical AND horizontal wheel scrolling
-        carousel.addEventListener('wheel', (e) => {
-            e.preventDefault();
+            // Handle user interaction
+            carousel.addEventListener('wheel', (e) => {
+                e.preventDefault();
+                isUserScrolling = true;
+                clearTimeout(userScrollTimeout);
+                
+                const delta = Math.abs(e.deltaX) > Math.abs(e.deltaY) ? e.deltaX : e.deltaY;
+                carousel.scrollLeft += delta;
+                
+                userScrollTimeout = setTimeout(() => {
+                    isUserScrolling = false;
+                }, 150);
+            }, { passive: false });
             
-            // Pause auto-scroll temporarily when user scrolls
-            isUserScrolling = true;
-            clearTimeout(userScrollTimeout);
-            userScrollTimeout = setTimeout(() => {
-                isUserScrolling = false;
-            }, 150); // Resume auto-scroll 150ms after user stops
+            carousel.addEventListener('touchstart', () => {
+                isUserScrolling = true;
+            }, { passive: true });
             
-            // Use deltaY (vertical scroll) OR deltaX (horizontal scroll)
-            const delta = Math.abs(e.deltaX) > Math.abs(e.deltaY) ? e.deltaX : e.deltaY;
-            carousel.scrollLeft += delta;
-        }, { passive: false });
-        
-        // Also detect touch/mouse scrolling
-        carousel.addEventListener('touchstart', () => {
-            isUserScrolling = true;
-        }, { passive: true });
-        
-        carousel.addEventListener('touchend', () => {
-            clearTimeout(userScrollTimeout);
-            userScrollTimeout = setTimeout(() => {
-                isUserScrolling = false;
-                lastTime = 0; // Reset timing for smooth restart
-            }, 150);
-        }, { passive: true });
-        
-        carousel.addEventListener('mousedown', () => {
-            isUserScrolling = true;
-        });
-        
-        carousel.addEventListener('mouseup', () => {
-            clearTimeout(userScrollTimeout);
-            userScrollTimeout = setTimeout(() => {
-                isUserScrolling = false;
-                lastTime = 0; // Reset timing for smooth restart
-            }, 150);
-        });
-        
-        // Prevent iOS Safari from pausing requestAnimationFrame
-        document.addEventListener('visibilitychange', () => {
-            if (!document.hidden) {
-                lastTime = 0; // Reset timing when page becomes visible again
+            carousel.addEventListener('touchend', () => {
+                clearTimeout(userScrollTimeout);
+                userScrollTimeout = setTimeout(() => {
+                    isUserScrolling = false;
+                    lastTime = 0;
+                }, 150);
+            }, { passive: true });
+            
+            carousel.addEventListener('mousedown', () => {
+                isUserScrolling = true;
+            });
+            
+            carousel.addEventListener('mouseup', () => {
+                clearTimeout(userScrollTimeout);
+                userScrollTimeout = setTimeout(() => {
+                    isUserScrolling = false;
+                    lastTime = 0;
+                }, 150);
+            });
+            
+            // Handle visibility change
+            document.addEventListener('visibilitychange', () => {
+                if (!document.hidden) {
+                    lastTime = 0;
+                }
+            });
+            
+            // Start all animations when DOM is ready
+            if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', startAnimations);
+            } else {
+                startAnimations();
             }
-        });
+            
+            function startAnimations() {
+                animateLogo();
+                animateGemstones();
+                animateSocialIcons();
+                animateOrigins();
+            }
+        })();
     </script>
 </body>
 </html>
