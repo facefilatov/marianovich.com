@@ -1,4 +1,4 @@
-222<!DOCTYPE html>
+333<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -233,7 +233,7 @@
         }
 
         .tagline {
-            font-size: clamp(14px, 2vw, 20px);
+            font-size: clamp(12px, 1.8vw, 18px);
             font-weight: 300;
             line-height: 1.6;
             letter-spacing: 0.5px;
@@ -270,18 +270,21 @@
             gap: clamp(30px, 10vw, 150px);
             will-change: transform;
             position: relative;
-            animation: slide-and-scroll 100000s cubic-bezier(0.33, 0, 0.67, 1) 0.74s forwards;
+            transform: translateX(100vw);
+            animation: slide-and-scroll 100000s linear 0.74s forwards;
         }
 
         @keyframes slide-and-scroll {
             0% {
-                transform: translateX(calc(100vw + 33.33%));
+                transform: translateX(100vw);
             }
             0.8% {
-                transform: translateX(calc(-33.33%));
+                transform: translateX(0);
+                animation-timing-function: cubic-bezier(0.25, 0.46, 0.45, 0.94);
             }
             100% {
-                transform: translateX(calc(-999999px - 33.33%));
+                transform: translateX(-999999px);
+                animation-timing-function: linear;
             }
         }
 
@@ -392,7 +395,7 @@
                 <img src="https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Marianovich%20gems%20Logo.svg" alt="Marianovich Gems - Collector's Grade Natural Gemstones" width="600" height="auto">
             </div>
 
-            <p class="tagline">We curate exceptional natural gemstones for the premium market – rare, distinctive, and selected to deliver timeless enjoyment</p>
+            <p class="tagline">We curate exceptional natural gemstones for the premium market –<br>rare, distinctive, and selected to deliver timeless enjoyment</p>
 
             <div class="gemstones-wrapper">
                 <div class="gemstones" id="gemstones">
@@ -485,7 +488,9 @@
                 <div class="separator-line"></div>
 
                 <div class="contact-email">
-                    <a href="/cdn-cgi/l/email-protection#93f0fcfde7f2f0e7d3fef2e1faf2fdfce5faf0fbbdf0fcfe"><span class="__cf_email__" data-cfemail="aecdc1c0dacfcddaeec3cfdcc7cfc0c1d8c7cdc680cdc1c3">[email&#160;protected]</span></a>
+                    <a href="mailto:contact@marianovich.com">contact@marianovich.com</a>
                 </div>
 
                 <div class="disclaimer">
+                    ©2026 Marianovich Gems Inc. All rights reserved.
+                </div>
