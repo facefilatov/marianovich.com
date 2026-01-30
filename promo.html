@@ -1,4 +1,4 @@
-222<!DOCTYPE html>
+333<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -198,23 +198,25 @@
 
         .gemstones {
             height: 200px;
-            overflow-x: auto;
-            overflow-y: hidden;
+            overflow: hidden;
             display: flex;
             align-items: center;
-            scrollbar-width: none;
-            -ms-overflow-style: none;
-            -webkit-overflow-scrolling: touch;
+            position: relative;
+            cursor: grab;
+            user-select: none;
+            -webkit-user-select: none;
+            touch-action: pan-y;
         }
 
-        .gemstones::-webkit-scrollbar {
-            display: none;
+        .gemstones:active {
+            cursor: grabbing;
         }
 
         .gemstones-track {
             display: flex;
             gap: clamp(30px, 10vw, 150px);
             will-change: transform;
+            position: relative;
         }
 
         .gemstones-content {
@@ -422,7 +424,7 @@
     </div>
 
     <script>
-        // Pure JavaScript animations - no CSS animations
+        // Pure JavaScript animations using transforms for smooth, jitter-free performance
         (function() {
             const carousel = document.getElementById('gemstones');
             const track = document.getElementById('gemstonesTrack');
@@ -433,12 +435,15 @@
             const originsContent = document.querySelector('.origins-content');
             
             let autoScrollSpeed = 1.2;
-            let isUserScrolling = false;
-            let userScrollTimeout;
+            let isUserInteracting = false;
+            let userInteractionTimeout;
             let animationFrame;
-            let lastTime = 0;
+            let trackPosition = 0;
             let setWidth = 0;
-            let currentVelocity = 0;
+            let isDragging = false;
+            let startX = 0;
+            let lastX = 0;
+            let velocity = 0;
             
             // Smoother easing function
             function easeOutQuart(t) {
@@ -496,8 +501,8 @@
                     if (progress < 1) {
                         requestAnimationFrame(animate);
                     } else {
-                        // Immediately start carousel after animation completes
-                        setTimeout(() => initCarousel(), 16); // One frame delay
+                        // Start carousel after animation completes
+                        setTimeout(() => initCarousel(), 50);
                     }
                 }
                 
@@ -527,7 +532,6 @@
                         const elapsed = currentTime - startTime;
                         const progress = Math.min(elapsed / duration, 1);
                         
-                        // Custom easing for bounce effect
                         let yPos;
                         if (progress < 0.6) {
                             const bounceProgress = progress / 0.6;
@@ -620,7 +624,7 @@
                 requestAnimationFrame(animate);
             }
             
-            // Initialize carousel with seamless infinite scrolling
+            // Initialize carousel with transform-based animation
             function initCarousel() {
                 const firstSet = track.querySelector('.gemstones-content');
                 if (!firstSet) return;
@@ -629,97 +633,129 @@
                 const gap = parseFloat(getComputedStyle(track).gap || 0);
                 setWidth = firstSet.offsetWidth + gap;
                 
-                // Start at middle set
-                carousel.scrollLeft = setWidth;
-                lastTime = performance.now();
+                // Start at middle set (negative because we're using translateX)
+                trackPosition = -setWidth;
+                updateTrackPosition();
                 
                 // Start auto-scroll
-                autoScroll(performance.now());
+                animate();
             }
             
-            // Seamless auto-scroll with infinite loop - completely invisible reset
-            function autoScroll(currentTime) {
-                if (!lastTime) lastTime = currentTime;
-                const deltaTime = currentTime - lastTime;
-                lastTime = currentTime;
-                
-                if (!isUserScrolling) {
-                    const scrollAmount = autoScrollSpeed * (deltaTime / 16.67);
-                    carousel.scrollLeft += scrollAmount;
-                    currentVelocity = scrollAmount;
-                } else {
-                    currentVelocity = 0;
-                }
-                
-                // Seamless infinite loop - instant reset when exactly at boundary
-                const currentScroll = carousel.scrollLeft;
-                
-                // Reset at exact boundaries for truly seamless loop
-                if (currentScroll >= setWidth * 2) {
-                    carousel.scrollLeft = setWidth + (currentScroll - setWidth * 2);
-                }
-                else if (currentScroll < setWidth) {
-                    carousel.scrollLeft = setWidth + currentScroll;
-                }
-                
-                animationFrame = requestAnimationFrame(autoScroll);
+            // Update track position using transform
+            function updateTrackPosition() {
+                track.style.transform = `translateX(${trackPosition}px)`;
             }
             
-            // Handle user interaction - smoother response
-            let lastScrollLeft = carousel.scrollLeft;
-            let scrollMomentum = 0;
-            
-            carousel.addEventListener('scroll', () => {
-                if (isUserScrolling) {
-                    scrollMomentum = carousel.scrollLeft - lastScrollLeft;
-                    lastScrollLeft = carousel.scrollLeft;
+            // Seamless infinite loop animation
+            function animate() {
+                if (!isUserInteracting) {
+                    trackPosition -= autoScrollSpeed;
+                    
+                    // Seamless loop: reset position when we've scrolled one full set
+                    if (trackPosition <= -setWidth * 2) {
+                        trackPosition += setWidth;
+                    }
+                    else if (trackPosition >= 0) {
+                        trackPosition -= setWidth;
+                    }
+                    
+                    updateTrackPosition();
                 }
-            }, { passive: true });
+                
+                animationFrame = requestAnimationFrame(animate);
+            }
             
+            // Mouse/Touch drag handlers
+            function handleDragStart(e) {
+                isDragging = true;
+                isUserInteracting = true;
+                startX = e.type.includes('mouse') ? e.pageX : e.touches[0].pageX;
+                lastX = startX;
+                velocity = 0;
+                carousel.style.cursor = 'grabbing';
+            }
+            
+            function handleDragMove(e) {
+                if (!isDragging) return;
+                
+                e.preventDefault();
+                const currentX = e.type.includes('mouse') ? e.pageX : e.touches[0].pageX;
+                const diff = currentX - lastX;
+                
+                trackPosition += diff;
+                velocity = diff;
+                
+                // Keep within bounds for seamless loop
+                if (trackPosition <= -setWidth * 2) {
+                    trackPosition += setWidth;
+                    startX += setWidth;
+                    lastX += setWidth;
+                }
+                else if (trackPosition >= 0) {
+                    trackPosition -= setWidth;
+                    startX -= setWidth;
+                    lastX -= setWidth;
+                }
+                
+                updateTrackPosition();
+                lastX = currentX;
+            }
+            
+            function handleDragEnd() {
+                if (!isDragging) return;
+                
+                isDragging = false;
+                carousel.style.cursor = 'grab';
+                
+                // Resume auto-scroll after a delay
+                clearTimeout(userInteractionTimeout);
+                userInteractionTimeout = setTimeout(() => {
+                    isUserInteracting = false;
+                }, 150);
+            }
+            
+            // Mouse events
+            carousel.addEventListener('mousedown', handleDragStart);
+            document.addEventListener('mousemove', handleDragMove);
+            document.addEventListener('mouseup', handleDragEnd);
+            
+            // Touch events
+            carousel.addEventListener('touchstart', handleDragStart, { passive: true });
+            carousel.addEventListener('touchmove', handleDragMove, { passive: false });
+            carousel.addEventListener('touchend', handleDragEnd, { passive: true });
+            
+            // Wheel scroll
             carousel.addEventListener('wheel', (e) => {
                 e.preventDefault();
-                isUserScrolling = true;
-                clearTimeout(userScrollTimeout);
+                isUserInteracting = true;
                 
                 const delta = Math.abs(e.deltaX) > Math.abs(e.deltaY) ? e.deltaX : e.deltaY;
-                carousel.scrollLeft += delta;
+                trackPosition -= delta;
                 
-                userScrollTimeout = setTimeout(() => {
-                    isUserScrolling = false;
-                    lastTime = performance.now();
+                // Keep within bounds for seamless loop
+                if (trackPosition <= -setWidth * 2) {
+                    trackPosition += setWidth;
+                }
+                else if (trackPosition >= 0) {
+                    trackPosition -= setWidth;
+                }
+                
+                updateTrackPosition();
+                
+                clearTimeout(userInteractionTimeout);
+                userInteractionTimeout = setTimeout(() => {
+                    isUserInteracting = false;
                 }, 150);
             }, { passive: false });
             
-            carousel.addEventListener('touchstart', () => {
-                isUserScrolling = true;
-                lastScrollLeft = carousel.scrollLeft;
-            }, { passive: true });
-            
-            carousel.addEventListener('touchend', () => {
-                clearTimeout(userScrollTimeout);
-                userScrollTimeout = setTimeout(() => {
-                    isUserScrolling = false;
-                    lastTime = performance.now();
-                }, 150);
-            }, { passive: true });
-            
-            carousel.addEventListener('mousedown', () => {
-                isUserScrolling = true;
-                lastScrollLeft = carousel.scrollLeft;
-            });
-            
-            carousel.addEventListener('mouseup', () => {
-                clearTimeout(userScrollTimeout);
-                userScrollTimeout = setTimeout(() => {
-                    isUserScrolling = false;
-                    lastTime = performance.now();
-                }, 150);
-            });
-            
             // Handle visibility change
             document.addEventListener('visibilitychange', () => {
-                if (!document.hidden) {
-                    lastTime = performance.now();
+                if (document.hidden) {
+                    if (animationFrame) {
+                        cancelAnimationFrame(animationFrame);
+                    }
+                } else {
+                    animate();
                 }
             });
             
@@ -731,7 +767,6 @@
             }
             
             function startAnimations() {
-                // Force immediate execution
                 requestAnimationFrame(() => {
                     animateLogo();
                     animateGemstones();
