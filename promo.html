@@ -1,4 +1,4 @@
-444<!DOCTYPE html>
+555<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -445,210 +445,13 @@
             let lastX = 0;
             let velocity = 0;
             let lastMoveTime = 0;
-            let carouselInitialized = false;
+            let carouselStartTime = null;
+            let logoAnimationComplete = false;
+            let gemstonesAnimationComplete = false;
             
             // Smoother easing function
             function easeOutQuart(t) {
                 return 1 - Math.pow(1 - t, 4);
-            }
-            
-            // Easing for inertia
-            function easeOutCubic(t) {
-                return 1 - Math.pow(1 - t, 3);
-            }
-            
-            // JS-based slide-in animation for logo
-            function animateLogo() {
-                const duration = 800;
-                let startTime = null;
-                
-                function animate(currentTime) {
-                    if (!startTime) startTime = currentTime;
-                    const elapsed = currentTime - startTime;
-                    const progress = Math.min(elapsed / duration, 1);
-                    const eased = easeOutQuart(progress);
-                    
-                    logo.style.opacity = String(eased);
-                    logo.style.transform = `translateX(${100 - (100 * eased)}%)`;
-                    
-                    if (progress < 1) {
-                        requestAnimationFrame(animate);
-                    }
-                }
-                
-                requestAnimationFrame(animate);
-            }
-            
-            // JS-based slide-in animation for gemstones wrapper
-            function animateGemstones() {
-                const duration = 800;
-                const delay = 740;
-                let startTime = null;
-                let delayComplete = false;
-                
-                function animate(currentTime) {
-                    if (!startTime) startTime = currentTime;
-                    
-                    if (!delayComplete) {
-                        if (currentTime - startTime < delay) {
-                            requestAnimationFrame(animate);
-                            return;
-                        }
-                        delayComplete = true;
-                        startTime = currentTime;
-                    }
-                    
-                    const elapsed = currentTime - startTime;
-                    const progress = Math.min(elapsed / duration, 1);
-                    const eased = easeOutQuart(progress);
-                    
-                    gemstonesWrapper.style.opacity = String(eased);
-                    gemstonesWrapper.style.transform = `translateX(${100 - (100 * eased)}%)`;
-                    
-                    if (progress < 1) {
-                        requestAnimationFrame(animate);
-                    } else {
-                        // Immediately initialize and start carousel
-                        initCarousel();
-                    }
-                }
-                
-                requestAnimationFrame(animate);
-            }
-            
-            // JS-based social icons animation
-            function animateSocialIcons() {
-                socialIcons.forEach((icon, index) => {
-                    const duration = 400;
-                    const delay = 640 + (index * 100);
-                    let startTime = null;
-                    let delayComplete = false;
-                    
-                    function animate(currentTime) {
-                        if (!startTime) startTime = currentTime;
-                        
-                        if (!delayComplete) {
-                            if (currentTime - startTime < delay) {
-                                requestAnimationFrame(animate);
-                                return;
-                            }
-                            delayComplete = true;
-                            startTime = currentTime;
-                        }
-                        
-                        const elapsed = currentTime - startTime;
-                        const progress = Math.min(elapsed / duration, 1);
-                        
-                        let yPos;
-                        if (progress < 0.6) {
-                            const bounceProgress = progress / 0.6;
-                            yPos = -100 + (110 * easeOutQuart(bounceProgress));
-                        } else {
-                            const bounceProgress = (progress - 0.6) / 0.4;
-                            yPos = 10 - (10 * bounceProgress);
-                        }
-                        
-                        icon.style.opacity = String(Math.min(progress * 2.5, 1));
-                        icon.style.transform = `translateY(${yPos}px)`;
-                        
-                        if (progress < 1) {
-                            requestAnimationFrame(animate);
-                        }
-                    }
-                    
-                    requestAnimationFrame(animate);
-                });
-                
-                // Animate the separator line
-                const separatorDelay = 900;
-                const separatorDuration = 200;
-                let startTime = null;
-                let delayComplete = false;
-                
-                function animateSeparator(currentTime) {
-                    if (!startTime) startTime = currentTime;
-                    
-                    if (!delayComplete) {
-                        if (currentTime - startTime < separatorDelay) {
-                            requestAnimationFrame(animateSeparator);
-                            return;
-                        }
-                        delayComplete = true;
-                        startTime = currentTime;
-                    }
-                    
-                    const elapsed = currentTime - startTime;
-                    const progress = Math.min(elapsed / separatorDuration, 1);
-                    
-                    socialIconsAfter.style.setProperty('--separator-opacity', String(progress));
-                    
-                    if (progress < 1) {
-                        requestAnimationFrame(animateSeparator);
-                    }
-                }
-                
-                // Add CSS variable support for separator
-                const style = document.createElement('style');
-                style.textContent = `
-                    .social-icons::after {
-                        opacity: var(--separator-opacity, 0) !important;
-                    }
-                `;
-                document.head.appendChild(style);
-                
-                requestAnimationFrame(animateSeparator);
-            }
-            
-            // JS-based fade-in for origins
-            function animateOrigins() {
-                const duration = 800;
-                const delay = 1540;
-                let startTime = null;
-                let delayComplete = false;
-                
-                function animate(currentTime) {
-                    if (!startTime) startTime = currentTime;
-                    
-                    if (!delayComplete) {
-                        if (currentTime - startTime < delay) {
-                            requestAnimationFrame(animate);
-                            return;
-                        }
-                        delayComplete = true;
-                        startTime = currentTime;
-                    }
-                    
-                    const elapsed = currentTime - startTime;
-                    const progress = Math.min(elapsed / duration, 1);
-                    
-                    originsContent.style.opacity = String(progress);
-                    
-                    if (progress < 1) {
-                        requestAnimationFrame(animate);
-                    }
-                }
-                
-                requestAnimationFrame(animate);
-            }
-            
-            // Initialize carousel with transform-based animation
-            function initCarousel() {
-                if (carouselInitialized) return;
-                carouselInitialized = true;
-                
-                const firstSet = track.querySelector('.gemstones-content');
-                if (!firstSet) return;
-                
-                // Calculate set width including gap
-                const gap = parseFloat(getComputedStyle(track).gap || 0);
-                setWidth = firstSet.offsetWidth + gap;
-                
-                // Start at middle set (negative because we're using translateX)
-                trackPosition = -setWidth;
-                updateTrackPosition();
-                
-                // Start auto-scroll immediately
-                animate();
             }
             
             // Update track position using transform
@@ -656,32 +459,100 @@
                 track.style.transform = `translateX(${trackPosition}px)`;
             }
             
-            // Seamless infinite loop animation with inertia support
-            function animate() {
-                if (!isUserInteracting) {
-                    // Apply auto-scroll
-                    trackPosition -= autoScrollSpeed;
-                } else if (!isDragging && Math.abs(velocity) > 0.1) {
-                    // Apply inertia when not dragging but still has velocity
-                    trackPosition += velocity;
-                    velocity *= 0.95; // Deceleration factor
+            // Main animation loop - runs continuously
+            function mainAnimationLoop(currentTime) {
+                // Run logo slide-in animation
+                if (!logoAnimationComplete) {
+                    const logoProgress = Math.min(currentTime / 800, 1);
+                    const logoEased = easeOutQuart(logoProgress);
+                    logo.style.opacity = String(logoEased);
+                    logo.style.transform = `translateX(${100 - (100 * logoEased)}%)`;
                     
-                    // Stop when velocity is very small
-                    if (Math.abs(velocity) < 0.1) {
-                        velocity = 0;
+                    if (logoProgress >= 1) {
+                        logoAnimationComplete = true;
                     }
                 }
                 
-                // Seamless loop: reset position when we've scrolled one full set
-                if (trackPosition <= -setWidth * 2) {
-                    trackPosition += setWidth;
-                }
-                else if (trackPosition >= 0) {
-                    trackPosition -= setWidth;
+                // Run gemstones slide-in animation (starts at 740ms)
+                if (!gemstonesAnimationComplete && currentTime >= 740) {
+                    const gemstonesProgress = Math.min((currentTime - 740) / 800, 1);
+                    const gemstonesEased = easeOutQuart(gemstonesProgress);
+                    gemstonesWrapper.style.opacity = String(gemstonesEased);
+                    gemstonesWrapper.style.transform = `translateX(${100 - (100 * gemstonesEased)}%)`;
+                    
+                    if (gemstonesProgress >= 1) {
+                        gemstonesAnimationComplete = true;
+                        // Initialize carousel immediately when animation completes
+                        if (!carouselStartTime) {
+                            const firstSet = track.querySelector('.gemstones-content');
+                            if (firstSet) {
+                                const gap = parseFloat(getComputedStyle(track).gap || 0);
+                                setWidth = firstSet.offsetWidth + gap;
+                                trackPosition = -setWidth;
+                                carouselStartTime = currentTime;
+                            }
+                        }
+                    }
                 }
                 
-                updateTrackPosition();
-                animationFrame = requestAnimationFrame(animate);
+                // Run social icons animation
+                socialIcons.forEach((icon, index) => {
+                    const iconDelay = 640 + (index * 100);
+                    if (currentTime >= iconDelay) {
+                        const iconProgress = Math.min((currentTime - iconDelay) / 400, 1);
+                        
+                        let yPos;
+                        if (iconProgress < 0.6) {
+                            const bounceProgress = iconProgress / 0.6;
+                            yPos = -100 + (110 * easeOutQuart(bounceProgress));
+                        } else {
+                            const bounceProgress = (iconProgress - 0.6) / 0.4;
+                            yPos = 10 - (10 * bounceProgress);
+                        }
+                        
+                        icon.style.opacity = String(Math.min(iconProgress * 2.5, 1));
+                        icon.style.transform = `translateY(${yPos}px)`;
+                    }
+                });
+                
+                // Run separator animation
+                if (currentTime >= 900) {
+                    const separatorProgress = Math.min((currentTime - 900) / 200, 1);
+                    socialIconsAfter.style.setProperty('--separator-opacity', String(separatorProgress));
+                }
+                
+                // Run origins fade-in animation
+                if (currentTime >= 1540) {
+                    const originsProgress = Math.min((currentTime - 1540) / 800, 1);
+                    originsContent.style.opacity = String(originsProgress);
+                }
+                
+                // Run carousel auto-scroll (starts immediately after gemstones slide-in completes)
+                if (carouselStartTime && setWidth > 0) {
+                    if (!isUserInteracting) {
+                        trackPosition -= autoScrollSpeed;
+                    } else if (!isDragging && Math.abs(velocity) > 0.1) {
+                        // Apply inertia when not dragging but still has velocity
+                        trackPosition += velocity;
+                        velocity *= 0.95;
+                        
+                        if (Math.abs(velocity) < 0.1) {
+                            velocity = 0;
+                        }
+                    }
+                    
+                    // Seamless loop: reset position when we've scrolled one full set
+                    if (trackPosition <= -setWidth * 2) {
+                        trackPosition += setWidth;
+                    }
+                    else if (trackPosition >= 0) {
+                        trackPosition -= setWidth;
+                    }
+                    
+                    updateTrackPosition();
+                }
+                
+                animationFrame = requestAnimationFrame(mainAnimationLoop);
             }
             
             // Mouse/Touch drag handlers with inertia calculation
@@ -737,12 +608,11 @@
                 carousel.style.cursor = 'grab';
                 
                 // Keep isUserInteracting true to allow inertia
-                // Resume auto-scroll after inertia completes
                 clearTimeout(userInteractionTimeout);
                 userInteractionTimeout = setTimeout(() => {
                     isUserInteracting = false;
                     velocity = 0;
-                }, 1000); // Longer timeout to allow inertia to complete
+                }, 1000);
             }
             
             // Mouse events
@@ -784,31 +654,33 @@
                 }, 500);
             }, { passive: false });
             
+            // Add CSS variable support for separator
+            const style = document.createElement('style');
+            style.textContent = `
+                .social-icons::after {
+                    opacity: var(--separator-opacity, 0) !important;
+                }
+            `;
+            document.head.appendChild(style);
+            
             // Handle visibility change
             document.addEventListener('visibilitychange', () => {
                 if (document.hidden) {
                     if (animationFrame) {
                         cancelAnimationFrame(animationFrame);
                     }
-                } else if (carouselInitialized) {
-                    animate();
+                } else {
+                    mainAnimationLoop(performance.now());
                 }
             });
             
-            // Start all animations when DOM is ready
+            // Start main animation loop immediately
             if (document.readyState === 'loading') {
-                document.addEventListener('DOMContentLoaded', startAnimations);
-            } else {
-                startAnimations();
-            }
-            
-            function startAnimations() {
-                requestAnimationFrame(() => {
-                    animateLogo();
-                    animateGemstones();
-                    animateSocialIcons();
-                    animateOrigins();
+                document.addEventListener('DOMContentLoaded', () => {
+                    mainAnimationLoop(0);
                 });
+            } else {
+                mainAnimationLoop(0);
             }
         })();
     </script>
