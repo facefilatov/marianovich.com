@@ -1,4 +1,4 @@
-999<!DOCTYPE html>
+111<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -131,11 +131,45 @@
             height: 1px;
             background: linear-gradient(135deg, rgba(255, 255, 255, 0.03) 0%, rgba(255, 255, 255, 0.08) 50%, rgba(255, 255, 255, 0.03) 100%);
             opacity: 0;
+            animation: separator-fade 0.2s ease 0.9s forwards;
         }
         
         .social-icon {
             opacity: 0;
             transform: translateY(-100px);
+        }
+
+        .social-icon:nth-child(1) {
+            animation: icon-bounce 0.4s ease 0.64s forwards;
+        }
+
+        .social-icon:nth-child(2) {
+            animation: icon-bounce 0.4s ease 0.74s forwards;
+        }
+
+        .social-icon:nth-child(3) {
+            animation: icon-bounce 0.4s ease 0.84s forwards;
+        }
+
+        @keyframes icon-bounce {
+            0% {
+                opacity: 0;
+                transform: translateY(-100px);
+            }
+            60% {
+                opacity: 1;
+                transform: translateY(10px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes separator-fade {
+            to {
+                opacity: 1;
+            }
         }
 
         .social-icon a {
@@ -182,6 +216,14 @@
             margin: 0 auto 10px;
             opacity: 0;
             transform: translateX(100%);
+            animation: slide-in-logo 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+        }
+
+        @keyframes slide-in-logo {
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
         }
 
         .logo img {
@@ -192,12 +234,13 @@
 
         .gemstones-wrapper {
             width: 100%;
-            opacity: 0;
+            overflow: hidden;
+            position: relative;
         }
 
         .gemstones {
             height: 200px;
-            overflow: hidden;
+            overflow: visible;
             display: flex;
             align-items: center;
             position: relative;
@@ -216,6 +259,19 @@
             gap: clamp(30px, 10vw, 150px);
             will-change: transform;
             position: relative;
+            animation: slide-and-scroll 100000s cubic-bezier(0.33, 0, 0.67, 1) 0.74s forwards;
+        }
+
+        @keyframes slide-and-scroll {
+            0% {
+                transform: translateX(100vw);
+            }
+            0.8% {
+                transform: translateX(0);
+            }
+            100% {
+                transform: translateX(-999999px);
+            }
         }
 
         .gemstones-content {
@@ -242,6 +298,13 @@
             margin-bottom: 30px;
             flex-wrap: wrap;
             opacity: 0;
+            animation: fade-in 0.8s ease 1.54s forwards;
+        }
+
+        @keyframes fade-in {
+            to {
+                opacity: 1;
+            }
         }
 
         .origin-column h3 {
@@ -321,7 +384,6 @@
             <div class="gemstones-wrapper">
                 <div class="gemstones" id="gemstones">
                     <div class="gemstones-track" id="gemstonesTrack">
-                        <!-- First set (for scrolling left) -->
                         <div class="gemstones-content">
                             <a href="https://www.etsy.com/shop/marianovich?search_query=demantoid" target="_blank" rel="noopener noreferrer">
                                 <img class="gemstone" src="https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Demantoid.webp" alt="Demantoid Garnet" width="150" height="150">
@@ -342,7 +404,6 @@
                                 <img class="gemstone" src="https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Emerald.webp" alt="Emerald" width="150" height="150">
                             </a>
                         </div>
-                        <!-- Second set (main view) -->
                         <div class="gemstones-content">
                             <a href="https://www.etsy.com/shop/marianovich?search_query=demantoid" target="_blank" rel="noopener noreferrer">
                                 <img class="gemstone" src="https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Demantoid.webp" alt="Demantoid Garnet" width="150" height="150">
@@ -363,7 +424,6 @@
                                 <img class="gemstone" src="https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Emerald.webp" alt="Emerald" width="150" height="150">
                             </a>
                         </div>
-                        <!-- Third set (for scrolling right) -->
                         <div class="gemstones-content">
                             <a href="https://www.etsy.com/shop/marianovich?search_query=demantoid" target="_blank" rel="noopener noreferrer">
                                 <img class="gemstone" src="https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Demantoid.webp" alt="Demantoid Garnet" width="150" height="150">
@@ -421,292 +481,5 @@
             </section>
         </main>
     </div>
-
-    <script>
-        // Unified animation system - slide-in flows directly into carousel scroll
-        (function() {
-            const carousel = document.getElementById('gemstones');
-            const track = document.getElementById('gemstonesTrack');
-            const logo = document.querySelector('.logo');
-            const gemstonesWrapper = document.querySelector('.gemstones-wrapper');
-            const socialIcons = document.querySelectorAll('.social-icon');
-            const socialIconsAfter = document.querySelector('.social-icons');
-            const originsContent = document.querySelector('.origins-content');
-            
-            const TARGET_AUTO_SCROLL_SPEED = 1.2;
-            const SLIDE_IN_START = 740;
-            const SLIDE_IN_DURATION = 800;
-            const SLIDE_IN_END = SLIDE_IN_START + SLIDE_IN_DURATION; // 1540ms
-            
-            let isUserInteracting = false;
-            let userInteractionTimeout;
-            let animationFrame;
-            let carouselScrollDistance = 0; // Total distance carousel has scrolled
-            let setWidth = 0;
-            let isDragging = false;
-            let startX = 0;
-            let lastX = 0;
-            let velocity = 0;
-            let lastMoveTime = 0;
-            let carouselInitialized = false;
-            let globalStartTime = null;
-            let slideInTotalDistance = 0;
-            
-            // Easing functions
-            function easeOutQuart(t) {
-                return 1 - Math.pow(1 - t, 4);
-            }
-            
-            function easeOutCubic(t) {
-                return 1 - Math.pow(1 - t, 3);
-            }
-            
-            // Update track position
-            function updateTrackPosition() {
-                const basePosition = -setWidth; // Start at middle set
-                const totalOffset = basePosition + carouselScrollDistance;
-                track.style.transform = `translateX(${totalOffset}px)`;
-            }
-            
-            // Initialize carousel
-            function initCarousel() {
-                if (carouselInitialized) return;
-                carouselInitialized = true;
-                
-                const firstSet = track.querySelector('.gemstones-content');
-                if (!firstSet) {
-                    setTimeout(initCarousel, 10);
-                    return;
-                }
-                
-                const gap = parseFloat(getComputedStyle(track).gap || 0);
-                setWidth = firstSet.offsetWidth + gap;
-                
-                // Calculate how far the slide-in will move
-                slideInTotalDistance = window.innerWidth || gemstonesWrapper.offsetWidth;
-                
-                updateTrackPosition();
-            }
-            
-            // Main animation loop
-            function mainAnimationLoop(currentTime) {
-                if (!globalStartTime) globalStartTime = currentTime;
-                const elapsed = currentTime - globalStartTime;
-                
-                // Initialize carousel early
-                if (!carouselInitialized && elapsed >= 1400) {
-                    initCarousel();
-                }
-                
-                // Logo slide-in
-                if (elapsed < 800) {
-                    const logoProgress = elapsed / 800;
-                    const logoEased = easeOutQuart(logoProgress);
-                    logo.style.opacity = String(logoEased);
-                    logo.style.transform = `translateX(${100 - (100 * logoEased)}%)`;
-                } else {
-                    logo.style.opacity = '1';
-                    logo.style.transform = 'translateX(0)';
-                }
-                
-                // Gemstones slide-in (using opacity only, position handled by carousel)
-                if (elapsed >= SLIDE_IN_START && elapsed < SLIDE_IN_END) {
-                    const gemstonesProgress = (elapsed - SLIDE_IN_START) / SLIDE_IN_DURATION;
-                    gemstonesWrapper.style.opacity = String(gemstonesProgress);
-                } else if (elapsed >= SLIDE_IN_END) {
-                    gemstonesWrapper.style.opacity = '1';
-                }
-                
-                // Social icons animation
-                socialIcons.forEach((icon, index) => {
-                    const iconDelay = 640 + (index * 100);
-                    const iconEnd = iconDelay + 400;
-                    
-                    if (elapsed >= iconDelay && elapsed < iconEnd) {
-                        const iconProgress = (elapsed - iconDelay) / 400;
-                        
-                        let yPos;
-                        if (iconProgress < 0.6) {
-                            const bounceProgress = iconProgress / 0.6;
-                            yPos = -100 + (110 * easeOutQuart(bounceProgress));
-                        } else {
-                            const bounceProgress = (iconProgress - 0.6) / 0.4;
-                            yPos = 10 - (10 * bounceProgress);
-                        }
-                        
-                        icon.style.opacity = String(Math.min(iconProgress * 2.5, 1));
-                        icon.style.transform = `translateY(${yPos}px)`;
-                    } else if (elapsed >= iconEnd) {
-                        icon.style.opacity = '1';
-                        icon.style.transform = 'translateY(0)';
-                    }
-                });
-                
-                // Separator animation
-                if (elapsed >= 900 && elapsed < 1100) {
-                    const separatorProgress = (elapsed - 900) / 200;
-                    socialIconsAfter.style.setProperty('--separator-opacity', String(separatorProgress));
-                } else if (elapsed >= 1100) {
-                    socialIconsAfter.style.setProperty('--separator-opacity', '1');
-                }
-                
-                // Origins fade-in
-                if (elapsed >= SLIDE_IN_END && elapsed < SLIDE_IN_END + 800) {
-                    const originsProgress = (elapsed - SLIDE_IN_END) / 800;
-                    originsContent.style.opacity = String(originsProgress);
-                } else if (elapsed >= SLIDE_IN_END + 800) {
-                    originsContent.style.opacity = '1';
-                }
-                
-                // Unified carousel movement (includes slide-in)
-                if (carouselInitialized && setWidth > 0) {
-                    if (!isUserInteracting) {
-                        // During slide-in phase: move at slide-in speed
-                        if (elapsed >= SLIDE_IN_START && elapsed < SLIDE_IN_END) {
-                            const progress = (elapsed - SLIDE_IN_START) / SLIDE_IN_DURATION;
-                            const easedProgress = easeOutCubic(progress);
-                            
-                            // Move from right (full distance) to 0
-                            const targetDistance = slideInTotalDistance * (1 - easedProgress);
-                            carouselScrollDistance = targetDistance;
-                        }
-                        // After slide-in: continue at constant auto-scroll speed
-                        else if (elapsed >= SLIDE_IN_END) {
-                            // Continue scrolling from where slide-in ended
-                            const timeSinceSlideIn = elapsed - SLIDE_IN_END;
-                            const autoScrollDistance = (timeSinceSlideIn / 1000) * (TARGET_AUTO_SCROLL_SPEED * 60);
-                            carouselScrollDistance = -autoScrollDistance;
-                        }
-                        // Before slide-in starts: position off-screen
-                        else {
-                            carouselScrollDistance = slideInTotalDistance;
-                        }
-                    } else if (!isDragging && Math.abs(velocity) > 0.1) {
-                        // User inertia
-                        carouselScrollDistance += velocity;
-                        velocity *= 0.95;
-                        
-                        if (Math.abs(velocity) < 0.1) {
-                            velocity = 0;
-                        }
-                    }
-                    
-                    // Seamless loop wrapping
-                    while (carouselScrollDistance < -setWidth) {
-                        carouselScrollDistance += setWidth;
-                    }
-                    while (carouselScrollDistance > setWidth) {
-                        carouselScrollDistance -= setWidth;
-                    }
-                    
-                    updateTrackPosition();
-                }
-                
-                animationFrame = requestAnimationFrame(mainAnimationLoop);
-            }
-            
-            // Drag handlers
-            function handleDragStart(e) {
-                isDragging = true;
-                isUserInteracting = true;
-                startX = e.type.includes('mouse') ? e.pageX : e.touches[0].pageX;
-                lastX = startX;
-                velocity = 0;
-                lastMoveTime = performance.now();
-                carousel.style.cursor = 'grabbing';
-                
-                clearTimeout(userInteractionTimeout);
-            }
-            
-            function handleDragMove(e) {
-                if (!isDragging) return;
-                
-                e.preventDefault();
-                const currentTime = performance.now();
-                const currentX = e.type.includes('mouse') ? e.pageX : e.touches[0].pageX;
-                const diff = currentX - lastX;
-                const timeDiff = currentTime - lastMoveTime;
-                
-                if (timeDiff > 0) {
-                    velocity = diff / timeDiff * 16;
-                }
-                
-                carouselScrollDistance += diff;
-                updateTrackPosition();
-                
-                lastX = currentX;
-                lastMoveTime = currentTime;
-            }
-            
-            function handleDragEnd() {
-                if (!isDragging) return;
-                
-                isDragging = false;
-                carousel.style.cursor = 'grab';
-                
-                clearTimeout(userInteractionTimeout);
-                userInteractionTimeout = setTimeout(() => {
-                    isUserInteracting = false;
-                    velocity = 0;
-                }, 1000);
-            }
-            
-            // Event listeners
-            carousel.addEventListener('mousedown', handleDragStart);
-            document.addEventListener('mousemove', handleDragMove);
-            document.addEventListener('mouseup', handleDragEnd);
-            
-            carousel.addEventListener('touchstart', handleDragStart, { passive: true });
-            carousel.addEventListener('touchmove', handleDragMove, { passive: false });
-            carousel.addEventListener('touchend', handleDragEnd, { passive: true });
-            
-            carousel.addEventListener('wheel', (e) => {
-                e.preventDefault();
-                isUserInteracting = true;
-                isDragging = false;
-                
-                const delta = Math.abs(e.deltaX) > Math.abs(e.deltaY) ? e.deltaX : e.deltaY;
-                velocity = -delta * 0.5;
-                carouselScrollDistance -= delta;
-                updateTrackPosition();
-                
-                clearTimeout(userInteractionTimeout);
-                userInteractionTimeout = setTimeout(() => {
-                    isUserInteracting = false;
-                    velocity = 0;
-                }, 500);
-            }, { passive: false });
-            
-            // CSS variable support
-            const style = document.createElement('style');
-            style.textContent = `
-                .social-icons::after {
-                    opacity: var(--separator-opacity, 0) !important;
-                }
-            `;
-            document.head.appendChild(style);
-            
-            // Visibility handling
-            document.addEventListener('visibilitychange', () => {
-                if (document.hidden) {
-                    if (animationFrame) {
-                        cancelAnimationFrame(animationFrame);
-                    }
-                } else {
-                    globalStartTime = null;
-                    mainAnimationLoop(performance.now());
-                }
-            });
-            
-            // Start animation
-            if (document.readyState === 'loading') {
-                document.addEventListener('DOMContentLoaded', () => {
-                    mainAnimationLoop(performance.now());
-                });
-            } else {
-                mainAnimationLoop(performance.now());
-            }
-        })();
-    </script>
 </body>
 </html>
