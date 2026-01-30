@@ -1,4 +1,4 @@
-111<!DOCTYPE html>
+222<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -232,6 +232,17 @@
             filter: brightness(0) invert(1);
         }
 
+        .tagline {
+            font-size: clamp(14px, 2vw, 20px);
+            font-weight: 300;
+            line-height: 1.6;
+            letter-spacing: 0.5px;
+            max-width: 700px;
+            margin: 20px auto 30px;
+            opacity: 0;
+            animation: fade-in 0.8s ease 0.8s forwards;
+        }
+
         .gemstones-wrapper {
             width: 100%;
             overflow: hidden;
@@ -264,13 +275,13 @@
 
         @keyframes slide-and-scroll {
             0% {
-                transform: translateX(100vw);
+                transform: translateX(calc(100vw + 33.33%));
             }
             0.8% {
-                transform: translateX(0);
+                transform: translateX(calc(-33.33%));
             }
             100% {
-                transform: translateX(-999999px);
+                transform: translateX(calc(-999999px - 33.33%));
             }
         }
 
@@ -381,6 +392,8 @@
                 <img src="https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Marianovich%20gems%20Logo.svg" alt="Marianovich Gems - Collector's Grade Natural Gemstones" width="600" height="auto">
             </div>
 
+            <p class="tagline">We curate exceptional natural gemstones for the premium market – rare, distinctive, and selected to deliver timeless enjoyment</p>
+
             <div class="gemstones-wrapper">
                 <div class="gemstones" id="gemstones">
                     <div class="gemstones-track" id="gemstonesTrack">
@@ -472,14 +485,7 @@
                 <div class="separator-line"></div>
 
                 <div class="contact-email">
-                    <a href="mailto:contact@marianovich.com">contact@marianovich.com</a>
+                    <a href="/cdn-cgi/l/email-protection#93f0fcfde7f2f0e7d3fef2e1faf2fdfce5faf0fbbdf0fcfe"><span class="__cf_email__" data-cfemail="aecdc1c0dacfcddaeec3cfdcc7cfc0c1d8c7cdc680cdc1c3">[email&#160;protected]</span></a>
                 </div>
 
                 <div class="disclaimer">
-                    ©2026 Marianovich Gems Inc. All rights reserved.
-                </div>
-            </section>
-        </main>
-    </div>
-</body>
-</html>
