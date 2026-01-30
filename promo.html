@@ -1,4 +1,4 @@
-666<!DOCTYPE html>
+777<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -424,7 +424,7 @@
     </div>
 
     <script>
-        // Pure JavaScript animations using transforms for smooth, jitter-free performance
+        // Pure JavaScript animations with smooth slide-in to carousel transition
         (function() {
             const carousel = document.getElementById('gemstones');
             const track = document.getElementById('gemstonesTrack');
@@ -434,7 +434,12 @@
             const socialIconsAfter = document.querySelector('.social-icons');
             const originsContent = document.querySelector('.origins-content');
             
-            let autoScrollSpeed = 1.2;
+            const TARGET_AUTO_SCROLL_SPEED = 1.2;
+            const SLIDE_IN_START = 740;
+            const SLIDE_IN_DURATION = 800;
+            const SLIDE_IN_END = SLIDE_IN_START + SLIDE_IN_DURATION; // 1540ms
+            const TRANSITION_DURATION = 300; // Blend period from slide-in to auto-scroll
+            
             let isUserInteracting = false;
             let userInteractionTimeout;
             let animationFrame;
@@ -451,6 +456,11 @@
             // Smoother easing function
             function easeOutQuart(t) {
                 return 1 - Math.pow(1 - t, 4);
+            }
+            
+            // Ease in function for smooth acceleration
+            function easeInQuad(t) {
+                return t * t;
             }
             
             // Update track position using transform
@@ -478,6 +488,28 @@
                 updateTrackPosition();
             }
             
+            // Calculate instantaneous velocity during slide-in animation
+            function getSlideInVelocity(elapsed) {
+                if (elapsed < SLIDE_IN_START || elapsed >= SLIDE_IN_END) {
+                    return 0;
+                }
+                
+                const progress = (elapsed - SLIDE_IN_START) / SLIDE_IN_DURATION;
+                
+                // Derivative of easeOutQuart: 4(1-t)^3
+                const t = 1 - progress;
+                const derivative = -4 * Math.pow(t, 3);
+                
+                // Convert to pixels per frame (assuming 60fps)
+                // The slide-in moves 100% of wrapper width in 800ms
+                const wrapperWidth = gemstonesWrapper.offsetWidth || window.innerWidth;
+                const totalDistance = wrapperWidth;
+                const pixelsPerMs = totalDistance / SLIDE_IN_DURATION;
+                const pixelsPerFrame = pixelsPerMs * (1000 / 60);
+                
+                return derivative * pixelsPerFrame;
+            }
+            
             // Main animation loop - runs continuously
             function mainAnimationLoop(currentTime) {
                 if (!globalStartTime) globalStartTime = currentTime;
@@ -499,13 +531,13 @@
                     logo.style.transform = 'translateX(0)';
                 }
                 
-                // Run gemstones slide-in animation (starts at 740ms, completes at 1540ms)
-                if (elapsed >= 740 && elapsed < 1540) {
-                    const gemstonesProgress = (elapsed - 740) / 800;
+                // Run gemstones slide-in animation
+                if (elapsed >= SLIDE_IN_START && elapsed < SLIDE_IN_END) {
+                    const gemstonesProgress = (elapsed - SLIDE_IN_START) / SLIDE_IN_DURATION;
                     const gemstonesEased = easeOutQuart(gemstonesProgress);
                     gemstonesWrapper.style.opacity = String(gemstonesEased);
                     gemstonesWrapper.style.transform = `translateX(${100 - (100 * gemstonesEased)}%)`;
-                } else if (elapsed >= 1540) {
+                } else if (elapsed >= SLIDE_IN_END) {
                     gemstonesWrapper.style.opacity = '1';
                     gemstonesWrapper.style.transform = 'translateX(0)';
                 }
@@ -544,17 +576,37 @@
                 }
                 
                 // Run origins fade-in animation
-                if (elapsed >= 1540 && elapsed < 2340) {
-                    const originsProgress = (elapsed - 1540) / 800;
+                if (elapsed >= SLIDE_IN_END && elapsed < SLIDE_IN_END + 800) {
+                    const originsProgress = (elapsed - SLIDE_IN_END) / 800;
                     originsContent.style.opacity = String(originsProgress);
-                } else if (elapsed >= 2340) {
+                } else if (elapsed >= SLIDE_IN_END + 800) {
                     originsContent.style.opacity = '1';
                 }
                 
-                // Run carousel auto-scroll (starts at 1540ms when gemstones slide-in completes)
-                if (carouselInitialized && setWidth > 0 && elapsed >= 1540) {
+                // Run carousel with smooth transition from slide-in
+                if (carouselInitialized && setWidth > 0) {
+                    let currentSpeed = 0;
+                    
+                    // During slide-in: track follows wrapper movement
+                    if (elapsed < SLIDE_IN_END) {
+                        currentSpeed = getSlideInVelocity(elapsed);
+                    }
+                    // Transition period: blend from slide-in velocity to auto-scroll
+                    else if (elapsed < SLIDE_IN_END + TRANSITION_DURATION) {
+                        const transitionProgress = (elapsed - SLIDE_IN_END) / TRANSITION_DURATION;
+                        const transitionEased = easeInQuad(transitionProgress);
+                        
+                        const slideInEndVelocity = getSlideInVelocity(SLIDE_IN_END - 1);
+                        currentSpeed = slideInEndVelocity + (TARGET_AUTO_SCROLL_SPEED - slideInEndVelocity) * transitionEased;
+                    }
+                    // Normal auto-scroll
+                    else {
+                        currentSpeed = TARGET_AUTO_SCROLL_SPEED;
+                    }
+                    
+                    // Apply movement
                     if (!isUserInteracting) {
-                        trackPosition -= autoScrollSpeed;
+                        trackPosition -= currentSpeed;
                     } else if (!isDragging && Math.abs(velocity) > 0.1) {
                         // Apply inertia when not dragging but still has velocity
                         trackPosition += velocity;
