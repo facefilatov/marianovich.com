@@ -1,4 +1,4 @@
-333<!DOCTYPE html>
+444<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -251,7 +251,7 @@
 
         .gemstones {
             height: 200px;
-            overflow: visible;
+            overflow: hidden;
             display: flex;
             align-items: center;
             position: relative;
@@ -270,21 +270,25 @@
             gap: clamp(30px, 10vw, 150px);
             will-change: transform;
             position: relative;
-            transform: translateX(100vw);
-            animation: slide-and-scroll 100000s linear 0.74s forwards;
+            animation: slide-in 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) 0.74s forwards, 
+                       carousel-scroll 60s linear 1.54s infinite;
         }
 
-        @keyframes slide-and-scroll {
-            0% {
+        @keyframes slide-in {
+            from {
                 transform: translateX(100vw);
             }
-            0.8% {
+            to {
                 transform: translateX(0);
-                animation-timing-function: cubic-bezier(0.25, 0.46, 0.45, 0.94);
             }
-            100% {
-                transform: translateX(-999999px);
-                animation-timing-function: linear;
+        }
+
+        @keyframes carousel-scroll {
+            from {
+                transform: translateX(0);
+            }
+            to {
+                transform: translateX(-50%);
             }
         }
 
@@ -400,26 +404,6 @@
             <div class="gemstones-wrapper">
                 <div class="gemstones" id="gemstones">
                     <div class="gemstones-track" id="gemstonesTrack">
-                        <div class="gemstones-content">
-                            <a href="https://www.etsy.com/shop/marianovich?search_query=demantoid" target="_blank" rel="noopener noreferrer">
-                                <img class="gemstone" src="https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Demantoid.webp" alt="Demantoid Garnet" width="150" height="150">
-                            </a>
-                            <a href="https://www.etsy.com/shop/marianovich?search_query=sapphire" target="_blank" rel="noopener noreferrer">
-                                <img class="gemstone" src="https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Sapphire.webp" alt="Natural Sapphire" width="150" height="150">
-                            </a>
-                            <a href="https://www.etsy.com/shop/marianovich?search_query=aquamarine" target="_blank" rel="noopener noreferrer">
-                                <img class="gemstone" src="https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Aquamarine.webp" alt="Aquamarine" width="150" height="150">
-                            </a>
-                            <a href="https://www.etsy.com/shop/marianovich?search_query=heliodor" target="_blank" rel="noopener noreferrer">
-                                <img class="gemstone" src="https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Heliodor.webp" alt="Heliodor" width="150" height="150">
-                            </a>
-                            <a href="https://www.etsy.com/shop/marianovich?search_query=alexandrite" target="_blank" rel="noopener noreferrer">
-                                <img class="gemstone" src="https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Alexandrite.webp" alt="Alexandrite" width="150" height="150">
-                            </a>
-                            <a href="https://www.etsy.com/shop/marianovich?search_query=emerald" target="_blank" rel="noopener noreferrer">
-                                <img class="gemstone" src="https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Emerald.webp" alt="Emerald" width="150" height="150">
-                            </a>
-                        </div>
                         <div class="gemstones-content">
                             <a href="https://www.etsy.com/shop/marianovich?search_query=demantoid" target="_blank" rel="noopener noreferrer">
                                 <img class="gemstone" src="https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Demantoid.webp" alt="Demantoid Garnet" width="150" height="150">
