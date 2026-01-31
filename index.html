@@ -110,7 +110,8 @@
             width: 100%;
             padding-bottom: 8px;
         }
-        
+
+        /* ─── Social Icons ─── */
         .social-icons {
             position: absolute;
             top: 25px;
@@ -129,36 +130,30 @@
             transform: translateX(-50%);
             width: 80vw;
             height: 1px;
-            background: linear-gradient(135deg, rgba(255, 255, 255, 0.03) 0%, rgba(255, 255, 255, 0.08) 50%, rgba(255, 255, 255, 0.03) 100%);
+            background: linear-gradient(135deg, rgba(255,255,255,0.03) 0%, rgba(255,255,255,0.08) 50%, rgba(255,255,255,0.03) 100%);
             opacity: 0;
-            animation: fadeIn 0.2s ease-out 0.9s forwards;
+            animation: fade-in 0.2s ease 0.9s forwards;
         }
-        
+
         .social-icon {
             opacity: 0;
             transform: translateY(-100px);
         }
+        .social-icon:nth-child(1) { animation: icon-bounce 0.4s ease 0.64s forwards; }
+        .social-icon:nth-child(2) { animation: icon-bounce 0.4s ease 0.74s forwards; }
+        .social-icon:nth-child(3) { animation: icon-bounce 0.4s ease 0.84s forwards; }
 
-        .social-icon:nth-child(1) {
-            animation: slideInSocial 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) 0.64s forwards;
-        }
-
-        .social-icon:nth-child(2) {
-            animation: slideInSocial 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) 0.74s forwards;
-        }
-
-        .social-icon:nth-child(3) {
-            animation: slideInSocial 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) 0.84s forwards;
+        @keyframes icon-bounce {
+            0%   { opacity: 0; transform: translateY(-100px); }
+            60%  { opacity: 1; transform: translateY(10px); }
+            100% { opacity: 1; transform: translateY(0); }
         }
 
         .social-icon a {
             display: block;
             transition: transform 0.2s ease;
         }
-
-        .social-icon a:hover {
-            transform: scale(1.1);
-        }
+        .social-icon a:hover { transform: scale(1.1); }
 
         .social-icon img {
             height: clamp(25px, 3vw, 35px);
@@ -166,24 +161,19 @@
             display: block;
         }
 
-        .social-icon:nth-child(2) a {
-            position: relative;
-        }
-
+        .social-icon:nth-child(2) a { position: relative; }
         .social-icon:nth-child(2) a::after {
             content: '';
             position: absolute;
             inset: 0;
             background: radial-gradient(circle at 30% 107%, #fd5949 0%, #d6249f 100%);
             -webkit-mask: url('https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Instagram%20Logo.svg') center/contain no-repeat;
-            mask: url('https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Instagram%20Logo.svg') center/contain no-repeat;
+            mask:         url('https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Instagram%20Logo.svg') center/contain no-repeat;
             pointer-events: none;
         }
+        .social-icon:nth-child(2) img { opacity: 0; }
 
-        .social-icon:nth-child(2) img {
-            opacity: 0;
-        }
-
+        /* ─── Logo ─── */
         .main-content {
             padding-top: 120px;
             text-align: center;
@@ -195,7 +185,10 @@
             margin: 0 auto 10px;
             opacity: 0;
             transform: translateX(100%);
-            animation: slideIn 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+            animation: slide-in-logo 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+        }
+        @keyframes slide-in-logo {
+            to { opacity: 1; transform: translateX(0); }
         }
 
         .logo img {
@@ -204,31 +197,76 @@
             filter: brightness(0) invert(1);
         }
 
+        /* ─── Tagline ─── */
+        .tagline {
+            font-size: clamp(11px, 1.6vw, 16px);
+            font-weight: 300;
+            line-height: 1.6;
+            letter-spacing: 0.5px;
+            max-width: 700px;
+            margin: 20px auto 30px;
+            opacity: 0;
+            animation: fade-in 0.8s ease 0.8s forwards;
+        }
+
+        /* ─── Carousel ─── */
+        /*
+         * STRUCTURE:
+         *   .gemstones-wrapper   — clips overflow, animates the whole block in
+         *   .gemstones           — the scroll container (overflow-x: scroll)
+         *                           native drag works here automatically
+         *   .gemstones-track     — flex row: [Set A] [Set B] [Set C]
+         *                           auto-scroll animation lives here
+         *
+         * SLIDE-IN:
+         *   .gemstones-wrapper starts at translateX(100%) via fill-mode:both,
+         *   so it is off-screen from frame 0 through the 0.74s delay.
+         *   Lands at translateX(0).
+         *
+         * AUTO-SCROLL:
+         *   .gemstones-track animates from translateX(0) to translateX(-33.333%)
+         *   (= exactly one set width, since there are 3 identical sets).
+         *   Starts at 1.54s (after slide-in finishes). Infinite + linear = seamless.
+         *
+         * MANUAL DRAG LOOP:
+         *   The JS below just watches scrollLeft. When it hits the boundary of
+         *   Set A or Set C it teleports back into Set B. That's the only JS on the page.
+         */
         .gemstones-wrapper {
             width: 100%;
-            opacity: 0;
-            transform: translateX(100%);
-            animation: slideIn 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) 0.74s forwards;
+            overflow: hidden;
+            animation: slide-in-wrapper 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) 0.74s both;
+        }
+
+        @keyframes slide-in-wrapper {
+            from { transform: translateX(100%); }
+            to   { transform: translateX(0); }
         }
 
         .gemstones {
             height: 200px;
-            overflow-x: auto;
-            overflow-y: hidden;
             display: flex;
             align-items: center;
+            overflow-x: scroll;
+            -webkit-overflow-scrolling: touch;
             scrollbar-width: none;
-            -ms-overflow-style: none;
+            cursor: grab;
         }
-
-        .gemstones::-webkit-scrollbar {
-            display: none;
-        }
+        .gemstones::-webkit-scrollbar { display: none; }
+        .gemstones:active { cursor: grabbing; }
 
         .gemstones-track {
             display: flex;
             gap: clamp(30px, 10vw, 150px);
-            will-change: transform;
+            padding-left: 10vw;
+            /* auto-scroll: moves exactly 1/3 of total track = one set.
+               Delay = slide-in delay + duration = 0.74 + 0.8 = 1.54s */
+            animation: carousel-scroll 40s linear 1.54s infinite;
+        }
+
+        @keyframes carousel-scroll {
+            from { transform: translateX(0); }
+            to   { transform: translateX(-33.333%); }
         }
 
         .gemstones-content {
@@ -244,9 +282,8 @@
             display: block;
         }
 
-        .origins-section {
-            margin-top: 40px;
-        }
+        /* ─── Origins ─── */
+        .origins-section { margin-top: 40px; }
 
         .origins-content {
             display: flex;
@@ -255,7 +292,7 @@
             margin-bottom: 30px;
             flex-wrap: wrap;
             opacity: 0;
-            animation: fadeIn 0.8s ease-out 1.54s forwards;
+            animation: fade-in 0.8s ease 1.54s forwards;
         }
 
         .origin-column h3 {
@@ -264,14 +301,12 @@
             margin-bottom: 15px;
             letter-spacing: 1px;
         }
-
         .origin-column p {
             font-size: clamp(16px, 2.2vw, 22px);
             font-weight: 300;
             line-height: 1.6;
             letter-spacing: 0.5px;
         }
-
         .origin-column a {
             color: #fff;
             text-decoration: none;
@@ -279,58 +314,31 @@
             transition: transform 0.2s ease;
             will-change: transform;
         }
+        .origin-column a:hover { transform: scale(1.05); }
 
-        .origin-column a:hover {
-            transform: scale(1.05);
-        }
-
+        /* ─── Footer ─── */
         .separator-line {
             height: 1px;
-            background: linear-gradient(135deg, rgba(255, 255, 255, 0.03) 0%, rgba(255, 255, 255, 0.08) 50%, rgba(255, 255, 255, 0.03) 100%);
+            background: linear-gradient(135deg, rgba(255,255,255,0.03) 0%, rgba(255,255,255,0.08) 50%, rgba(255,255,255,0.03) 100%);
             margin-bottom: 10px;
         }
-
         .contact-email {
             font-size: 10pt;
             margin-bottom: 10px;
         }
-
         .contact-email a {
             color: #fff;
             text-decoration: none;
         }
-
         .disclaimer {
             font-size: 8pt;
             color: #333;
             letter-spacing: 1px;
         }
 
-        @keyframes slideIn {
-            to {
-                opacity: 1;
-                transform: translateX(0);
-            }
-        }
-
-        @keyframes slideInSocial {
-            0% {
-                opacity: 0;
-                transform: translateY(-100px);
-            }
-            60% {
-                transform: translateY(10px);
-            }
-            100% {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-        
-        @keyframes fadeIn {
-            to {
-                opacity: 1;
-            }
+        /* ─── Shared ─── */
+        @keyframes fade-in {
+            to { opacity: 1; }
         }
     </style>
 </head>
@@ -359,71 +367,37 @@
                 <img src="https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Marianovich%20gems%20Logo.svg" alt="Marianovich Gems - Collector's Grade Natural Gemstones" width="600" height="auto">
             </div>
 
+            <p class="tagline">We curate exceptional natural gemstones for the premium market –<br>rare, distinctive, and selected to deliver timeless enjoyment</p>
+
             <div class="gemstones-wrapper">
                 <div class="gemstones" id="gemstones">
-                    <div class="gemstones-track" id="gemstonesTrack">
-                        <!-- First set (for scrolling left) -->
+                    <div class="gemstones-track">
+                        <!-- Set A -->
                         <div class="gemstones-content">
-                            <a href="https://www.etsy.com/shop/marianovich?search_query=demantoid" target="_blank" rel="noopener noreferrer">
-                                <img class="gemstone" src="https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Demantoid.webp" alt="Demantoid Garnet" width="150" height="150">
-                            </a>
-                            <a href="https://www.etsy.com/shop/marianovich?search_query=sapphire" target="_blank" rel="noopener noreferrer">
-                                <img class="gemstone" src="https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Sapphire.webp" alt="Natural Sapphire" width="150" height="150">
-                            </a>
-                            <a href="https://www.etsy.com/shop/marianovich?search_query=aquamarine" target="_blank" rel="noopener noreferrer">
-                                <img class="gemstone" src="https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Aquamarine.webp" alt="Aquamarine" width="150" height="150">
-                            </a>
-                            <a href="https://www.etsy.com/shop/marianovich?search_query=heliodor" target="_blank" rel="noopener noreferrer">
-                                <img class="gemstone" src="https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Heliodor.webp" alt="Heliodor" width="150" height="150">
-                            </a>
-                            <a href="https://www.etsy.com/shop/marianovich?search_query=alexandrite" target="_blank" rel="noopener noreferrer">
-                                <img class="gemstone" src="https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Alexandrite.webp" alt="Alexandrite" width="150" height="150">
-                            </a>
-                            <a href="https://www.etsy.com/shop/marianovich?search_query=emerald" target="_blank" rel="noopener noreferrer">
-                                <img class="gemstone" src="https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Emerald.webp" alt="Emerald" width="150" height="150">
-                            </a>
+                            <a href="https://www.etsy.com/shop/marianovich?search_query=demantoid" target="_blank" rel="noopener noreferrer"><img class="gemstone" src="https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Demantoid.webp" alt="Demantoid Garnet" width="150" height="150"></a>
+                            <a href="https://www.etsy.com/shop/marianovich?search_query=sapphire" target="_blank" rel="noopener noreferrer"><img class="gemstone" src="https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Sapphire.webp" alt="Natural Sapphire" width="150" height="150"></a>
+                            <a href="https://www.etsy.com/shop/marianovich?search_query=aquamarine" target="_blank" rel="noopener noreferrer"><img class="gemstone" src="https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Aquamarine.webp" alt="Aquamarine" width="150" height="150"></a>
+                            <a href="https://www.etsy.com/shop/marianovich?search_query=heliodor" target="_blank" rel="noopener noreferrer"><img class="gemstone" src="https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Heliodor.webp" alt="Heliodor" width="150" height="150"></a>
+                            <a href="https://www.etsy.com/shop/marianovich?search_query=alexandrite" target="_blank" rel="noopener noreferrer"><img class="gemstone" src="https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Alexandrite.webp" alt="Alexandrite" width="150" height="150"></a>
+                            <a href="https://www.etsy.com/shop/marianovich?search_query=emerald" target="_blank" rel="noopener noreferrer"><img class="gemstone" src="https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Emerald.webp" alt="Emerald" width="150" height="150"></a>
                         </div>
-                        <!-- Second set (main view) -->
+                        <!-- Set B -->
                         <div class="gemstones-content">
-                            <a href="https://www.etsy.com/shop/marianovich?search_query=demantoid" target="_blank" rel="noopener noreferrer">
-                                <img class="gemstone" src="https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Demantoid.webp" alt="Demantoid Garnet" width="150" height="150">
-                            </a>
-                            <a href="https://www.etsy.com/shop/marianovich?search_query=sapphire" target="_blank" rel="noopener noreferrer">
-                                <img class="gemstone" src="https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Sapphire.webp" alt="Natural Sapphire" width="150" height="150">
-                            </a>
-                            <a href="https://www.etsy.com/shop/marianovich?search_query=aquamarine" target="_blank" rel="noopener noreferrer">
-                                <img class="gemstone" src="https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Aquamarine.webp" alt="Aquamarine" width="150" height="150">
-                            </a>
-                            <a href="https://www.etsy.com/shop/marianovich?search_query=heliodor" target="_blank" rel="noopener noreferrer">
-                                <img class="gemstone" src="https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Heliodor.webp" alt="Heliodor" width="150" height="150">
-                            </a>
-                            <a href="https://www.etsy.com/shop/marianovich?search_query=alexandrite" target="_blank" rel="noopener noreferrer">
-                                <img class="gemstone" src="https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Alexandrite.webp" alt="Alexandrite" width="150" height="150">
-                            </a>
-                            <a href="https://www.etsy.com/shop/marianovich?search_query=emerald" target="_blank" rel="noopener noreferrer">
-                                <img class="gemstone" src="https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Emerald.webp" alt="Emerald" width="150" height="150">
-                            </a>
+                            <a href="https://www.etsy.com/shop/marianovich?search_query=demantoid" target="_blank" rel="noopener noreferrer"><img class="gemstone" src="https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Demantoid.webp" alt="Demantoid Garnet" width="150" height="150"></a>
+                            <a href="https://www.etsy.com/shop/marianovich?search_query=sapphire" target="_blank" rel="noopener noreferrer"><img class="gemstone" src="https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Sapphire.webp" alt="Natural Sapphire" width="150" height="150"></a>
+                            <a href="https://www.etsy.com/shop/marianovich?search_query=aquamarine" target="_blank" rel="noopener noreferrer"><img class="gemstone" src="https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Aquamarine.webp" alt="Aquamarine" width="150" height="150"></a>
+                            <a href="https://www.etsy.com/shop/marianovich?search_query=heliodor" target="_blank" rel="noopener noreferrer"><img class="gemstone" src="https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Heliodor.webp" alt="Heliodor" width="150" height="150"></a>
+                            <a href="https://www.etsy.com/shop/marianovich?search_query=alexandrite" target="_blank" rel="noopener noreferrer"><img class="gemstone" src="https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Alexandrite.webp" alt="Alexandrite" width="150" height="150"></a>
+                            <a href="https://www.etsy.com/shop/marianovich?search_query=emerald" target="_blank" rel="noopener noreferrer"><img class="gemstone" src="https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Emerald.webp" alt="Emerald" width="150" height="150"></a>
                         </div>
-                        <!-- Third set (for scrolling right) -->
+                        <!-- Set C -->
                         <div class="gemstones-content">
-                            <a href="https://www.etsy.com/shop/marianovich?search_query=demantoid" target="_blank" rel="noopener noreferrer">
-                                <img class="gemstone" src="https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Demantoid.webp" alt="Demantoid Garnet" width="150" height="150">
-                            </a>
-                            <a href="https://www.etsy.com/shop/marianovich?search_query=sapphire" target="_blank" rel="noopener noreferrer">
-                                <img class="gemstone" src="https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Sapphire.webp" alt="Natural Sapphire" width="150" height="150">
-                            </a>
-                            <a href="https://www.etsy.com/shop/marianovich?search_query=aquamarine" target="_blank" rel="noopener noreferrer">
-                                <img class="gemstone" src="https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Aquamarine.webp" alt="Aquamarine" width="150" height="150">
-                            </a>
-                            <a href="https://www.etsy.com/shop/marianovich?search_query=heliodor" target="_blank" rel="noopener noreferrer">
-                                <img class="gemstone" src="https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Heliodor.webp" alt="Heliodor" width="150" height="150">
-                            </a>
-                            <a href="https://www.etsy.com/shop/marianovich?search_query=alexandrite" target="_blank" rel="noopener noreferrer">
-                                <img class="gemstone" src="https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Alexandrite.webp" alt="Alexandrite" width="150" height="150">
-                            </a>
-                            <a href="https://www.etsy.com/shop/marianovich?search_query=emerald" target="_blank" rel="noopener noreferrer">
-                                <img class="gemstone" src="https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Emerald.webp" alt="Emerald" width="150" height="150">
-                            </a>
+                            <a href="https://www.etsy.com/shop/marianovich?search_query=demantoid" target="_blank" rel="noopener noreferrer"><img class="gemstone" src="https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Demantoid.webp" alt="Demantoid Garnet" width="150" height="150"></a>
+                            <a href="https://www.etsy.com/shop/marianovich?search_query=sapphire" target="_blank" rel="noopener noreferrer"><img class="gemstone" src="https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Sapphire.webp" alt="Natural Sapphire" width="150" height="150"></a>
+                            <a href="https://www.etsy.com/shop/marianovich?search_query=aquamarine" target="_blank" rel="noopener noreferrer"><img class="gemstone" src="https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Aquamarine.webp" alt="Aquamarine" width="150" height="150"></a>
+                            <a href="https://www.etsy.com/shop/marianovich?search_query=heliodor" target="_blank" rel="noopener noreferrer"><img class="gemstone" src="https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Heliodor.webp" alt="Heliodor" width="150" height="150"></a>
+                            <a href="https://www.etsy.com/shop/marianovich?search_query=alexandrite" target="_blank" rel="noopener noreferrer"><img class="gemstone" src="https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Alexandrite.webp" alt="Alexandrite" width="150" height="150"></a>
+                            <a href="https://www.etsy.com/shop/marianovich?search_query=emerald" target="_blank" rel="noopener noreferrer"><img class="gemstone" src="https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Emerald.webp" alt="Emerald" width="150" height="150"></a>
                         </div>
                     </div>
                 </div>
@@ -464,102 +438,35 @@
     </div>
 
     <script>
-        const carousel = document.getElementById('gemstones');
-        const track = document.getElementById('gemstonesTrack');
-        
-        let autoScrollSpeed = 1.2; // pixels per frame (matches ~36.67s for full carousel)
-        let isUserScrolling = false;
-        let userScrollTimeout;
-        let animationFrame;
-        
-        // Initialize immediately when DOM is ready
-        function initCarousel() {
-            const firstSet = track.querySelector('.gemstones-content');
-            if (!firstSet) {
-                // Try again if elements aren't ready
-                setTimeout(initCarousel, 100);
-                return;
-            }
-            
-            const setWidth = firstSet.offsetWidth;
-            
-            // Start at the middle set (second set) - allows scrolling left immediately
-            carousel.scrollLeft = setWidth;
-            
-            // Auto-scroll animation
-            function autoScroll() {
-                if (!isUserScrolling) {
-                    carousel.scrollLeft += autoScrollSpeed;
+    // Scroll-loop teleport only. Everything else is CSS.
+    // Layout: [Set A][Set B][Set C] — all identical.
+    // On load we position scrollLeft into Set B.
+    // When user drags into Set A territory → teleport to Set C (same visual spot).
+    // When user drags into Set C territory → teleport to Set A (same visual spot).
+    (function() {
+        var el = document.getElementById('gemstones');
+        var sets = el.querySelectorAll('.gemstones-content');
+        if (sets.length < 3) return;
+
+        // Wait one frame so layout is computed
+        requestAnimationFrame(function() {
+            var setW = sets[0].offsetWidth + parseFloat(getComputedStyle(el.firstElementChild).gap || 0);
+
+            // Start scrolled to the beginning of Set B
+            el.scrollLeft = setW;
+
+            el.addEventListener('scroll', function() {
+                // Scrolled left into Set A → jump to equivalent position in Set C
+                if (el.scrollLeft < setW) {
+                    el.scrollLeft += setW;
                 }
-                
-                // Check for infinite loop reset
-                const currentScroll = carousel.scrollLeft;
-                const scrollWidth = carousel.scrollWidth;
-                const clientWidth = carousel.clientWidth;
-                
-                // Seamless loop: when reaching end of second set, jump to start of second set
-                if (currentScroll >= setWidth * 2) {
-                    carousel.scrollLeft = setWidth;
+                // Scrolled right into Set C → jump to equivalent position in Set A
+                if (el.scrollLeft >= setW * 2) {
+                    el.scrollLeft -= setW;
                 }
-                // When reaching start of first set, jump to start of second set
-                else if (currentScroll <= 0) {
-                    carousel.scrollLeft = setWidth;
-                }
-                
-                animationFrame = requestAnimationFrame(autoScroll);
-            }
-            
-            // Start auto-scroll after initial delay (1.54s to match original)
-            setTimeout(() => {
-                autoScroll();
-            }, 1540);
-        }
-        
-        // Start when DOM is ready
-        if (document.readyState === 'loading') {
-            document.addEventListener('DOMContentLoaded', initCarousel);
-        } else {
-            initCarousel();
-        }
-        
-        // Enable both vertical AND horizontal wheel scrolling
-        carousel.addEventListener('wheel', (e) => {
-            e.preventDefault();
-            
-            // Pause auto-scroll temporarily when user scrolls
-            isUserScrolling = true;
-            clearTimeout(userScrollTimeout);
-            userScrollTimeout = setTimeout(() => {
-                isUserScrolling = false;
-            }, 150); // Resume auto-scroll 150ms after user stops
-            
-            // Use deltaY (vertical scroll) OR deltaX (horizontal scroll)
-            const delta = Math.abs(e.deltaX) > Math.abs(e.deltaY) ? e.deltaX : e.deltaY;
-            carousel.scrollLeft += delta;
-        }, { passive: false });
-        
-        // Also detect touch/mouse scrolling
-        carousel.addEventListener('touchstart', () => {
-            isUserScrolling = true;
+            }, { passive: true });
         });
-        
-        carousel.addEventListener('touchend', () => {
-            clearTimeout(userScrollTimeout);
-            userScrollTimeout = setTimeout(() => {
-                isUserScrolling = false;
-            }, 150);
-        });
-        
-        carousel.addEventListener('mousedown', () => {
-            isUserScrolling = true;
-        });
-        
-        carousel.addEventListener('mouseup', () => {
-            clearTimeout(userScrollTimeout);
-            userScrollTimeout = setTimeout(() => {
-                isUserScrolling = false;
-            }, 150);
-        });
+    })();
     </script>
 </body>
 </html>
