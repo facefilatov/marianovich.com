@@ -1,4 +1,4 @@
-111<!DOCTYPE html>
+222<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -199,7 +199,7 @@
 
         /* ─── Tagline ─── */
         .tagline {
-            font-size: clamp(12px, 1.8vw, 18px);
+            font-size: clamp(11px, 1.6vw, 16px);
             font-weight: 300;
             line-height: 1.6;
             letter-spacing: 0.5px;
@@ -218,7 +218,7 @@
 
         @keyframes slide-in-wrapper {
             from { transform: translateX(100%); }
-            to   { transform: translateX(10vw); }
+            to   { transform: translateX(0); }
         }
 
         .gemstones {
@@ -228,20 +228,27 @@
             overflow-x: scroll;
             -webkit-overflow-scrolling: touch;
             scrollbar-width: none;
+            cursor: grab;
         }
         .gemstones::-webkit-scrollbar { display: none; }
+        .gemstones:active { cursor: grabbing; }
 
         .gemstones-track {
             display: flex;
             gap: clamp(30px, 10vw, 150px);
             padding-left: 10vw;
-            padding-right: clamp(30px, 10vw, 150px);
-            animation: carousel-scroll 30s linear 1.54s infinite;
+            /* Animation will be removed by JS on first touch/scroll */
+            animation: carousel-scroll 40s linear 1.54s infinite;
         }
 
         @keyframes carousel-scroll {
             from { transform: translateX(0); }
             to   { transform: translateX(-33.333%); }
+        }
+
+        /* Class to disable animation */
+        .gemstones-track.user-scrolling {
+            animation: none !important;
         }
 
         .gemstones-content {
@@ -346,7 +353,7 @@
 
             <div class="gemstones-wrapper">
                 <div class="gemstones" id="gemstones">
-                    <div class="gemstones-track" id="track">
+                    <div class="gemstones-track" id="gemstones-track">
                         <!-- Set A -->
                         <div class="gemstones-content">
                             <a href="https://www.etsy.com/shop/marianovich?search_query=demantoid" target="_blank" rel="noopener noreferrer"><img class="gemstone" src="https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Demantoid.webp" alt="Demantoid Garnet" width="150" height="150"></a>
@@ -415,58 +422,69 @@
     <script>
     (function() {
         var el = document.getElementById('gemstones');
-        var track = document.getElementById('track');
+        var track = document.getElementById('gemstones-track');
         var sets = el.querySelectorAll('.gemstones-content');
+        
         if (sets.length < 3) return;
 
         var setW = 0;
-        var lastManualScroll = 0;
-        var scrollTimer = null;
+        var isUserScrolling = false;
+        var scrollTimeout;
 
-        // Calculate set width (including gap)
-        function calcSetWidth() {
-            var gap = parseFloat(getComputedStyle(track).gap || 0);
+        // Initialize after layout
+        function init() {
+            // Calculate set width including gap
+            var trackStyle = getComputedStyle(track);
+            var gap = parseFloat(trackStyle.gap) || 0;
             setW = sets[0].offsetWidth + gap;
+
+            // Start at Set B (middle set)
+            el.scrollLeft = setW;
         }
 
-        // Wait for layout
-        requestAnimationFrame(function() {
-            calcSetWidth();
+        // Disable CSS animation when user starts scrolling
+        function handleInteractionStart() {
+            if (!isUserScrolling) {
+                isUserScrolling = true;
+                track.classList.add('user-scrolling');
+            }
+        }
+
+        // Handle the infinite loop teleport
+        function handleScroll() {
+            handleInteractionStart();
             
-            // Start scrolled to Set B (accounting for left padding)
-            var leftPadding = parseFloat(getComputedStyle(track).paddingLeft || 0);
-            el.scrollLeft = setW + leftPadding;
+            // Clear existing timeout
+            clearTimeout(scrollTimeout);
+            
+            // Perform the teleport logic
+            var currentScroll = el.scrollLeft;
+            
+            // If scrolled into Set A territory (left), jump to equivalent position in Set C
+            if (currentScroll < setW * 0.5) {
+                el.scrollLeft = currentScroll + setW;
+            }
+            // If scrolled into Set C territory (right), jump to equivalent position in Set A  
+            else if (currentScroll > setW * 2.5) {
+                el.scrollLeft = currentScroll - setW;
+            }
+        }
 
-            // Handle scroll teleport loop
-            el.addEventListener('scroll', function() {
-                var currentScroll = el.scrollLeft;
-                
-                // Track manual scrolling
-                clearTimeout(scrollTimer);
-                scrollTimer = setTimeout(function() {
-                    lastManualScroll = 0;
-                }, 150);
-                
-                // Teleport boundaries (accounting for padding)
-                if (currentScroll < setW + leftPadding) {
-                    el.scrollLeft = currentScroll + setW;
-                }
-                if (currentScroll >= (setW * 2) + leftPadding) {
-                    el.scrollLeft = currentScroll - setW;
-                }
-            }, { passive: true });
+        // Wait for images to load and layout to stabilize
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', function() {
+                setTimeout(init, 100);
+            });
+        } else {
+            setTimeout(init, 100);
+        }
 
-            // Mouse wheel scrolling support (horizontal + vertical)
-            el.addEventListener('wheel', function(e) {
-                var delta = Math.abs(e.deltaX) > Math.abs(e.deltaY) ? e.deltaX : e.deltaY;
-                e.preventDefault();
-                el.scrollLeft += delta * 0.5;
-            }, { passive: false });
-        });
-
-        window.addEventListener('resize', function() {
-            calcSetWidth();
-        });
+        // Listen for scroll events
+        el.addEventListener('scroll', handleScroll, { passive: true });
+        
+        // Also listen for touch/mouse events to immediately disable animation
+        el.addEventListener('touchstart', handleInteractionStart, { passive: true });
+        el.addEventListener('mousedown', handleInteractionStart, { passive: true });
     })();
     </script>
 </body>
