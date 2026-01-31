@@ -1,4 +1,4 @@
-444<!DOCTYPE html>
+555<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -266,7 +266,7 @@
             position: relative;
             transform: translateX(100vw);
             animation: slide-in 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) 0.74s forwards, 
-                       carousel-scroll 60s linear 1.54s infinite;
+                       carousel-scroll 30s linear 1.54s infinite;
         }
 
         @keyframes slide-in {
@@ -424,12 +424,15 @@
             
             // Mouse wheel scrolling
             function handleWheel(e) {
+                // Check if there's horizontal scroll (shift+wheel or touchpad horizontal)
+                const delta = Math.abs(e.deltaX) > Math.abs(e.deltaY) ? e.deltaX : e.deltaY;
+                
                 e.preventDefault();
                 e.stopPropagation();
                 
                 pauseAnimation();
                 
-                currentTranslate -= e.deltaY * 0.5;
+                currentTranslate -= delta * 0.5;
                 currentTranslate = normalizePosition(currentTranslate);
                 track.style.transform = `translateX(${currentTranslate}px)`;
                 
