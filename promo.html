@@ -1,4 +1,4 @@
-444<!DOCTYPE html>
+555<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -110,7 +110,8 @@
             width: 100%;
             padding-bottom: 8px;
         }
-        
+
+        /* ─── Social Icons ─── */
         .social-icons {
             position: absolute;
             top: 25px;
@@ -129,57 +130,30 @@
             transform: translateX(-50%);
             width: 80vw;
             height: 1px;
-            background: linear-gradient(135deg, rgba(255, 255, 255, 0.03) 0%, rgba(255, 255, 255, 0.08) 50%, rgba(255, 255, 255, 0.03) 100%);
+            background: linear-gradient(135deg, rgba(255,255,255,0.03) 0%, rgba(255,255,255,0.08) 50%, rgba(255,255,255,0.03) 100%);
             opacity: 0;
-            animation: separator-fade 0.2s ease 0.9s forwards;
+            animation: fade-in 0.2s ease 0.9s forwards;
         }
-        
+
         .social-icon {
             opacity: 0;
             transform: translateY(-100px);
         }
-
-        .social-icon:nth-child(1) {
-            animation: icon-bounce 0.4s ease 0.64s forwards;
-        }
-
-        .social-icon:nth-child(2) {
-            animation: icon-bounce 0.4s ease 0.74s forwards;
-        }
-
-        .social-icon:nth-child(3) {
-            animation: icon-bounce 0.4s ease 0.84s forwards;
-        }
+        .social-icon:nth-child(1) { animation: icon-bounce 0.4s ease 0.64s forwards; }
+        .social-icon:nth-child(2) { animation: icon-bounce 0.4s ease 0.74s forwards; }
+        .social-icon:nth-child(3) { animation: icon-bounce 0.4s ease 0.84s forwards; }
 
         @keyframes icon-bounce {
-            0% {
-                opacity: 0;
-                transform: translateY(-100px);
-            }
-            60% {
-                opacity: 1;
-                transform: translateY(10px);
-            }
-            100% {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        @keyframes separator-fade {
-            to {
-                opacity: 1;
-            }
+            0%   { opacity: 0; transform: translateY(-100px); }
+            60%  { opacity: 1; transform: translateY(10px); }
+            100% { opacity: 1; transform: translateY(0); }
         }
 
         .social-icon a {
             display: block;
             transition: transform 0.2s ease;
         }
-
-        .social-icon a:hover {
-            transform: scale(1.1);
-        }
+        .social-icon a:hover { transform: scale(1.1); }
 
         .social-icon img {
             height: clamp(25px, 3vw, 35px);
@@ -187,24 +161,19 @@
             display: block;
         }
 
-        .social-icon:nth-child(2) a {
-            position: relative;
-        }
-
+        .social-icon:nth-child(2) a { position: relative; }
         .social-icon:nth-child(2) a::after {
             content: '';
             position: absolute;
             inset: 0;
             background: radial-gradient(circle at 30% 107%, #fd5949 0%, #d6249f 100%);
             -webkit-mask: url('https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Instagram%20Logo.svg') center/contain no-repeat;
-            mask: url('https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Instagram%20Logo.svg') center/contain no-repeat;
+            mask:         url('https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Instagram%20Logo.svg') center/contain no-repeat;
             pointer-events: none;
         }
+        .social-icon:nth-child(2) img { opacity: 0; }
 
-        .social-icon:nth-child(2) img {
-            opacity: 0;
-        }
-
+        /* ─── Logo ─── */
         .main-content {
             padding-top: 120px;
             text-align: center;
@@ -218,12 +187,8 @@
             transform: translateX(100%);
             animation: slide-in-logo 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
         }
-
         @keyframes slide-in-logo {
-            to {
-                opacity: 1;
-                transform: translateX(0);
-            }
+            to { opacity: 1; transform: translateX(0); }
         }
 
         .logo img {
@@ -232,8 +197,9 @@
             filter: brightness(0) invert(1);
         }
 
+        /* ─── Tagline ─── */
         .tagline {
-            font-size: clamp(12px, 1.8vw, 18px);
+            font-size: clamp(11px, 1.6vw, 16px);
             font-weight: 300;
             line-height: 1.6;
             letter-spacing: 0.5px;
@@ -243,53 +209,53 @@
             animation: fade-in 0.8s ease 0.8s forwards;
         }
 
+        /* ─── Carousel ─── */
+        /*
+         * .gemstones-wrapper is the clipping box — overflow:hidden.
+         * .gemstones is the scrollable row — it's also the element
+         *   that slides in. It starts at translateX(100%) so it is
+         *   fully off-screen from the very first frame (no flash).
+         *   animation-fill-mode: both applies the 'from' keyframe
+         *   during the delay period too.
+         * .gemstones-track is the inner row that auto-scrolls.
+         *   Its animation only starts after the slide-in finishes.
+         */
         .gemstones-wrapper {
             width: 100%;
             overflow: hidden;
-            position: relative;
         }
 
         .gemstones {
             height: 200px;
-            overflow: hidden;
             display: flex;
             align-items: center;
-            position: relative;
+            overflow-x: scroll;
+            scroll-behavior: smooth;
+            -webkit-overflow-scrolling: touch;
+            scrollbar-width: none;
             cursor: grab;
-            user-select: none;
-            -webkit-user-select: none;
-            touch-action: pan-y;
+            /* slide-in: starts off-screen right, fill-mode:both keeps
+               the 'from' state during the 0.74s delay */
+            animation: slide-in 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) 0.74s both;
         }
+        .gemstones::-webkit-scrollbar { display: none; }
+        .gemstones:active { cursor: grabbing; }
 
-        .gemstones:active {
-            cursor: grabbing;
+        @keyframes slide-in {
+            from { transform: translateX(100%); }
+            to   { transform: translateX(0); }
         }
 
         .gemstones-track {
             display: flex;
             gap: clamp(30px, 10vw, 150px);
-            will-change: transform;
-            position: relative;
-            animation: slide-in 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) 0.74s forwards, 
-                       carousel-scroll 60s linear 1.54s infinite;
-        }
-
-        @keyframes slide-in {
-            from {
-                transform: translateX(100vw);
-            }
-            to {
-                transform: translateX(0);
-            }
+            /* auto-scroll starts only after slide-in is done (0.74 + 0.8 = 1.54s) */
+            animation: carousel-scroll 40s linear 1.54s infinite;
         }
 
         @keyframes carousel-scroll {
-            from {
-                transform: translateX(0);
-            }
-            to {
-                transform: translateX(-50%);
-            }
+            from { transform: translateX(0); }
+            to   { transform: translateX(-50%); }
         }
 
         .gemstones-content {
@@ -305,9 +271,8 @@
             display: block;
         }
 
-        .origins-section {
-            margin-top: 40px;
-        }
+        /* ─── Origins ─── */
+        .origins-section { margin-top: 40px; }
 
         .origins-content {
             display: flex;
@@ -319,26 +284,18 @@
             animation: fade-in 0.8s ease 1.54s forwards;
         }
 
-        @keyframes fade-in {
-            to {
-                opacity: 1;
-            }
-        }
-
         .origin-column h3 {
             font-size: clamp(18px, 2.5vw, 24px);
             font-weight: 400;
             margin-bottom: 15px;
             letter-spacing: 1px;
         }
-
         .origin-column p {
             font-size: clamp(16px, 2.2vw, 22px);
             font-weight: 300;
             line-height: 1.6;
             letter-spacing: 0.5px;
         }
-
         .origin-column a {
             color: #fff;
             text-decoration: none;
@@ -346,31 +303,31 @@
             transition: transform 0.2s ease;
             will-change: transform;
         }
+        .origin-column a:hover { transform: scale(1.05); }
 
-        .origin-column a:hover {
-            transform: scale(1.05);
-        }
-
+        /* ─── Footer ─── */
         .separator-line {
             height: 1px;
-            background: linear-gradient(135deg, rgba(255, 255, 255, 0.03) 0%, rgba(255, 255, 255, 0.08) 50%, rgba(255, 255, 255, 0.03) 100%);
+            background: linear-gradient(135deg, rgba(255,255,255,0.03) 0%, rgba(255,255,255,0.08) 50%, rgba(255,255,255,0.03) 100%);
             margin-bottom: 10px;
         }
-
         .contact-email {
             font-size: 10pt;
             margin-bottom: 10px;
         }
-
         .contact-email a {
             color: #fff;
             text-decoration: none;
         }
-
         .disclaimer {
             font-size: 8pt;
             color: #333;
             letter-spacing: 1px;
+        }
+
+        /* ─── Shared ─── */
+        @keyframes fade-in {
+            to { opacity: 1; }
         }
     </style>
 </head>
@@ -402,47 +359,26 @@
             <p class="tagline">We curate exceptional natural gemstones for the premium market –<br>rare, distinctive, and selected to deliver timeless enjoyment</p>
 
             <div class="gemstones-wrapper">
+                <!-- .gemstones slides in; also native-scrollable for drag -->
                 <div class="gemstones" id="gemstones">
                     <div class="gemstones-track" id="gemstonesTrack">
+                        <!-- Set A -->
                         <div class="gemstones-content">
-                            <a href="https://www.etsy.com/shop/marianovich?search_query=demantoid" target="_blank" rel="noopener noreferrer">
-                                <img class="gemstone" src="https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Demantoid.webp" alt="Demantoid Garnet" width="150" height="150">
-                            </a>
-                            <a href="https://www.etsy.com/shop/marianovich?search_query=sapphire" target="_blank" rel="noopener noreferrer">
-                                <img class="gemstone" src="https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Sapphire.webp" alt="Natural Sapphire" width="150" height="150">
-                            </a>
-                            <a href="https://www.etsy.com/shop/marianovich?search_query=aquamarine" target="_blank" rel="noopener noreferrer">
-                                <img class="gemstone" src="https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Aquamarine.webp" alt="Aquamarine" width="150" height="150">
-                            </a>
-                            <a href="https://www.etsy.com/shop/marianovich?search_query=heliodor" target="_blank" rel="noopener noreferrer">
-                                <img class="gemstone" src="https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Heliodor.webp" alt="Heliodor" width="150" height="150">
-                            </a>
-                            <a href="https://www.etsy.com/shop/marianovich?search_query=alexandrite" target="_blank" rel="noopener noreferrer">
-                                <img class="gemstone" src="https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Alexandrite.webp" alt="Alexandrite" width="150" height="150">
-                            </a>
-                            <a href="https://www.etsy.com/shop/marianovich?search_query=emerald" target="_blank" rel="noopener noreferrer">
-                                <img class="gemstone" src="https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Emerald.webp" alt="Emerald" width="150" height="150">
-                            </a>
+                            <a href="https://www.etsy.com/shop/marianovich?search_query=demantoid" target="_blank" rel="noopener noreferrer"><img class="gemstone" src="https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Demantoid.webp" alt="Demantoid Garnet" width="150" height="150"></a>
+                            <a href="https://www.etsy.com/shop/marianovich?search_query=sapphire" target="_blank" rel="noopener noreferrer"><img class="gemstone" src="https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Sapphire.webp" alt="Natural Sapphire" width="150" height="150"></a>
+                            <a href="https://www.etsy.com/shop/marianovich?search_query=aquamarine" target="_blank" rel="noopener noreferrer"><img class="gemstone" src="https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Aquamarine.webp" alt="Aquamarine" width="150" height="150"></a>
+                            <a href="https://www.etsy.com/shop/marianovich?search_query=heliodor" target="_blank" rel="noopener noreferrer"><img class="gemstone" src="https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Heliodor.webp" alt="Heliodor" width="150" height="150"></a>
+                            <a href="https://www.etsy.com/shop/marianovich?search_query=alexandrite" target="_blank" rel="noopener noreferrer"><img class="gemstone" src="https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Alexandrite.webp" alt="Alexandrite" width="150" height="150"></a>
+                            <a href="https://www.etsy.com/shop/marianovich?search_query=emerald" target="_blank" rel="noopener noreferrer"><img class="gemstone" src="https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Emerald.webp" alt="Emerald" width="150" height="150"></a>
                         </div>
+                        <!-- Set B (duplicate for seamless loop) -->
                         <div class="gemstones-content">
-                            <a href="https://www.etsy.com/shop/marianovich?search_query=demantoid" target="_blank" rel="noopener noreferrer">
-                                <img class="gemstone" src="https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Demantoid.webp" alt="Demantoid Garnet" width="150" height="150">
-                            </a>
-                            <a href="https://www.etsy.com/shop/marianovich?search_query=sapphire" target="_blank" rel="noopener noreferrer">
-                                <img class="gemstone" src="https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Sapphire.webp" alt="Natural Sapphire" width="150" height="150">
-                            </a>
-                            <a href="https://www.etsy.com/shop/marianovich?search_query=aquamarine" target="_blank" rel="noopener noreferrer">
-                                <img class="gemstone" src="https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Aquamarine.webp" alt="Aquamarine" width="150" height="150">
-                            </a>
-                            <a href="https://www.etsy.com/shop/marianovich?search_query=heliodor" target="_blank" rel="noopener noreferrer">
-                                <img class="gemstone" src="https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Heliodor.webp" alt="Heliodor" width="150" height="150">
-                            </a>
-                            <a href="https://www.etsy.com/shop/marianovich?search_query=alexandrite" target="_blank" rel="noopener noreferrer">
-                                <img class="gemstone" src="https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Alexandrite.webp" alt="Alexandrite" width="150" height="150">
-                            </a>
-                            <a href="https://www.etsy.com/shop/marianovich?search_query=emerald" target="_blank" rel="noopener noreferrer">
-                                <img class="gemstone" src="https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Emerald.webp" alt="Emerald" width="150" height="150">
-                            </a>
+                            <a href="https://www.etsy.com/shop/marianovich?search_query=demantoid" target="_blank" rel="noopener noreferrer"><img class="gemstone" src="https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Demantoid.webp" alt="Demantoid Garnet" width="150" height="150"></a>
+                            <a href="https://www.etsy.com/shop/marianovich?search_query=sapphire" target="_blank" rel="noopener noreferrer"><img class="gemstone" src="https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Sapphire.webp" alt="Natural Sapphire" width="150" height="150"></a>
+                            <a href="https://www.etsy.com/shop/marianovich?search_query=aquamarine" target="_blank" rel="noopener noreferrer"><img class="gemstone" src="https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Aquamarine.webp" alt="Aquamarine" width="150" height="150"></a>
+                            <a href="https://www.etsy.com/shop/marianovich?search_query=heliodor" target="_blank" rel="noopener noreferrer"><img class="gemstone" src="https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Heliodor.webp" alt="Heliodor" width="150" height="150"></a>
+                            <a href="https://www.etsy.com/shop/marianovich?search_query=alexandrite" target="_blank" rel="noopener noreferrer"><img class="gemstone" src="https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Alexandrite.webp" alt="Alexandrite" width="150" height="150"></a>
+                            <a href="https://www.etsy.com/shop/marianovich?search_query=emerald" target="_blank" rel="noopener noreferrer"><img class="gemstone" src="https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Emerald.webp" alt="Emerald" width="150" height="150"></a>
                         </div>
                     </div>
                 </div>
@@ -478,3 +414,8 @@
                 <div class="disclaimer">
                     ©2026 Marianovich Gems Inc. All rights reserved.
                 </div>
+            </section>
+        </main>
+    </div>
+</body>
+</html>
