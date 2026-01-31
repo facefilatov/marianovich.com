@@ -1,4 +1,4 @@
-888<!DOCTYPE html>
+999<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -110,7 +110,8 @@
             width: 100%;
             padding-bottom: 8px;
         }
-        
+
+        /* ─── Social Icons ─── */
         .social-icons {
             position: absolute;
             top: 25px;
@@ -129,57 +130,30 @@
             transform: translateX(-50%);
             width: 80vw;
             height: 1px;
-            background: linear-gradient(135deg, rgba(255, 255, 255, 0.03) 0%, rgba(255, 255, 255, 0.08) 50%, rgba(255, 255, 255, 0.03) 100%);
+            background: linear-gradient(135deg, rgba(255,255,255,0.03) 0%, rgba(255,255,255,0.08) 50%, rgba(255,255,255,0.03) 100%);
             opacity: 0;
-            animation: separator-fade 0.2s ease 0.9s forwards;
+            animation: fade-in 0.2s ease 0.9s forwards;
         }
-        
+
         .social-icon {
             opacity: 0;
             transform: translateY(-100px);
         }
-
-        .social-icon:nth-child(1) {
-            animation: icon-bounce 0.4s ease 0.64s forwards;
-        }
-
-        .social-icon:nth-child(2) {
-            animation: icon-bounce 0.4s ease 0.74s forwards;
-        }
-
-        .social-icon:nth-child(3) {
-            animation: icon-bounce 0.4s ease 0.84s forwards;
-        }
+        .social-icon:nth-child(1) { animation: icon-bounce 0.4s ease 0.64s forwards; }
+        .social-icon:nth-child(2) { animation: icon-bounce 0.4s ease 0.74s forwards; }
+        .social-icon:nth-child(3) { animation: icon-bounce 0.4s ease 0.84s forwards; }
 
         @keyframes icon-bounce {
-            0% {
-                opacity: 0;
-                transform: translateY(-100px);
-            }
-            60% {
-                opacity: 1;
-                transform: translateY(10px);
-            }
-            100% {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        @keyframes separator-fade {
-            to {
-                opacity: 1;
-            }
+            0%   { opacity: 0; transform: translateY(-100px); }
+            60%  { opacity: 1; transform: translateY(10px); }
+            100% { opacity: 1; transform: translateY(0); }
         }
 
         .social-icon a {
             display: block;
             transition: transform 0.2s ease;
         }
-
-        .social-icon a:hover {
-            transform: scale(1.1);
-        }
+        .social-icon a:hover { transform: scale(1.1); }
 
         .social-icon img {
             height: clamp(25px, 3vw, 35px);
@@ -187,24 +161,19 @@
             display: block;
         }
 
-        .social-icon:nth-child(2) a {
-            position: relative;
-        }
-
+        .social-icon:nth-child(2) a { position: relative; }
         .social-icon:nth-child(2) a::after {
             content: '';
             position: absolute;
             inset: 0;
             background: radial-gradient(circle at 30% 107%, #fd5949 0%, #d6249f 100%);
             -webkit-mask: url('https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Instagram%20Logo.svg') center/contain no-repeat;
-            mask: url('https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Instagram%20Logo.svg') center/contain no-repeat;
+            mask:         url('https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Instagram%20Logo.svg') center/contain no-repeat;
             pointer-events: none;
         }
+        .social-icon:nth-child(2) img { opacity: 0; }
 
-        .social-icon:nth-child(2) img {
-            opacity: 0;
-        }
-
+        /* ─── Logo ─── */
         .main-content {
             padding-top: 120px;
             text-align: center;
@@ -218,12 +187,8 @@
             transform: translateX(100%);
             animation: slide-in-logo 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
         }
-
         @keyframes slide-in-logo {
-            to {
-                opacity: 1;
-                transform: translateX(0);
-            }
+            to { opacity: 1; transform: translateX(0); }
         }
 
         .logo img {
@@ -232,6 +197,7 @@
             filter: brightness(0) invert(1);
         }
 
+        /* ─── Tagline ─── */
         .tagline {
             font-size: clamp(12px, 1.8vw, 18px);
             font-weight: 300;
@@ -243,45 +209,37 @@
             animation: fade-in 0.8s ease 0.8s forwards;
         }
 
+        /* ─── Carousel ─── */
         .gemstones-wrapper {
             width: 100%;
             overflow: hidden;
-            position: relative;
+            animation: slide-in-wrapper 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) 0.74s both;
+        }
+
+        @keyframes slide-in-wrapper {
+            from { transform: translateX(100%); }
+            to   { transform: translateX(10vw); }
         }
 
         .gemstones {
             height: 200px;
-            overflow: hidden;
             display: flex;
             align-items: center;
-            position: relative;
-            user-select: none;
-            -webkit-user-select: none;
+            overflow-x: scroll;
+            -webkit-overflow-scrolling: touch;
+            scrollbar-width: none;
         }
+        .gemstones::-webkit-scrollbar { display: none; }
 
         .gemstones-track {
             display: flex;
             gap: clamp(30px, 10vw, 150px);
-            will-change: transform;
-            position: relative;
-            transform: translateX(100vw);
-            animation: slide-in 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) 0.74s forwards, 
-                       carousel-scroll 30s linear 1.54s infinite;
-        }
-
-        @keyframes slide-in {
-            to {
-                transform: translateX(10vw);
-            }
+            animation: carousel-scroll 30s linear 1.54s infinite;
         }
 
         @keyframes carousel-scroll {
-            from {
-                transform: translateX(10vw);
-            }
-            to {
-                transform: translateX(calc(-50% + 10vw));
-            }
+            from { transform: translateX(0); }
+            to   { transform: translateX(-33.333%); }
         }
 
         .gemstones-content {
@@ -295,12 +253,10 @@
             height: clamp(100px, 15vw, 150px);
             object-fit: contain;
             display: block;
-            pointer-events: auto;
         }
 
-        .origins-section {
-            margin-top: 40px;
-        }
+        /* ─── Origins ─── */
+        .origins-section { margin-top: 40px; }
 
         .origins-content {
             display: flex;
@@ -312,26 +268,18 @@
             animation: fade-in 0.8s ease 1.54s forwards;
         }
 
-        @keyframes fade-in {
-            to {
-                opacity: 1;
-            }
-        }
-
         .origin-column h3 {
             font-size: clamp(18px, 2.5vw, 24px);
             font-weight: 400;
             margin-bottom: 15px;
             letter-spacing: 1px;
         }
-
         .origin-column p {
             font-size: clamp(16px, 2.2vw, 22px);
             font-weight: 300;
             line-height: 1.6;
             letter-spacing: 0.5px;
         }
-
         .origin-column a {
             color: #fff;
             text-decoration: none;
@@ -339,240 +287,35 @@
             transition: transform 0.2s ease;
             will-change: transform;
         }
+        .origin-column a:hover { transform: scale(1.05); }
 
-        .origin-column a:hover {
-            transform: scale(1.05);
-        }
-
+        /* ─── Footer ─── */
         .separator-line {
             height: 1px;
-            background: linear-gradient(135deg, rgba(255, 255, 255, 0.03) 0%, rgba(255, 255, 255, 0.08) 50%, rgba(255, 255, 255, 0.03) 100%);
+            background: linear-gradient(135deg, rgba(255,255,255,0.03) 0%, rgba(255,255,255,0.08) 50%, rgba(255,255,255,0.03) 100%);
             margin-bottom: 10px;
         }
-
         .contact-email {
             font-size: 10pt;
             margin-bottom: 10px;
         }
-
         .contact-email a {
             color: #fff;
             text-decoration: none;
         }
-
         .disclaimer {
             font-size: 8pt;
             color: #333;
             letter-spacing: 1px;
         }
+
+        /* ─── Shared ─── */
+        @keyframes fade-in {
+            to { opacity: 1; }
+        }
     </style>
 </head>
 <body>
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const track = document.getElementById('gemstonesTrack');
-            const wrapper = document.querySelector('.gemstones-wrapper');
-            let loopWidth = 0;
-            let isManualScrolling = false;
-            let scrollTimeout;
-            let isTouching = false;
-            let touchStartX = 0;
-            let touchLastX = 0;
-            let touchStartY = 0;
-            let lastTouchTime = 0;
-            let velocity = 0;
-            let animationFrame = null;
-            
-            // Calculate the width of one set of gemstones
-            function calculateLoopWidth() {
-                const content = track.querySelector('.gemstones-content');
-                loopWidth = content.offsetWidth + parseFloat(getComputedStyle(track).gap || 0);
-            }
-            
-            // Get current translateX value
-            function getCurrentTranslate() {
-                const computedStyle = window.getComputedStyle(track);
-                const matrix = computedStyle.transform;
-                if (matrix === 'none') return 0;
-                const matrixValues = matrix.match(/matrix.*\((.+)\)/)[1].split(', ');
-                return parseFloat(matrixValues[4]);
-            }
-            
-            // Normalize position to create infinite loop effect
-            function normalizeTranslate(translate) {
-                if (loopWidth === 0) calculateLoopWidth();
-                const vw10 = window.innerWidth * 0.1;
-                const adjustedTranslate = translate - vw10;
-                
-                while (adjustedTranslate < -loopWidth) {
-                    translate += loopWidth;
-                }
-                while (adjustedTranslate > 0) {
-                    translate -= loopWidth;
-                }
-                return translate;
-            }
-            
-            // Start manual scrolling mode
-            function startManualMode() {
-                if (isManualScrolling) return;
-                isManualScrolling = true;
-                
-                // Get current position from running animation
-                const currentPos = getCurrentTranslate();
-                
-                // Stop CSS animation and freeze at current position
-                track.style.animation = 'none';
-                track.style.transform = `translateX(${currentPos}px)`;
-            }
-            
-            // Resume auto-scrolling animation
-            function resumeAutoScroll() {
-                if (!isManualScrolling) return;
-                
-                // Get final manual position and normalize it
-                const finalPos = getCurrentTranslate();
-                const normalizedPos = normalizeTranslate(finalPos);
-                
-                // Set normalized position
-                track.style.transform = `translateX(${normalizedPos}px)`;
-                
-                // Force reflow
-                track.offsetHeight;
-                
-                // Re-enable animation - it will start from the current position
-                track.style.animation = 'carousel-scroll 30s linear infinite';
-                
-                isManualScrolling = false;
-            }
-            
-            // Apply inertia after touch end
-            function applyInertia(initialVelocity) {
-                let currentVelocity = initialVelocity;
-                const friction = 0.95;
-                const minVelocity = 0.1;
-                
-                function step() {
-                    if (Math.abs(currentVelocity) < minVelocity) {
-                        // Inertia finished, resume auto-scroll
-                        clearTimeout(scrollTimeout);
-                        scrollTimeout = setTimeout(resumeAutoScroll, 1000);
-                        return;
-                    }
-                    
-                    // Apply friction
-                    currentVelocity *= friction;
-                    
-                    // Update position
-                    const currentPos = getCurrentTranslate();
-                    const newPos = normalizeTranslate(currentPos + currentVelocity);
-                    track.style.transform = `translateX(${newPos}px)`;
-                    
-                    // Continue animation
-                    animationFrame = requestAnimationFrame(step);
-                }
-                
-                step();
-            }
-            
-            // Mouse wheel scrolling
-            function handleWheel(e) {
-                const delta = Math.abs(e.deltaX) > Math.abs(e.deltaY) ? e.deltaX : e.deltaY;
-                
-                e.preventDefault();
-                e.stopPropagation();
-                
-                startManualMode();
-                
-                const currentPos = getCurrentTranslate();
-                const newPos = normalizeTranslate(currentPos - delta * 0.5);
-                track.style.transform = `translateX(${newPos}px)`;
-                
-                // Resume after 2 seconds of no scrolling
-                clearTimeout(scrollTimeout);
-                scrollTimeout = setTimeout(resumeAutoScroll, 2000);
-            }
-            
-            // Touch start
-            function handleTouchStart(e) {
-                touchStartX = e.touches[0].clientX;
-                touchStartY = e.touches[0].clientY;
-                touchLastX = touchStartX;
-                lastTouchTime = Date.now();
-                velocity = 0;
-                
-                // Cancel any ongoing inertia
-                if (animationFrame) {
-                    cancelAnimationFrame(animationFrame);
-                    animationFrame = null;
-                }
-            }
-            
-            // Touch move
-            function handleTouchMove(e) {
-                const touchCurrentX = e.touches[0].clientX;
-                const touchCurrentY = e.touches[0].clientY;
-                const deltaX = Math.abs(touchCurrentX - touchStartX);
-                const deltaY = Math.abs(touchCurrentY - touchStartY);
-                
-                // Determine if this is horizontal scrolling
-                if (!isTouching && deltaX > 10 && deltaX > deltaY) {
-                    isTouching = true;
-                    startManualMode();
-                } else if (!isTouching && deltaY > deltaX) {
-                    // Vertical scroll, don't interfere
-                    return;
-                }
-                
-                if (isTouching) {
-                    e.preventDefault();
-                    
-                    const now = Date.now();
-                    const timeDelta = now - lastTouchTime;
-                    const positionDelta = touchCurrentX - touchLastX;
-                    
-                    if (timeDelta > 0) {
-                        velocity = positionDelta / timeDelta * 16; // Convert to pixels per frame (60fps)
-                    }
-                    
-                    touchLastX = touchCurrentX;
-                    lastTouchTime = now;
-                    
-                    const currentPos = getCurrentTranslate();
-                    const newPos = normalizeTranslate(currentPos + positionDelta);
-                    track.style.transform = `translateX(${newPos}px)`;
-                }
-            }
-            
-            // Touch end
-            function handleTouchEnd(e) {
-                if (!isTouching) return;
-                isTouching = false;
-                
-                // Apply inertia based on velocity
-                if (Math.abs(velocity) > 0.5) {
-                    applyInertia(velocity);
-                } else {
-                    clearTimeout(scrollTimeout);
-                    scrollTimeout = setTimeout(resumeAutoScroll, 1000);
-                }
-            }
-            
-            // Calculate loop width after images load
-            setTimeout(calculateLoopWidth, 100);
-            window.addEventListener('load', calculateLoopWidth);
-            window.addEventListener('resize', calculateLoopWidth);
-            
-            // Mouse wheel
-            wrapper.addEventListener('wheel', handleWheel, { passive: false });
-            
-            // Touch events for iOS
-            wrapper.addEventListener('touchstart', handleTouchStart, { passive: true });
-            wrapper.addEventListener('touchmove', handleTouchMove, { passive: false });
-            wrapper.addEventListener('touchend', handleTouchEnd, { passive: true });
-            wrapper.addEventListener('touchcancel', handleTouchEnd, { passive: true });
-        });
-    </script>
     <div class="container">
         <div class="social-icons">
             <div class="social-icon">
@@ -601,46 +344,33 @@
 
             <div class="gemstones-wrapper">
                 <div class="gemstones" id="gemstones">
-                    <div class="gemstones-track" id="gemstonesTrack">
+                    <div class="gemstones-track" id="track">
+                        <!-- Set A -->
                         <div class="gemstones-content">
-                            <a href="https://www.etsy.com/shop/marianovich?search_query=demantoid" target="_blank" rel="noopener noreferrer">
-                                <img class="gemstone" src="https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Demantoid.webp" alt="Demantoid Garnet" width="150" height="150">
-                            </a>
-                            <a href="https://www.etsy.com/shop/marianovich?search_query=sapphire" target="_blank" rel="noopener noreferrer">
-                                <img class="gemstone" src="https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Sapphire.webp" alt="Natural Sapphire" width="150" height="150">
-                            </a>
-                            <a href="https://www.etsy.com/shop/marianovich?search_query=aquamarine" target="_blank" rel="noopener noreferrer">
-                                <img class="gemstone" src="https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Aquamarine.webp" alt="Aquamarine" width="150" height="150">
-                            </a>
-                            <a href="https://www.etsy.com/shop/marianovich?search_query=heliodor" target="_blank" rel="noopener noreferrer">
-                                <img class="gemstone" src="https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Heliodor.webp" alt="Heliodor" width="150" height="150">
-                            </a>
-                            <a href="https://www.etsy.com/shop/marianovich?search_query=alexandrite" target="_blank" rel="noopener noreferrer">
-                                <img class="gemstone" src="https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Alexandrite.webp" alt="Alexandrite" width="150" height="150">
-                            </a>
-                            <a href="https://www.etsy.com/shop/marianovich?search_query=emerald" target="_blank" rel="noopener noreferrer">
-                                <img class="gemstone" src="https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Emerald.webp" alt="Emerald" width="150" height="150">
-                            </a>
+                            <a href="https://www.etsy.com/shop/marianovich?search_query=demantoid" target="_blank" rel="noopener noreferrer"><img class="gemstone" src="https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Demantoid.webp" alt="Demantoid Garnet" width="150" height="150"></a>
+                            <a href="https://www.etsy.com/shop/marianovich?search_query=sapphire" target="_blank" rel="noopener noreferrer"><img class="gemstone" src="https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Sapphire.webp" alt="Natural Sapphire" width="150" height="150"></a>
+                            <a href="https://www.etsy.com/shop/marianovich?search_query=aquamarine" target="_blank" rel="noopener noreferrer"><img class="gemstone" src="https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Aquamarine.webp" alt="Aquamarine" width="150" height="150"></a>
+                            <a href="https://www.etsy.com/shop/marianovich?search_query=heliodor" target="_blank" rel="noopener noreferrer"><img class="gemstone" src="https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Heliodor.webp" alt="Heliodor" width="150" height="150"></a>
+                            <a href="https://www.etsy.com/shop/marianovich?search_query=alexandrite" target="_blank" rel="noopener noreferrer"><img class="gemstone" src="https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Alexandrite.webp" alt="Alexandrite" width="150" height="150"></a>
+                            <a href="https://www.etsy.com/shop/marianovich?search_query=emerald" target="_blank" rel="noopener noreferrer"><img class="gemstone" src="https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Emerald.webp" alt="Emerald" width="150" height="150"></a>
                         </div>
+                        <!-- Set B -->
                         <div class="gemstones-content">
-                            <a href="https://www.etsy.com/shop/marianovich?search_query=demantoid" target="_blank" rel="noopener noreferrer">
-                                <img class="gemstone" src="https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Demantoid.webp" alt="Demantoid Garnet" width="150" height="150">
-                            </a>
-                            <a href="https://www.etsy.com/shop/marianovich?search_query=sapphire" target="_blank" rel="noopener noreferrer">
-                                <img class="gemstone" src="https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Sapphire.webp" alt="Natural Sapphire" width="150" height="150">
-                            </a>
-                            <a href="https://www.etsy.com/shop/marianovich?search_query=aquamarine" target="_blank" rel="noopener noreferrer">
-                                <img class="gemstone" src="https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Aquamarine.webp" alt="Aquamarine" width="150" height="150">
-                            </a>
-                            <a href="https://www.etsy.com/shop/marianovich?search_query=heliodor" target="_blank" rel="noopener noreferrer">
-                                <img class="gemstone" src="https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Heliodor.webp" alt="Heliodor" width="150" height="150">
-                            </a>
-                            <a href="https://www.etsy.com/shop/marianovich?search_query=alexandrite" target="_blank" rel="noopener noreferrer">
-                                <img class="gemstone" src="https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Alexandrite.webp" alt="Alexandrite" width="150" height="150">
-                            </a>
-                            <a href="https://www.etsy.com/shop/marianovich?search_query=emerald" target="_blank" rel="noopener noreferrer">
-                                <img class="gemstone" src="https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Emerald.webp" alt="Emerald" width="150" height="150">
-                            </a>
+                            <a href="https://www.etsy.com/shop/marianovich?search_query=demantoid" target="_blank" rel="noopener noreferrer"><img class="gemstone" src="https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Demantoid.webp" alt="Demantoid Garnet" width="150" height="150"></a>
+                            <a href="https://www.etsy.com/shop/marianovich?search_query=sapphire" target="_blank" rel="noopener noreferrer"><img class="gemstone" src="https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Sapphire.webp" alt="Natural Sapphire" width="150" height="150"></a>
+                            <a href="https://www.etsy.com/shop/marianovich?search_query=aquamarine" target="_blank" rel="noopener noreferrer"><img class="gemstone" src="https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Aquamarine.webp" alt="Aquamarine" width="150" height="150"></a>
+                            <a href="https://www.etsy.com/shop/marianovich?search_query=heliodor" target="_blank" rel="noopener noreferrer"><img class="gemstone" src="https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Heliodor.webp" alt="Heliodor" width="150" height="150"></a>
+                            <a href="https://www.etsy.com/shop/marianovich?search_query=alexandrite" target="_blank" rel="noopener noreferrer"><img class="gemstone" src="https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Alexandrite.webp" alt="Alexandrite" width="150" height="150"></a>
+                            <a href="https://www.etsy.com/shop/marianovich?search_query=emerald" target="_blank" rel="noopener noreferrer"><img class="gemstone" src="https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Emerald.webp" alt="Emerald" width="150" height="150"></a>
+                        </div>
+                        <!-- Set C -->
+                        <div class="gemstones-content">
+                            <a href="https://www.etsy.com/shop/marianovich?search_query=demantoid" target="_blank" rel="noopener noreferrer"><img class="gemstone" src="https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Demantoid.webp" alt="Demantoid Garnet" width="150" height="150"></a>
+                            <a href="https://www.etsy.com/shop/marianovich?search_query=sapphire" target="_blank" rel="noopener noreferrer"><img class="gemstone" src="https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Sapphire.webp" alt="Natural Sapphire" width="150" height="150"></a>
+                            <a href="https://www.etsy.com/shop/marianovich?search_query=aquamarine" target="_blank" rel="noopener noreferrer"><img class="gemstone" src="https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Aquamarine.webp" alt="Aquamarine" width="150" height="150"></a>
+                            <a href="https://www.etsy.com/shop/marianovich?search_query=heliodor" target="_blank" rel="noopener noreferrer"><img class="gemstone" src="https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Heliodor.webp" alt="Heliodor" width="150" height="150"></a>
+                            <a href="https://www.etsy.com/shop/marianovich?search_query=alexandrite" target="_blank" rel="noopener noreferrer"><img class="gemstone" src="https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Alexandrite.webp" alt="Alexandrite" width="150" height="150"></a>
+                            <a href="https://www.etsy.com/shop/marianovich?search_query=emerald" target="_blank" rel="noopener noreferrer"><img class="gemstone" src="https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Emerald.webp" alt="Emerald" width="150" height="150"></a>
                         </div>
                     </div>
                 </div>
@@ -679,5 +409,47 @@
             </section>
         </main>
     </div>
+
+    <script>
+    (function() {
+        var el = document.getElementById('gemstones');
+        var track = document.getElementById('track');
+        var sets = el.querySelectorAll('.gemstones-content');
+        if (sets.length < 3) return;
+
+        var setW = 0;
+
+        // Calculate set width
+        function calcSetWidth() {
+            setW = sets[0].offsetWidth + parseFloat(getComputedStyle(track).gap || 0);
+        }
+
+        // Wait for layout
+        requestAnimationFrame(function() {
+            calcSetWidth();
+            // Start scrolled to Set B
+            el.scrollLeft = setW;
+
+            // Handle scroll teleport loop for native touch/drag scrolling
+            el.addEventListener('scroll', function() {
+                if (el.scrollLeft < setW) {
+                    el.scrollLeft += setW;
+                }
+                if (el.scrollLeft >= setW * 2) {
+                    el.scrollLeft -= setW;
+                }
+            }, { passive: true });
+
+            // Mouse wheel scrolling support (horizontal + vertical)
+            el.addEventListener('wheel', function(e) {
+                var delta = Math.abs(e.deltaX) > Math.abs(e.deltaY) ? e.deltaX : e.deltaY;
+                e.preventDefault();
+                el.scrollLeft += delta * 0.5;
+            }, { passive: false });
+        });
+
+        window.addEventListener('resize', calcSetWidth);
+    })();
+    </script>
 </body>
 </html>
