@@ -1,4 +1,4 @@
-666<!DOCTYPE html>
+777<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -376,11 +376,10 @@
             let loopWidth = 0;
             let isScrolling = false;
             let scrollTimeout;
-            let animationStartTime = 0;
-            let animationProgress = 0;
             let isTouching = false;
             let touchStartX = 0;
             let touchLastX = 0;
+            let touchStartY = 0;
             
             // Calculate the width of one set of gemstones
             function calculateLoopWidth() {
@@ -410,7 +409,6 @@
                         const matrixValues = matrix.match(/matrix.*\((.+)\)/)[1].split(', ');
                         currentTranslate = parseFloat(matrixValues[4]);
                     }
-                    // Store the current state without resetting animation
                     track.style.animation = 'none';
                     track.style.transform = `translateX(${currentTranslate}px)`;
                     isScrolling = true;
@@ -421,21 +419,14 @@
             function resumeAnimation() {
                 // Normalize position
                 currentTranslate = normalizePosition(currentTranslate);
-                
-                // Calculate how far we are in the loop cycle
-                const loopStart = parseFloat(getComputedStyle(document.documentElement).fontSize) * 10 * 0.01 * window.innerWidth; // 10vw in pixels
-                const currentOffset = currentTranslate - loopStart;
-                const loopProgress = (Math.abs(currentOffset) % loopWidth) / loopWidth;
-                
-                // Calculate remaining animation duration
-                const totalDuration = 30; // 30s total
-                const remainingDuration = totalDuration * (1 - loopProgress);
-                
-                // Resume from current position
-                track.style.animation = `carousel-scroll ${remainingDuration}s linear infinite`;
                 track.style.transform = `translateX(${currentTranslate}px)`;
                 
-                isScrolling = false;
+                // Re-enable the original animation which will continue from here
+                // Use a very brief timeout to ensure transform is applied first
+                requestAnimationFrame(() => {
+                    track.style.animation = 'carousel-scroll 30s linear infinite';
+                    isScrolling = false;
+                });
             }
             
             // Mouse wheel scrolling
@@ -461,6 +452,7 @@
             function handleTouchStart(e) {
                 isTouching = true;
                 touchStartX = e.touches[0].clientX;
+                touchStartY = e.touches[0].clientY;
                 touchLastX = touchStartX;
                 pauseAnimation();
             }
@@ -470,18 +462,23 @@
                 if (!isTouching) return;
                 
                 const touchCurrentX = e.touches[0].clientX;
-                const delta = touchCurrentX - touchLastX;
-                touchLastX = touchCurrentX;
-                
-                currentTranslate += delta;
-                currentTranslate = normalizePosition(currentTranslate);
-                track.style.transform = `translateX(${currentTranslate}px)`;
-                
-                // Only prevent default if moving horizontally more than vertically
                 const touchCurrentY = e.touches[0].clientY;
-                const touchStartY = e.touches[0].clientY;
-                if (Math.abs(touchCurrentX - touchStartX) > Math.abs(touchCurrentY - touchStartY)) {
+                const deltaX = Math.abs(touchCurrentX - touchStartX);
+                const deltaY = Math.abs(touchCurrentY - touchStartY);
+                
+                // Only handle horizontal scrolling if moving more horizontally than vertically
+                if (deltaX > deltaY && deltaX > 10) {
                     e.preventDefault();
+                    
+                    const delta = touchCurrentX - touchLastX;
+                    touchLastX = touchCurrentX;
+                    
+                    currentTranslate += delta;
+                    currentTranslate = normalizePosition(currentTranslate);
+                    track.style.transform = `translateX(${currentTranslate}px)`;
+                } else if (deltaY > deltaX) {
+                    // User is scrolling vertically, cancel our horizontal handling
+                    isTouching = false;
                 }
             }
             
@@ -507,6 +504,7 @@
             wrapper.addEventListener('touchstart', handleTouchStart, { passive: true });
             wrapper.addEventListener('touchmove', handleTouchMove, { passive: false });
             wrapper.addEventListener('touchend', handleTouchEnd, { passive: true });
+            wrapper.addEventListener('touchcancel', handleTouchEnd, { passive: true });
         });
     </script>
     <div class="container">
