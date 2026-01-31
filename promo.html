@@ -1,4 +1,4 @@
-222<!DOCTYPE html>
+333<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -210,19 +210,39 @@
         }
 
         /* ─── Carousel ─── */
+        /*
+         * STRUCTURE:
+         *   .gemstones-wrapper   — clips overflow, animates the whole block in
+         *   .gemstones           — the scroll container (overflow-x: scroll)
+         *                           native drag works here automatically
+         *   .gemstones-track     — flex row: [Set A] [Set B] [Set C]
+         *                           auto-scroll animation lives here
+         *
+         * SLIDE-IN:
+         *   .gemstones-wrapper starts at translateX(100%) via fill-mode:both,
+         *   so it is off-screen from frame 0 through the 0.74s delay.
+         *   Lands at translateX(0).
+         *
+         * AUTO-SCROLL:
+         *   .gemstones-track animates from translateX(0) to translateX(-33.333%)
+         *   (= exactly one set width, since there are 3 identical sets).
+         *   Starts at 1.54s (after slide-in finishes). Infinite + linear = seamless.
+         *
+         * MANUAL DRAG LOOP:
+         *   The JS below just watches scrollLeft. When it hits the boundary of
+         *   Set A or Set C it teleports back into Set B. That's the only JS on the page.
+         */
         .gemstones-wrapper {
             width: 100%;
             overflow: hidden;
+            animation: slide-in-wrapper 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) 0.74s both;
         }
 
-        /*
-         * .gemstones is the clipping + slide-in container.
-         * animation-fill-mode: both → the 'from' translateX(100%)
-         * is active from frame 0 through the entire 0.74s delay.
-         * Slide-in lands at translateX(0) — the track itself carries
-         * the 20vw left-padding via padding-left, so the first gem
-         * naturally sits 20vw in from the left edge.
-         */
+        @keyframes slide-in-wrapper {
+            from { transform: translateX(100%); }
+            to   { transform: translateX(0); }
+        }
+
         .gemstones {
             height: 200px;
             display: flex;
@@ -231,34 +251,22 @@
             -webkit-overflow-scrolling: touch;
             scrollbar-width: none;
             cursor: grab;
-            animation: slide-in 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) 0.74s both;
         }
         .gemstones::-webkit-scrollbar { display: none; }
         .gemstones:active { cursor: grabbing; }
 
-        @keyframes slide-in {
-            from { transform: translateX(100%); }
-            to   { transform: translateX(0); }
-        }
-
-        /*
-         * .gemstones-track holds all gems and scrolls.
-         * padding-left: 20vw pushes the first gem 20vw from the left.
-         * The carousel-scroll keyframes go from 0 to -50%.
-         * 50% of the track = exactly one full set (A+B are identical),
-         * so the loop is seamless.
-         * Delay 1.54s = slide-in delay (0.74) + slide-in duration (0.8).
-         */
         .gemstones-track {
             display: flex;
             gap: clamp(30px, 10vw, 150px);
             padding-left: 10vw;
+            /* auto-scroll: moves exactly 1/3 of total track = one set.
+               Delay = slide-in delay + duration = 0.74 + 0.8 = 1.54s */
             animation: carousel-scroll 40s linear 1.54s infinite;
         }
 
         @keyframes carousel-scroll {
             from { transform: translateX(0); }
-            to   { transform: translateX(-50%); }
+            to   { transform: translateX(-33.333%); }
         }
 
         .gemstones-content {
@@ -362,7 +370,7 @@
             <p class="tagline">We curate exceptional natural gemstones for the premium market –<br>rare, distinctive, and selected to deliver timeless enjoyment</p>
 
             <div class="gemstones-wrapper">
-                <div class="gemstones">
+                <div class="gemstones" id="gemstones">
                     <div class="gemstones-track">
                         <!-- Set A -->
                         <div class="gemstones-content">
@@ -373,7 +381,16 @@
                             <a href="https://www.etsy.com/shop/marianovich?search_query=alexandrite" target="_blank" rel="noopener noreferrer"><img class="gemstone" src="https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Alexandrite.webp" alt="Alexandrite" width="150" height="150"></a>
                             <a href="https://www.etsy.com/shop/marianovich?search_query=emerald" target="_blank" rel="noopener noreferrer"><img class="gemstone" src="https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Emerald.webp" alt="Emerald" width="150" height="150"></a>
                         </div>
-                        <!-- Set B (identical duplicate for seamless loop) -->
+                        <!-- Set B -->
+                        <div class="gemstones-content">
+                            <a href="https://www.etsy.com/shop/marianovich?search_query=demantoid" target="_blank" rel="noopener noreferrer"><img class="gemstone" src="https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Demantoid.webp" alt="Demantoid Garnet" width="150" height="150"></a>
+                            <a href="https://www.etsy.com/shop/marianovich?search_query=sapphire" target="_blank" rel="noopener noreferrer"><img class="gemstone" src="https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Sapphire.webp" alt="Natural Sapphire" width="150" height="150"></a>
+                            <a href="https://www.etsy.com/shop/marianovich?search_query=aquamarine" target="_blank" rel="noopener noreferrer"><img class="gemstone" src="https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Aquamarine.webp" alt="Aquamarine" width="150" height="150"></a>
+                            <a href="https://www.etsy.com/shop/marianovich?search_query=heliodor" target="_blank" rel="noopener noreferrer"><img class="gemstone" src="https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Heliodor.webp" alt="Heliodor" width="150" height="150"></a>
+                            <a href="https://www.etsy.com/shop/marianovich?search_query=alexandrite" target="_blank" rel="noopener noreferrer"><img class="gemstone" src="https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Alexandrite.webp" alt="Alexandrite" width="150" height="150"></a>
+                            <a href="https://www.etsy.com/shop/marianovich?search_query=emerald" target="_blank" rel="noopener noreferrer"><img class="gemstone" src="https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Emerald.webp" alt="Emerald" width="150" height="150"></a>
+                        </div>
+                        <!-- Set C -->
                         <div class="gemstones-content">
                             <a href="https://www.etsy.com/shop/marianovich?search_query=demantoid" target="_blank" rel="noopener noreferrer"><img class="gemstone" src="https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Demantoid.webp" alt="Demantoid Garnet" width="150" height="150"></a>
                             <a href="https://www.etsy.com/shop/marianovich?search_query=sapphire" target="_blank" rel="noopener noreferrer"><img class="gemstone" src="https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Sapphire.webp" alt="Natural Sapphire" width="150" height="150"></a>
@@ -419,5 +436,37 @@
             </section>
         </main>
     </div>
+
+    <script>
+    // Scroll-loop teleport only. Everything else is CSS.
+    // Layout: [Set A][Set B][Set C] — all identical.
+    // On load we position scrollLeft into Set B.
+    // When user drags into Set A territory → teleport to Set C (same visual spot).
+    // When user drags into Set C territory → teleport to Set A (same visual spot).
+    (function() {
+        var el = document.getElementById('gemstones');
+        var sets = el.querySelectorAll('.gemstones-content');
+        if (sets.length < 3) return;
+
+        // Wait one frame so layout is computed
+        requestAnimationFrame(function() {
+            var setW = sets[0].offsetWidth + parseFloat(getComputedStyle(el.firstElementChild).gap || 0);
+
+            // Start scrolled to the beginning of Set B
+            el.scrollLeft = setW;
+
+            el.addEventListener('scroll', function() {
+                // Scrolled left into Set A → jump to equivalent position in Set C
+                if (el.scrollLeft < setW) {
+                    el.scrollLeft += setW;
+                }
+                // Scrolled right into Set C → jump to equivalent position in Set A
+                if (el.scrollLeft >= setW * 2) {
+                    el.scrollLeft -= setW;
+                }
+            }, { passive: true });
+        });
+    })();
+    </script>
 </body>
 </html>
