@@ -1,4 +1,4 @@
-222<!DOCTYPE html>
+333<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -387,6 +387,26 @@
             let velocity = 0;
             let lastX = 0;
             let lastTime = Date.now();
+            let loopWidth = 0;
+            
+            // Calculate the width of one set of gemstones
+            function calculateLoopWidth() {
+                const content = track.querySelector('.gemstones-content');
+                loopWidth = content.offsetWidth + parseFloat(getComputedStyle(track).gap || 0);
+            }
+            
+            // Normalize position to create infinite loop effect
+            function normalizePosition(pos) {
+                if (loopWidth === 0) calculateLoopWidth();
+                
+                while (pos < -loopWidth) {
+                    pos += loopWidth;
+                }
+                while (pos > 0) {
+                    pos -= loopWidth;
+                }
+                return pos;
+            }
             
             // Pause CSS animation when user interacts
             function pauseAnimation() {
@@ -403,7 +423,26 @@
             
             // Resume CSS animation
             function resumeAnimation() {
+                // Normalize position before resuming
+                currentTranslate = normalizePosition(currentTranslate);
+                prevTranslate = currentTranslate;
+                track.style.transform = `translateX(${currentTranslate}px)`;
                 track.style.animation = '';
+            }
+            
+            // Mouse wheel scrolling
+            function handleWheel(e) {
+                e.preventDefault();
+                pauseAnimation();
+                
+                currentTranslate -= e.deltaY;
+                currentTranslate = normalizePosition(currentTranslate);
+                prevTranslate = currentTranslate;
+                track.style.transform = `translateX(${currentTranslate}px)`;
+                
+                // Resume after 2 seconds of no scrolling
+                clearTimeout(track.wheelTimeout);
+                track.wheelTimeout = setTimeout(resumeAnimation, 2000);
             }
             
             // Touch/Mouse start
@@ -434,6 +473,7 @@
                 lastX = currentPosition;
                 lastTime = now;
                 currentTranslate = prevTranslate + currentPosition - startPos;
+                currentTranslate = normalizePosition(currentTranslate);
                 track.style.transform = `translateX(${currentTranslate}px)`;
             }
             
@@ -462,6 +502,7 @@
                     
                     if (Math.abs(velocity) > 0.01) {
                         currentTranslate += velocity * 16;
+                        currentTranslate = normalizePosition(currentTranslate);
                         prevTranslate = currentTranslate;
                         track.style.transform = `translateX(${currentTranslate}px)`;
                         animationID = requestAnimationFrame(inertiaStep);
@@ -477,6 +518,14 @@
             function getPositionX(e) {
                 return e.type.includes('mouse') ? e.pageX : e.touches[0].clientX;
             }
+            
+            // Calculate loop width after images load
+            setTimeout(calculateLoopWidth, 100);
+            window.addEventListener('load', calculateLoopWidth);
+            window.addEventListener('resize', calculateLoopWidth);
+            
+            // Mouse wheel
+            wrapper.addEventListener('wheel', handleWheel, { passive: false });
             
             // Mouse events
             track.addEventListener('mousedown', dragStart);
