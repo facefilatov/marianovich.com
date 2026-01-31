@@ -1,4 +1,4 @@
-777<!DOCTYPE html>
+888<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -372,14 +372,16 @@
         document.addEventListener('DOMContentLoaded', function() {
             const track = document.getElementById('gemstonesTrack');
             const wrapper = document.querySelector('.gemstones-wrapper');
-            let currentTranslate = 0;
             let loopWidth = 0;
-            let isScrolling = false;
+            let isManualScrolling = false;
             let scrollTimeout;
             let isTouching = false;
             let touchStartX = 0;
             let touchLastX = 0;
             let touchStartY = 0;
+            let lastTouchTime = 0;
+            let velocity = 0;
+            let animationFrame = null;
             
             // Calculate the width of one set of gemstones
             function calculateLoopWidth() {
@@ -387,98 +389,158 @@
                 loopWidth = content.offsetWidth + parseFloat(getComputedStyle(track).gap || 0);
             }
             
+            // Get current translateX value
+            function getCurrentTranslate() {
+                const computedStyle = window.getComputedStyle(track);
+                const matrix = computedStyle.transform;
+                if (matrix === 'none') return 0;
+                const matrixValues = matrix.match(/matrix.*\((.+)\)/)[1].split(', ');
+                return parseFloat(matrixValues[4]);
+            }
+            
             // Normalize position to create infinite loop effect
-            function normalizePosition(pos) {
+            function normalizeTranslate(translate) {
                 if (loopWidth === 0) calculateLoopWidth();
+                const vw10 = window.innerWidth * 0.1;
+                const adjustedTranslate = translate - vw10;
                 
-                while (pos < -loopWidth) {
-                    pos += loopWidth;
+                while (adjustedTranslate < -loopWidth) {
+                    translate += loopWidth;
                 }
-                while (pos > 0) {
-                    pos -= loopWidth;
+                while (adjustedTranslate > 0) {
+                    translate -= loopWidth;
                 }
-                return pos;
+                return translate;
             }
             
-            // Pause CSS animation when user interacts
-            function pauseAnimation() {
-                if (!isScrolling) {
-                    const computedStyle = window.getComputedStyle(track);
-                    const matrix = computedStyle.transform;
-                    if (matrix !== 'none') {
-                        const matrixValues = matrix.match(/matrix.*\((.+)\)/)[1].split(', ');
-                        currentTranslate = parseFloat(matrixValues[4]);
+            // Start manual scrolling mode
+            function startManualMode() {
+                if (isManualScrolling) return;
+                isManualScrolling = true;
+                
+                // Get current position from running animation
+                const currentPos = getCurrentTranslate();
+                
+                // Stop CSS animation and freeze at current position
+                track.style.animation = 'none';
+                track.style.transform = `translateX(${currentPos}px)`;
+            }
+            
+            // Resume auto-scrolling animation
+            function resumeAutoScroll() {
+                if (!isManualScrolling) return;
+                
+                // Get final manual position and normalize it
+                const finalPos = getCurrentTranslate();
+                const normalizedPos = normalizeTranslate(finalPos);
+                
+                // Set normalized position
+                track.style.transform = `translateX(${normalizedPos}px)`;
+                
+                // Force reflow
+                track.offsetHeight;
+                
+                // Re-enable animation - it will start from the current position
+                track.style.animation = 'carousel-scroll 30s linear infinite';
+                
+                isManualScrolling = false;
+            }
+            
+            // Apply inertia after touch end
+            function applyInertia(initialVelocity) {
+                let currentVelocity = initialVelocity;
+                const friction = 0.95;
+                const minVelocity = 0.1;
+                
+                function step() {
+                    if (Math.abs(currentVelocity) < minVelocity) {
+                        // Inertia finished, resume auto-scroll
+                        clearTimeout(scrollTimeout);
+                        scrollTimeout = setTimeout(resumeAutoScroll, 1000);
+                        return;
                     }
-                    track.style.animation = 'none';
-                    track.style.transform = `translateX(${currentTranslate}px)`;
-                    isScrolling = true;
+                    
+                    // Apply friction
+                    currentVelocity *= friction;
+                    
+                    // Update position
+                    const currentPos = getCurrentTranslate();
+                    const newPos = normalizeTranslate(currentPos + currentVelocity);
+                    track.style.transform = `translateX(${newPos}px)`;
+                    
+                    // Continue animation
+                    animationFrame = requestAnimationFrame(step);
                 }
-            }
-            
-            // Resume CSS animation from current position
-            function resumeAnimation() {
-                // Normalize position
-                currentTranslate = normalizePosition(currentTranslate);
-                track.style.transform = `translateX(${currentTranslate}px)`;
                 
-                // Re-enable the original animation which will continue from here
-                // Use a very brief timeout to ensure transform is applied first
-                requestAnimationFrame(() => {
-                    track.style.animation = 'carousel-scroll 30s linear infinite';
-                    isScrolling = false;
-                });
+                step();
             }
             
             // Mouse wheel scrolling
             function handleWheel(e) {
-                // Check if there's horizontal scroll (shift+wheel or touchpad horizontal)
                 const delta = Math.abs(e.deltaX) > Math.abs(e.deltaY) ? e.deltaX : e.deltaY;
                 
                 e.preventDefault();
                 e.stopPropagation();
                 
-                pauseAnimation();
+                startManualMode();
                 
-                currentTranslate -= delta * 0.5;
-                currentTranslate = normalizePosition(currentTranslate);
-                track.style.transform = `translateX(${currentTranslate}px)`;
+                const currentPos = getCurrentTranslate();
+                const newPos = normalizeTranslate(currentPos - delta * 0.5);
+                track.style.transform = `translateX(${newPos}px)`;
                 
                 // Resume after 2 seconds of no scrolling
                 clearTimeout(scrollTimeout);
-                scrollTimeout = setTimeout(resumeAnimation, 2000);
+                scrollTimeout = setTimeout(resumeAutoScroll, 2000);
             }
             
             // Touch start
             function handleTouchStart(e) {
-                isTouching = true;
                 touchStartX = e.touches[0].clientX;
                 touchStartY = e.touches[0].clientY;
                 touchLastX = touchStartX;
-                pauseAnimation();
+                lastTouchTime = Date.now();
+                velocity = 0;
+                
+                // Cancel any ongoing inertia
+                if (animationFrame) {
+                    cancelAnimationFrame(animationFrame);
+                    animationFrame = null;
+                }
             }
             
             // Touch move
             function handleTouchMove(e) {
-                if (!isTouching) return;
-                
                 const touchCurrentX = e.touches[0].clientX;
                 const touchCurrentY = e.touches[0].clientY;
                 const deltaX = Math.abs(touchCurrentX - touchStartX);
                 const deltaY = Math.abs(touchCurrentY - touchStartY);
                 
-                // Only handle horizontal scrolling if moving more horizontally than vertically
-                if (deltaX > deltaY && deltaX > 10) {
+                // Determine if this is horizontal scrolling
+                if (!isTouching && deltaX > 10 && deltaX > deltaY) {
+                    isTouching = true;
+                    startManualMode();
+                } else if (!isTouching && deltaY > deltaX) {
+                    // Vertical scroll, don't interfere
+                    return;
+                }
+                
+                if (isTouching) {
                     e.preventDefault();
                     
-                    const delta = touchCurrentX - touchLastX;
-                    touchLastX = touchCurrentX;
+                    const now = Date.now();
+                    const timeDelta = now - lastTouchTime;
+                    const positionDelta = touchCurrentX - touchLastX;
                     
-                    currentTranslate += delta;
-                    currentTranslate = normalizePosition(currentTranslate);
-                    track.style.transform = `translateX(${currentTranslate}px)`;
-                } else if (deltaY > deltaX) {
-                    // User is scrolling vertically, cancel our horizontal handling
-                    isTouching = false;
+                    if (timeDelta > 0) {
+                        velocity = positionDelta / timeDelta * 16; // Convert to pixels per frame (60fps)
+                    }
+                    
+                    touchLastX = touchCurrentX;
+                    lastTouchTime = now;
+                    
+                    const currentPos = getCurrentTranslate();
+                    const newPos = normalizeTranslate(currentPos + positionDelta);
+                    track.style.transform = `translateX(${newPos}px)`;
                 }
             }
             
@@ -487,9 +549,13 @@
                 if (!isTouching) return;
                 isTouching = false;
                 
-                // Resume after 2 seconds
-                clearTimeout(scrollTimeout);
-                scrollTimeout = setTimeout(resumeAnimation, 2000);
+                // Apply inertia based on velocity
+                if (Math.abs(velocity) > 0.5) {
+                    applyInertia(velocity);
+                } else {
+                    clearTimeout(scrollTimeout);
+                    scrollTimeout = setTimeout(resumeAutoScroll, 1000);
+                }
             }
             
             // Calculate loop width after images load
