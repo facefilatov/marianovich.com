@@ -1,4 +1,4 @@
-111<!DOCTYPE html>
+222<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -245,26 +245,19 @@
 
         .gemstones-wrapper {
             width: 100%;
-            overflow-x: auto;
-            overflow-y: hidden;
+            overflow: hidden;
             position: relative;
-            -webkit-overflow-scrolling: touch;
-            scrollbar-width: none;
-            -ms-overflow-style: none;
-        }
-
-        .gemstones-wrapper::-webkit-scrollbar {
-            display: none;
         }
 
         .gemstones {
             height: 200px;
-            overflow: visible;
+            overflow: hidden;
             display: flex;
             align-items: center;
             position: relative;
             user-select: none;
             -webkit-user-select: none;
+            touch-action: pan-y;
         }
 
         .gemstones-track {
@@ -272,24 +265,27 @@
             gap: clamp(30px, 10vw, 150px);
             will-change: transform;
             position: relative;
+            transform: translateX(100vw);
             animation: slide-in 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) 0.74s forwards, 
                        carousel-scroll 60s linear 1.54s infinite;
+            cursor: grab;
+        }
+
+        .gemstones-track:active {
+            cursor: grabbing;
         }
 
         @keyframes slide-in {
-            from {
-                transform: translateX(100vw);
-            }
             to {
                 transform: translateX(0);
             }
         }
 
         @keyframes carousel-scroll {
-            0% {
+            from {
                 transform: translateX(0);
             }
-            100% {
+            to {
                 transform: translateX(-50%);
             }
         }
@@ -378,6 +374,124 @@
     </style>
 </head>
 <body>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const track = document.getElementById('gemstonesTrack');
+            const wrapper = document.querySelector('.gemstones-wrapper');
+            let isDragging = false;
+            let startPos = 0;
+            let currentTranslate = 0;
+            let prevTranslate = 0;
+            let animationID = 0;
+            let currentX = 0;
+            let velocity = 0;
+            let lastX = 0;
+            let lastTime = Date.now();
+            
+            // Pause CSS animation when user interacts
+            function pauseAnimation() {
+                const computedStyle = window.getComputedStyle(track);
+                const matrix = computedStyle.transform;
+                if (matrix !== 'none') {
+                    const matrixValues = matrix.match(/matrix.*\((.+)\)/)[1].split(', ');
+                    currentTranslate = parseFloat(matrixValues[4]);
+                }
+                track.style.animation = 'none';
+                track.style.transform = `translateX(${currentTranslate}px)`;
+                prevTranslate = currentTranslate;
+            }
+            
+            // Resume CSS animation
+            function resumeAnimation() {
+                track.style.animation = '';
+            }
+            
+            // Touch/Mouse start
+            function dragStart(e) {
+                isDragging = true;
+                pauseAnimation();
+                startPos = getPositionX(e);
+                lastX = startPos;
+                lastTime = Date.now();
+                velocity = 0;
+                cancelAnimationFrame(animationID);
+                track.style.cursor = 'grabbing';
+            }
+            
+            // Touch/Mouse move
+            function drag(e) {
+                if (!isDragging) return;
+                e.preventDefault();
+                
+                const currentPosition = getPositionX(e);
+                const now = Date.now();
+                const timeDelta = now - lastTime;
+                
+                if (timeDelta > 0) {
+                    velocity = (currentPosition - lastX) / timeDelta;
+                }
+                
+                lastX = currentPosition;
+                lastTime = now;
+                currentTranslate = prevTranslate + currentPosition - startPos;
+                track.style.transform = `translateX(${currentTranslate}px)`;
+            }
+            
+            // Touch/Mouse end
+            function dragEnd() {
+                if (!isDragging) return;
+                isDragging = false;
+                track.style.cursor = 'grab';
+                
+                prevTranslate = currentTranslate;
+                
+                // Apply inertia
+                if (Math.abs(velocity) > 0.1) {
+                    applyInertia();
+                } else {
+                    setTimeout(resumeAnimation, 2000);
+                }
+            }
+            
+            // Inertia animation
+            function applyInertia() {
+                const friction = 0.95;
+                
+                function inertiaStep() {
+                    velocity *= friction;
+                    
+                    if (Math.abs(velocity) > 0.01) {
+                        currentTranslate += velocity * 16;
+                        prevTranslate = currentTranslate;
+                        track.style.transform = `translateX(${currentTranslate}px)`;
+                        animationID = requestAnimationFrame(inertiaStep);
+                    } else {
+                        setTimeout(resumeAnimation, 2000);
+                    }
+                }
+                
+                inertiaStep();
+            }
+            
+            // Get X position from touch or mouse event
+            function getPositionX(e) {
+                return e.type.includes('mouse') ? e.pageX : e.touches[0].clientX;
+            }
+            
+            // Mouse events
+            track.addEventListener('mousedown', dragStart);
+            window.addEventListener('mousemove', drag);
+            window.addEventListener('mouseup', dragEnd);
+            
+            // Touch events
+            track.addEventListener('touchstart', dragStart, { passive: false });
+            track.addEventListener('touchmove', drag, { passive: false });
+            track.addEventListener('touchend', dragEnd);
+            
+            // Prevent context menu on long press
+            track.addEventListener('contextmenu', e => e.preventDefault());
+        });
+    </script>
     <div class="container">
         <div class="social-icons">
             <div class="social-icon">
