@@ -1,4 +1,4 @@
-999<!DOCTYPE html>
+111<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -234,6 +234,8 @@
         .gemstones-track {
             display: flex;
             gap: clamp(30px, 10vw, 150px);
+            padding-left: 10vw;
+            padding-right: clamp(30px, 10vw, 150px);
             animation: carousel-scroll 30s linear 1.54s infinite;
         }
 
@@ -418,25 +420,39 @@
         if (sets.length < 3) return;
 
         var setW = 0;
+        var lastManualScroll = 0;
+        var scrollTimer = null;
 
-        // Calculate set width
+        // Calculate set width (including gap)
         function calcSetWidth() {
-            setW = sets[0].offsetWidth + parseFloat(getComputedStyle(track).gap || 0);
+            var gap = parseFloat(getComputedStyle(track).gap || 0);
+            setW = sets[0].offsetWidth + gap;
         }
 
         // Wait for layout
         requestAnimationFrame(function() {
             calcSetWidth();
-            // Start scrolled to Set B
-            el.scrollLeft = setW;
+            
+            // Start scrolled to Set B (accounting for left padding)
+            var leftPadding = parseFloat(getComputedStyle(track).paddingLeft || 0);
+            el.scrollLeft = setW + leftPadding;
 
-            // Handle scroll teleport loop for native touch/drag scrolling
+            // Handle scroll teleport loop
             el.addEventListener('scroll', function() {
-                if (el.scrollLeft < setW) {
-                    el.scrollLeft += setW;
+                var currentScroll = el.scrollLeft;
+                
+                // Track manual scrolling
+                clearTimeout(scrollTimer);
+                scrollTimer = setTimeout(function() {
+                    lastManualScroll = 0;
+                }, 150);
+                
+                // Teleport boundaries (accounting for padding)
+                if (currentScroll < setW + leftPadding) {
+                    el.scrollLeft = currentScroll + setW;
                 }
-                if (el.scrollLeft >= setW * 2) {
-                    el.scrollLeft -= setW;
+                if (currentScroll >= (setW * 2) + leftPadding) {
+                    el.scrollLeft = currentScroll - setW;
                 }
             }, { passive: true });
 
@@ -448,7 +464,9 @@
             }, { passive: false });
         });
 
-        window.addEventListener('resize', calcSetWidth);
+        window.addEventListener('resize', function() {
+            calcSetWidth();
+        });
     })();
     </script>
 </body>
