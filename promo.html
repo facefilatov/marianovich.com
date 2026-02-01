@@ -1,4 +1,4 @@
-555<!DOCTYPE html>
+666<!DOCTYPE html>
 
 <html lang="en">
 <head>
@@ -215,7 +215,6 @@
     .gemstones-wrapper {
         width: 100%;
         overflow: hidden;
-        position: relative;
     }
 
     .gemstones {
@@ -226,7 +225,6 @@
         overflow-y: hidden;
         -webkit-overflow-scrolling: touch;
         scrollbar-width: none;
-        position: relative;
     }
     .gemstones::-webkit-scrollbar { display: none; }
 
@@ -234,7 +232,6 @@
         display: flex;
         gap: clamp(30px, 10vw, 150px);
         padding-left: 15vw;
-        will-change: transform;
     }
 
     .gemstones-content {
@@ -421,237 +418,112 @@
 
 <script>
 (function() {
-    'use strict';
-    
-    var el = document.getElementById('gemstones');
-    var track = document.getElementById('gemstones-track');
-    var sets = el.querySelectorAll('.gemstones-content');
+    const el = document.getElementById('gemstones');
+    const track = document.getElementById('gemstones-track');
+    const sets = el.querySelectorAll('.gemstones-content');
     
     if (sets.length < 3) return;
 
-    // Configuration
-    var AUTO_SCROLL_SPEED = 0.6; // Final auto-scroll speed (pixels per frame)
-    var SLIDE_IN_DELAY = 840; // Start after social icons (0.84s)
-    var SLIDE_IN_DURATION = 2000; // Duration of slide-in with deceleration (ms)
-    var INITIAL_SLIDE_SPEED = 8; // Initial high speed for slide-in (pixels per frame)
+    // Config
+    const SCROLL_SPEED = 0.5;
+    const START_DELAY = 840;
+    const DECEL_FACTOR = 0.98;
+    const MIN_SPEED = SCROLL_SPEED;
     
     // State
-    var setWidth = 0;
-    var isUserScrolling = false;
-    var animationFrameId = null;
-    var slideInStartTime = null;
-    var currentSpeed = INITIAL_SLIDE_SPEED;
-    var isSlideInPhase = true;
-    var userScrollVelocity = 0;
-    var lastUserScrollTime = 0;
-    var lastScrollLeft = 0;
-    var scrollCheckInterval = null;
+    let setW = 0;
+    let speed = 20;
+    let raf = null;
+    let userActive = false;
+    let wheelTimer = null;
     
     // Calculate set width
-    function calculateSetWidth() {
-        var trackStyle = getComputedStyle(track);
-        var gap = parseFloat(trackStyle.gap) || 0;
-        setWidth = sets[0].offsetWidth + gap;
+    function calcWidth() {
+        const gap = parseFloat(getComputedStyle(track).gap) || 0;
+        setW = sets[0].offsetWidth + gap;
     }
     
-    // Exponential decay for smooth deceleration
-    function exponentialDecay(current, target, factor) {
-        return current + (target - current) * factor;
+    // Loop boundaries - teleport when needed
+    function checkLoop() {
+        const s = el.scrollLeft;
+        if (s < setW * 0.3) el.scrollLeft = s + setW;
+        else if (s > setW * 1.7) el.scrollLeft = s - setW;
     }
     
-    // Handle infinite loop - teleport at boundaries
-    function handleLoopBoundaries() {
-        var currentScroll = el.scrollLeft;
-        var shouldTeleport = false;
-        var newPosition = currentScroll;
-        
-        // Left boundary - scrolled too far left
-        if (currentScroll < setWidth * 0.2) {
-            newPosition = currentScroll + setWidth;
-            shouldTeleport = true;
-        }
-        // Right boundary - scrolled too far right
-        else if (currentScroll > setWidth * 1.8) {
-            newPosition = currentScroll - setWidth;
-            shouldTeleport = true;
-        }
-        
-        if (shouldTeleport) {
-            el.scrollLeft = newPosition;
-        }
-    }
-    
-    // Main animation loop
-    function animate(currentTime) {
-        animationFrameId = requestAnimationFrame(animate);
-        
-        // Slide-in phase
-        if (isSlideInPhase) {
-            if (!slideInStartTime) {
-                slideInStartTime = currentTime;
+    // Animation loop
+    function loop() {
+        if (!userActive) {
+            // Decelerate to min speed
+            if (speed > MIN_SPEED) {
+                speed *= DECEL_FACTOR;
+                if (speed < MIN_SPEED) speed = MIN_SPEED;
             }
-            
-            var elapsed = currentTime - slideInStartTime;
-            
-            if (elapsed < SLIDE_IN_DURATION) {
-                // Smoothly decelerate from INITIAL_SLIDE_SPEED to AUTO_SCROLL_SPEED
-                currentSpeed = exponentialDecay(currentSpeed, AUTO_SCROLL_SPEED, 0.02);
-                
-                // Apply the scroll movement
-                if (!isUserScrolling) {
-                    el.scrollLeft += currentSpeed;
-                    handleLoopBoundaries();
-                }
-            } else {
-                // Slide-in complete, transition to auto-scroll
-                isSlideInPhase = false;
-                currentSpeed = AUTO_SCROLL_SPEED;
-            }
+            el.scrollLeft += speed;
+            checkLoop();
         }
-        // Auto-scroll phase
-        else {
-            if (!isUserScrolling) {
-                // Check if we need to decelerate from user's inertia
-                if (userScrollVelocity !== 0) {
-                    // Gradually reduce user velocity to match auto-scroll
-                    if (Math.abs(userScrollVelocity) > AUTO_SCROLL_SPEED) {
-                        userScrollVelocity = exponentialDecay(userScrollVelocity, AUTO_SCROLL_SPEED, 0.05);
-                        el.scrollLeft += userScrollVelocity;
-                    } else {
-                        userScrollVelocity = 0;
-                        el.scrollLeft += AUTO_SCROLL_SPEED;
-                    }
-                } else {
-                    el.scrollLeft += AUTO_SCROLL_SPEED;
-                }
-                
-                handleLoopBoundaries();
-            }
-        }
+        raf = requestAnimationFrame(loop);
     }
     
-    // Handle scroll events (including inertia)
-    function handleScroll() {
-        var currentScrollLeft = el.scrollLeft;
-        var now = performance.now();
-        
-        // Calculate velocity from scroll delta
-        if (lastUserScrollTime > 0) {
-            var deltaTime = now - lastUserScrollTime;
-            if (deltaTime > 0 && deltaTime < 100) { // Ignore if too long (not continuous)
-                var deltaScroll = currentScrollLeft - lastScrollLeft;
-                userScrollVelocity = deltaScroll / (deltaTime / 16); // Normalize to per-frame
-            }
-        }
-        
-        lastScrollLeft = currentScrollLeft;
-        lastUserScrollTime = now;
-        
-        handleLoopBoundaries();
-    }
-    
-    // Handle wheel events (desktop)
-    function handleWheel(e) {
-        if (e.deltaY !== 0 || e.deltaX !== 0) {
+    // Wheel handler
+    function onWheel(e) {
+        if (e.deltaY || e.deltaX) {
             e.preventDefault();
-            
-            isUserScrolling = true;
-            userScrollVelocity = 0; // Reset velocity on new wheel input
-            
-            var scrollAmount = e.deltaX !== 0 ? e.deltaX : e.deltaY;
-            el.scrollLeft += scrollAmount;
-            
-            // Clear existing timeout
-            clearTimeout(scrollCheckInterval);
-            
-            // Resume auto-scroll immediately when wheel stops
-            scrollCheckInterval = setTimeout(function() {
-                isUserScrolling = false;
-                userScrollVelocity = 0;
-            }, 150);
+            userActive = true;
+            el.scrollLeft += e.deltaX || e.deltaY;
+            clearTimeout(wheelTimer);
+            wheelTimer = setTimeout(() => userActive = false, 100);
         }
     }
     
-    // Touch/swipe interaction handlers
-    function handleTouchStart() {
-        isUserScrolling = true;
-        userScrollVelocity = 0;
+    // Touch handlers
+    function onTouchStart() {
+        userActive = true;
     }
     
-    function handleTouchEnd() {
-        // On touch end, let the inertia take over
-        // Don't immediately set isUserScrolling = false
-        // Instead, wait a moment to see if there's momentum
-        setTimeout(function() {
-            // Check if scroll is still happening (inertia)
-            var checkStart = el.scrollLeft;
-            setTimeout(function() {
-                if (Math.abs(el.scrollLeft - checkStart) < 1) {
-                    // Scroll has stopped, resume auto-scroll
-                    isUserScrolling = false;
+    function onTouchEnd() {
+        setTimeout(() => {
+            const start = el.scrollLeft;
+            setTimeout(() => {
+                if (Math.abs(el.scrollLeft - start) < 0.5) {
+                    userActive = false;
                 } else {
-                    // Still scrolling with inertia, check again
-                    handleTouchEnd();
+                    onTouchEnd();
                 }
             }, 50);
         }, 50);
     }
     
-    // Mouse interaction handlers
-    function handleMouseDown() {
-        isUserScrolling = true;
-        userScrollVelocity = 0;
-    }
-    
-    function handleMouseUp() {
-        isUserScrolling = false;
-    }
-    
-    // Initialize
+    // Init
     function init() {
-        calculateSetWidth();
-        
-        // Position at Set B (middle)
-        el.scrollLeft = setWidth;
-        lastScrollLeft = setWidth;
-        
-        // Start animation loop after delay
-        setTimeout(function() {
-            animationFrameId = requestAnimationFrame(animate);
-        }, SLIDE_IN_DELAY);
+        calcWidth();
+        el.scrollLeft = setW;
+        setTimeout(() => raf = requestAnimationFrame(loop), START_DELAY);
     }
     
-    // Event listeners
-    el.addEventListener('scroll', handleScroll, { passive: true });
-    el.addEventListener('wheel', handleWheel, { passive: false });
-    el.addEventListener('touchstart', handleTouchStart, { passive: true });
-    el.addEventListener('touchend', handleTouchEnd, { passive: true });
-    el.addEventListener('mousedown', handleMouseDown, { passive: true });
-    el.addEventListener('mouseup', handleMouseUp, { passive: true });
+    // Events
+    el.addEventListener('scroll', checkLoop, { passive: true });
+    el.addEventListener('wheel', onWheel, { passive: false });
+    el.addEventListener('touchstart', onTouchStart, { passive: true });
+    el.addEventListener('touchend', onTouchEnd, { passive: true });
+    el.addEventListener('mousedown', () => userActive = true, { passive: true });
+    el.addEventListener('mouseup', () => userActive = false, { passive: true });
     
-    // Handle window resize
-    var resizeTimeout;
-    window.addEventListener('resize', function() {
-        clearTimeout(resizeTimeout);
-        resizeTimeout = setTimeout(function() {
-            var oldSetWidth = setWidth;
-            calculateSetWidth();
-            // Maintain relative position
-            if (oldSetWidth > 0) {
-                el.scrollLeft = (el.scrollLeft / oldSetWidth) * setWidth;
-            }
-        }, 250);
+    // Resize
+    window.addEventListener('resize', () => {
+        clearTimeout(wheelTimer);
+        wheelTimer = setTimeout(() => {
+            const old = setW;
+            calcWidth();
+            if (old) el.scrollLeft = (el.scrollLeft / old) * setW;
+        }, 200);
     }, { passive: true });
     
     // Cleanup
-    window.addEventListener('beforeunload', function() {
-        if (animationFrameId) {
-            cancelAnimationFrame(animationFrameId);
-        }
-        clearTimeout(scrollCheckInterval);
+    window.addEventListener('beforeunload', () => {
+        if (raf) cancelAnimationFrame(raf);
     });
     
-    // Start when DOM is ready
+    // Start
     if (document.readyState === 'loading') {
         document.addEventListener('DOMContentLoaded', init);
     } else {
