@@ -1,4 +1,4 @@
-555<!DOCTYPE html>
+666<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -224,6 +224,7 @@
             overflow-y: hidden;
             -webkit-overflow-scrolling: touch;
             scrollbar-width: none;
+            position: relative;
         }
         .gemstones::-webkit-scrollbar { display: none; }
 
@@ -427,17 +428,19 @@
         const SLIDE_DURATION = 2500;
         const AUTO_SPEED = 0.5;
         const INIT_SPEED = 20;
-        const DECEL = 0.98;
+        const DECEL = 0.985;
         
         // State
         let setW = 0;
         let speed = INIT_SPEED;
-        let slidePos = 0;
+        let wrapperPos = 0;
         let raf = null;
         let startTime = null;
         let sliding = true;
         let userActive = false;
         let wheelTimer = null;
+        let lastScroll = 0;
+        let scrollVelocity = 0;
         
         // Calc set width
         function calcWidth() {
@@ -448,8 +451,14 @@
         // Loop check
         function checkLoop() {
             const s = carousel.scrollLeft;
-            if (s < setW * 0.25) carousel.scrollLeft = s + setW;
-            else if (s > setW * 1.75) carousel.scrollLeft = s - setW;
+            if (s < setW * 0.3) {
+                carousel.scrollLeft = s + setW;
+                lastScroll = carousel.scrollLeft;
+            }
+            else if (s > setW * 1.7) {
+                carousel.scrollLeft = s - setW;
+                lastScroll = carousel.scrollLeft;
+            }
         }
         
         // Animation loop
@@ -466,35 +475,59 @@
                         if (speed < AUTO_SPEED) speed = AUTO_SPEED;
                     }
                     
-                    // Move wrapper from right
-                    slidePos += speed;
+                    // Move wrapper from right (slides IN from right edge)
+                    wrapperPos += speed;
                     const screenW = window.innerWidth;
-                    const wrapperX = screenW - slidePos;
+                    const targetX = screenW - wrapperPos;
                     
-                    if (wrapperX > 0) {
-                        wrapper.style.transform = `translateX(${wrapperX}px)`;
+                    if (targetX > 0) {
+                        wrapper.style.transform = `translateX(${targetX}px)`;
                     } else {
-                        wrapper.style.transform = 'translateX(0)';
+                        wrapper.style.transform = 'translateX(0px)';
                     }
                     
-                    // Scroll internal
+                    // Scroll carousel left internally
                     carousel.scrollLeft += speed;
+                    lastScroll = carousel.scrollLeft;
                     checkLoop();
                 }
             }
-            // Auto-scroll phase
+            // Complete slide-in
             else if (sliding) {
                 sliding = false;
-                wrapper.style.transform = 'translateX(0)';
+                wrapper.style.transform = 'translateX(0px)';
                 speed = AUTO_SPEED;
             }
             
+            // Auto-scroll phase
             if (!sliding && !userActive) {
-                carousel.scrollLeft += AUTO_SPEED;
+                // Check for lingering momentum
+                if (scrollVelocity !== 0) {
+                    if (Math.abs(scrollVelocity) > AUTO_SPEED) {
+                        scrollVelocity *= 0.95; // Decelerate momentum
+                        carousel.scrollLeft += scrollVelocity;
+                    } else {
+                        scrollVelocity = 0;
+                        carousel.scrollLeft += AUTO_SPEED;
+                    }
+                } else {
+                    carousel.scrollLeft += AUTO_SPEED;
+                }
+                lastScroll = carousel.scrollLeft;
                 checkLoop();
             }
             
             raf = requestAnimationFrame(animate);
+        }
+        
+        // Track scroll for velocity
+        function onScroll() {
+            if (userActive) {
+                const delta = carousel.scrollLeft - lastScroll;
+                scrollVelocity = delta * 0.8; // Capture velocity
+            }
+            lastScroll = carousel.scrollLeft;
+            checkLoop();
         }
         
         // Wheel
@@ -502,37 +535,64 @@
             if (e.deltaY || e.deltaX) {
                 e.preventDefault();
                 userActive = true;
+                scrollVelocity = 0;
                 carousel.scrollLeft += e.deltaX || e.deltaY;
                 clearTimeout(wheelTimer);
-                wheelTimer = setTimeout(() => userActive = false, 100);
+                wheelTimer = setTimeout(() => {
+                    userActive = false;
+                    scrollVelocity = 0;
+                }, 100);
             }
         }
         
-        // Touch
+        // Touch start
         function onTouchStart() {
             userActive = true;
+            scrollVelocity = 0;
         }
         
+        // Touch end - let iOS momentum work naturally
         function onTouchEnd() {
-            setTimeout(checkInertia, 50);
+            // Check if still scrolling
+            setTimeout(function checkMomentum() {
+                const currentScroll = carousel.scrollLeft;
+                setTimeout(() => {
+                    if (Math.abs(carousel.scrollLeft - currentScroll) > 1) {
+                        // Still has momentum
+                        scrollVelocity = carousel.scrollLeft - currentScroll;
+                        checkMomentum();
+                    } else {
+                        // Stopped
+                        userActive = false;
+                        scrollVelocity = 0;
+                    }
+                }, 50);
+            }, 50);
         }
         
-        function checkInertia() {
-            const start = carousel.scrollLeft;
-            setTimeout(() => {
-                if (Math.abs(carousel.scrollLeft - start) > 0.5) {
-                    checkInertia();
-                } else {
-                    userActive = false;
-                }
-            }, 50);
+        // Mouse
+        function onMouseDown() {
+            userActive = true;
+            scrollVelocity = 0;
+        }
+        
+        function onMouseUp() {
+            userActive = false;
+            scrollVelocity = 0;
         }
         
         // Init
         function init() {
             calcWidth();
+            
+            // Start at middle set
             carousel.scrollLeft = setW;
-            wrapper.style.transform = `translateX(${window.innerWidth}px)`;
+            lastScroll = setW;
+            
+            // Start wrapper fully off-screen right
+            const screenW = window.innerWidth;
+            wrapper.style.transform = `translateX(${screenW}px)`;
+            wrapper.style.opacity = '1';
             
             setTimeout(() => {
                 raf = requestAnimationFrame(animate);
@@ -540,19 +600,22 @@
         }
         
         // Events
-        carousel.addEventListener('scroll', checkLoop, { passive: true });
+        carousel.addEventListener('scroll', onScroll, { passive: true });
         carousel.addEventListener('wheel', onWheel, { passive: false });
         carousel.addEventListener('touchstart', onTouchStart, { passive: true });
         carousel.addEventListener('touchend', onTouchEnd, { passive: true });
-        carousel.addEventListener('mousedown', () => userActive = true, { passive: true });
-        carousel.addEventListener('mouseup', () => userActive = false, { passive: true });
+        carousel.addEventListener('mousedown', onMouseDown, { passive: true });
+        carousel.addEventListener('mouseup', onMouseUp, { passive: true });
         
         window.addEventListener('resize', () => {
             clearTimeout(wheelTimer);
             wheelTimer = setTimeout(() => {
                 const old = setW;
                 calcWidth();
-                if (old) carousel.scrollLeft = (carousel.scrollLeft / old) * setW;
+                if (old > 0) {
+                    carousel.scrollLeft = (carousel.scrollLeft / old) * setW;
+                    lastScroll = carousel.scrollLeft;
+                }
             }, 200);
         }, { passive: true });
         
