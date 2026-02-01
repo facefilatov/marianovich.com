@@ -235,7 +235,7 @@
         .gemstones-wrapper {
             width: 100%;
             overflow: hidden;
-            animation: slide-in-wrapper 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) 0s both;
+            animation: slide-in-wrapper 1.5s cubic-bezier(0.25, 0.46, 0.45, 0.94) 0s both;
         }
 
         @keyframes slide-in-wrapper {
@@ -248,9 +248,9 @@
             display: flex;
             align-items: center;
             overflow-x: scroll;
-            -webkit-overflow-scrolling: touch;
+            -webkit-overflow-scrolling: ;
             scrollbar-width: none;
-            cursor: grab;
+            cursor: ;
         }
         .gemstones::-webkit-scrollbar { display: none; }
         .gemstones:active { cursor: grabbing; }
@@ -266,7 +266,7 @@
 
         @keyframes carousel-scroll {
             from { transform: translateX(0); }
-            to   { transform: translateX(-33.333%); }
+            to   { transform: translateX(-20%); }
         }
 
         .gemstones-content {
