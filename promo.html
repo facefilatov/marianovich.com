@@ -1,4 +1,4 @@
-444<!DOCTYPE html>
+555<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -344,9 +344,9 @@
 
             <p class="tagline">We curate exceptional natural gemstones for the premium market –<br>rare, distinctive, and selected to deliver timeless enjoyment</p>
 
-            <div class="gemstones-wrapper" id="gemstones-wrapper">
-                <div class="gemstones" id="gemstones">
-                    <div class="gemstones-track" id="gemstones-track">
+            <div class="gemstones-wrapper" id="wrapper">
+                <div class="gemstones" id="carousel">
+                    <div class="gemstones-track">
                         <!-- Set A -->
                         <div class="gemstones-content">
                             <a href="https://www.etsy.com/shop/marianovich?search_query=demantoid" target="_blank" rel="noopener noreferrer" class="gemstone-link"><img class="gemstone" src="https://raw.githubusercontent.com/facefilatov/marianovich.com/refs/heads/main/images/Demantoid.webp" alt="Demantoid Garnet" width="150" height="150"></a>
@@ -416,216 +416,154 @@
     (function() {
         'use strict';
         
-        // DOM elements
-        const wrapper = document.getElementById('gemstones-wrapper');
-        const carousel = document.getElementById('gemstones');
-        const track = document.getElementById('gemstones-track');
+        const wrapper = document.getElementById('wrapper');
+        const carousel = document.getElementById('carousel');
         const sets = carousel.querySelectorAll('.gemstones-content');
         
         if (sets.length < 3) return;
 
-        // Configuration
-        const CONFIG = {
-            startDelay: 840,              // Wait for social icons (840ms)
-            slideInDuration: 2000,        // Duration of slide-in phase (ms)
-            autoScrollSpeed: 0.5,         // Final auto-scroll speed (px/frame)
-            initialSlideSpeed: 15,        // Initial speed for wrapper slide-in
-            initialScrollSpeed: 18,       // Initial speed for internal scroll
-            decelerationRate: 0.98,       // Geometric deceleration
-            loopLeftBound: 0.25,          // Teleport boundary
-            loopRightBound: 1.75,         // Teleport boundary
-            wheelStopDelay: 100,          // Resume delay after wheel
-            touchCheckInterval: 50        // Touch inertia check
-        };
-
+        // Config
+        const START_DELAY = 840;
+        const SLIDE_DURATION = 2500;
+        const AUTO_SPEED = 0.5;
+        const INIT_SPEED = 20;
+        const DECEL = 0.98;
+        
         // State
-        let setWidth = 0;
-        let wrapperSlideSpeed = CONFIG.initialSlideSpeed;
-        let internalScrollSpeed = CONFIG.initialScrollSpeed;
-        let animationFrame = null;
-        let slideStartTime = null;
-        let isSlideInPhase = true;
-        let userIsInteracting = false;
-        let wheelStopTimer = null;
-
-        // Calculate set width
-        function calculateSetWidth() {
-            const gap = parseFloat(getComputedStyle(track).gap) || 0;
-            setWidth = sets[0].offsetWidth + gap;
+        let setW = 0;
+        let speed = INIT_SPEED;
+        let slidePos = 0;
+        let raf = null;
+        let startTime = null;
+        let sliding = true;
+        let userActive = false;
+        let wheelTimer = null;
+        
+        // Calc set width
+        function calcWidth() {
+            const gap = parseFloat(getComputedStyle(carousel.querySelector('.gemstones-track')).gap) || 0;
+            setW = sets[0].offsetWidth + gap;
         }
-
-        // Maintain infinite loop
-        function maintainInfiniteLoop() {
-            const scroll = carousel.scrollLeft;
+        
+        // Loop check
+        function checkLoop() {
+            const s = carousel.scrollLeft;
+            if (s < setW * 0.25) carousel.scrollLeft = s + setW;
+            else if (s > setW * 1.75) carousel.scrollLeft = s - setW;
+        }
+        
+        // Animation loop
+        function animate(time) {
+            if (!startTime) startTime = time;
+            const elapsed = time - startTime;
             
-            if (scroll < setWidth * CONFIG.loopLeftBound) {
-                carousel.scrollLeft = scroll + setWidth;
-            }
-            else if (scroll > setWidth * CONFIG.loopRightBound) {
-                carousel.scrollLeft = scroll - setWidth;
-            }
-        }
-
-        // Main animation loop
-        function animateCarousel(currentTime) {
-            if (!slideStartTime) {
-                slideStartTime = currentTime;
-            }
-
-            const elapsed = currentTime - slideStartTime;
-
-            // SLIDE-IN PHASE: Wrapper slides from right, content scrolls left
-            if (isSlideInPhase && elapsed < CONFIG.slideInDuration) {
-                if (!userIsInteracting) {
-                    // Calculate how far wrapper should be from right edge
-                    const screenWidth = window.innerWidth;
-                    let wrapperOffset = screenWidth;
-                    
-                    // Decelerate wrapper slide-in
-                    if (wrapperSlideSpeed > CONFIG.autoScrollSpeed) {
-                        wrapperSlideSpeed *= CONFIG.decelerationRate;
-                        if (wrapperSlideSpeed < CONFIG.autoScrollSpeed) {
-                            wrapperSlideSpeed = CONFIG.autoScrollSpeed;
-                        }
+            // Slide-in phase
+            if (sliding && elapsed < SLIDE_DURATION) {
+                if (!userActive) {
+                    // Decelerate speed
+                    if (speed > AUTO_SPEED) {
+                        speed *= DECEL;
+                        if (speed < AUTO_SPEED) speed = AUTO_SPEED;
                     }
                     
-                    wrapperOffset -= wrapperSlideSpeed;
+                    // Move wrapper from right
+                    slidePos += speed;
+                    const screenW = window.innerWidth;
+                    const wrapperX = screenW - slidePos;
                     
-                    // Apply wrapper position (sliding from right)
-                    if (wrapperOffset > 0) {
-                        wrapper.style.transform = `translateX(${wrapperOffset}px)`;
+                    if (wrapperX > 0) {
+                        wrapper.style.transform = `translateX(${wrapperX}px)`;
                     } else {
                         wrapper.style.transform = 'translateX(0)';
                     }
                     
-                    // Decelerate internal scroll
-                    if (internalScrollSpeed > CONFIG.autoScrollSpeed) {
-                        internalScrollSpeed *= CONFIG.decelerationRate;
-                        if (internalScrollSpeed < CONFIG.autoScrollSpeed) {
-                            internalScrollSpeed = CONFIG.autoScrollSpeed;
-                        }
-                    }
-                    
-                    // Apply internal scroll (scrolling left)
-                    carousel.scrollLeft += internalScrollSpeed;
-                    maintainInfiniteLoop();
+                    // Scroll internal
+                    carousel.scrollLeft += speed;
+                    checkLoop();
                 }
             }
-            // AUTO-SCROLL PHASE: Slide-in complete, continue scrolling
-            else if (isSlideInPhase) {
-                isSlideInPhase = false;
+            // Auto-scroll phase
+            else if (sliding) {
+                sliding = false;
                 wrapper.style.transform = 'translateX(0)';
-                wrapperSlideSpeed = CONFIG.autoScrollSpeed;
-                internalScrollSpeed = CONFIG.autoScrollSpeed;
+                speed = AUTO_SPEED;
             }
             
-            // Continue auto-scroll after slide-in
-            if (!isSlideInPhase && !userIsInteracting) {
-                carousel.scrollLeft += CONFIG.autoScrollSpeed;
-                maintainInfiniteLoop();
+            if (!sliding && !userActive) {
+                carousel.scrollLeft += AUTO_SPEED;
+                checkLoop();
             }
             
-            animationFrame = requestAnimationFrame(animateCarousel);
+            raf = requestAnimationFrame(animate);
         }
-
-        // Handle wheel events
-        function handleWheel(event) {
-            if (event.deltaY !== 0 || event.deltaX !== 0) {
-                event.preventDefault();
-                
-                userIsInteracting = true;
-                
-                const scrollDelta = event.deltaX !== 0 ? event.deltaX : event.deltaY;
-                carousel.scrollLeft += scrollDelta;
-                
-                clearTimeout(wheelStopTimer);
-                wheelStopTimer = setTimeout(() => {
-                    userIsInteracting = false;
-                }, CONFIG.wheelStopDelay);
+        
+        // Wheel
+        function onWheel(e) {
+            if (e.deltaY || e.deltaX) {
+                e.preventDefault();
+                userActive = true;
+                carousel.scrollLeft += e.deltaX || e.deltaY;
+                clearTimeout(wheelTimer);
+                wheelTimer = setTimeout(() => userActive = false, 100);
             }
         }
-
-        // Touch handlers
-        function handleTouchStart() {
-            userIsInteracting = true;
+        
+        // Touch
+        function onTouchStart() {
+            userActive = true;
         }
-
-        function handleTouchEnd() {
-            setTimeout(checkIfScrollingStopped, CONFIG.touchCheckInterval);
+        
+        function onTouchEnd() {
+            setTimeout(checkInertia, 50);
         }
-
-        function checkIfScrollingStopped() {
-            const startScroll = carousel.scrollLeft;
-            
+        
+        function checkInertia() {
+            const start = carousel.scrollLeft;
             setTimeout(() => {
-                const endScroll = carousel.scrollLeft;
-                
-                if (Math.abs(endScroll - startScroll) > 0.5) {
-                    checkIfScrollingStopped();
+                if (Math.abs(carousel.scrollLeft - start) > 0.5) {
+                    checkInertia();
                 } else {
-                    userIsInteracting = false;
+                    userActive = false;
                 }
-            }, CONFIG.touchCheckInterval);
+            }, 50);
         }
-
-        // Mouse handlers
-        function handleMouseDown() {
-            userIsInteracting = true;
-        }
-
-        function handleMouseUp() {
-            userIsInteracting = false;
-        }
-
-        // Resize handler
-        function handleResize() {
-            clearTimeout(wheelStopTimer);
-            wheelStopTimer = setTimeout(() => {
-                const oldWidth = setWidth;
-                calculateSetWidth();
-                
-                if (oldWidth > 0) {
-                    carousel.scrollLeft = (carousel.scrollLeft / oldWidth) * setWidth;
-                }
-            }, 200);
-        }
-
-        // Initialize
-        function initialize() {
-            calculateSetWidth();
-            
-            // Position at middle set
-            carousel.scrollLeft = setWidth;
-            
-            // Start wrapper off-screen right
+        
+        // Init
+        function init() {
+            calcWidth();
+            carousel.scrollLeft = setW;
             wrapper.style.transform = `translateX(${window.innerWidth}px)`;
             
-            // Start animation after delay
             setTimeout(() => {
-                animationFrame = requestAnimationFrame(animateCarousel);
-            }, CONFIG.startDelay);
+                raf = requestAnimationFrame(animate);
+            }, START_DELAY);
         }
-
-        // Event listeners
-        carousel.addEventListener('scroll', maintainInfiniteLoop, { passive: true });
-        carousel.addEventListener('wheel', handleWheel, { passive: false });
-        carousel.addEventListener('touchstart', handleTouchStart, { passive: true });
-        carousel.addEventListener('touchend', handleTouchEnd, { passive: true });
-        carousel.addEventListener('mousedown', handleMouseDown, { passive: true });
-        carousel.addEventListener('mouseup', handleMouseUp, { passive: true });
-        window.addEventListener('resize', handleResize, { passive: true });
-
-        // Cleanup
+        
+        // Events
+        carousel.addEventListener('scroll', checkLoop, { passive: true });
+        carousel.addEventListener('wheel', onWheel, { passive: false });
+        carousel.addEventListener('touchstart', onTouchStart, { passive: true });
+        carousel.addEventListener('touchend', onTouchEnd, { passive: true });
+        carousel.addEventListener('mousedown', () => userActive = true, { passive: true });
+        carousel.addEventListener('mouseup', () => userActive = false, { passive: true });
+        
+        window.addEventListener('resize', () => {
+            clearTimeout(wheelTimer);
+            wheelTimer = setTimeout(() => {
+                const old = setW;
+                calcWidth();
+                if (old) carousel.scrollLeft = (carousel.scrollLeft / old) * setW;
+            }, 200);
+        }, { passive: true });
+        
         window.addEventListener('beforeunload', () => {
-            if (animationFrame) cancelAnimationFrame(animationFrame);
-            clearTimeout(wheelStopTimer);
+            if (raf) cancelAnimationFrame(raf);
         });
-
-        // Start
+        
         if (document.readyState === 'loading') {
-            document.addEventListener('DOMContentLoaded', initialize);
+            document.addEventListener('DOMContentLoaded', init);
         } else {
-            initialize();
+            init();
         }
     })();
     </script>
