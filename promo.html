@@ -1,4 +1,4 @@
-666<!DOCTYPE html>
+<!DOCTYPE html>
 
 <html lang="en">
 <head>
@@ -418,116 +418,180 @@
 
 <script>
 (function() {
-    const el = document.getElementById('gemstones');
+    'use strict';
+    
+    // DOM elements
+    const carousel = document.getElementById('gemstones');
     const track = document.getElementById('gemstones-track');
-    const sets = el.querySelectorAll('.gemstones-content');
+    const sets = carousel.querySelectorAll('.gemstones-content');
     
     if (sets.length < 3) return;
 
-    // Config
-    const SCROLL_SPEED = 0.5;
-    const START_DELAY = 840;
-    const DECEL_FACTOR = 0.98;
-    const MIN_SPEED = SCROLL_SPEED;
-    
+    // Configuration
+    const CONFIG = {
+        startDelay: 840,           // Wait for social icons (840ms)
+        autoScrollSpeed: 0.5,      // Final auto-scroll speed (px/frame)
+        initialSpeed: 18,          // High initial speed for slide-in
+        decelerationRate: 0.975,   // Geometric deceleration factor
+        loopLeftBound: 0.25,       // Teleport at 25% of setWidth
+        loopRightBound: 1.75,      // Teleport at 175% of setWidth
+        wheelStopDelay: 100,       // Resume auto-scroll after wheel stops (ms)
+        touchCheckInterval: 50     // Check if touch inertia stopped (ms)
+    };
+
     // State
-    let setW = 0;
-    let speed = 20;
-    let raf = null;
-    let userActive = false;
-    let wheelTimer = null;
-    
-    // Calculate set width
-    function calcWidth() {
+    let setWidth = 0;
+    let currentSpeed = CONFIG.initialSpeed;
+    let animationFrame = null;
+    let userIsInteracting = false;
+    let wheelStopTimer = null;
+
+    // Calculate width of one gemstone set (including gap)
+    function calculateSetWidth() {
         const gap = parseFloat(getComputedStyle(track).gap) || 0;
-        setW = sets[0].offsetWidth + gap;
+        setWidth = sets[0].offsetWidth + gap;
     }
-    
-    // Loop boundaries - teleport when needed
-    function checkLoop() {
-        const s = el.scrollLeft;
-        if (s < setW * 0.3) el.scrollLeft = s + setW;
-        else if (s > setW * 1.7) el.scrollLeft = s - setW;
-    }
-    
-    // Animation loop
-    function loop() {
-        if (!userActive) {
-            // Decelerate to min speed
-            if (speed > MIN_SPEED) {
-                speed *= DECEL_FACTOR;
-                if (speed < MIN_SPEED) speed = MIN_SPEED;
-            }
-            el.scrollLeft += speed;
-            checkLoop();
+
+    // Handle infinite loop - teleport when boundaries are crossed
+    function maintainInfiniteLoop() {
+        const scroll = carousel.scrollLeft;
+        
+        // Scrolled too far left - teleport right
+        if (scroll < setWidth * CONFIG.loopLeftBound) {
+            carousel.scrollLeft = scroll + setWidth;
         }
-        raf = requestAnimationFrame(loop);
-    }
-    
-    // Wheel handler
-    function onWheel(e) {
-        if (e.deltaY || e.deltaX) {
-            e.preventDefault();
-            userActive = true;
-            el.scrollLeft += e.deltaX || e.deltaY;
-            clearTimeout(wheelTimer);
-            wheelTimer = setTimeout(() => userActive = false, 100);
+        // Scrolled too far right - teleport left
+        else if (scroll > setWidth * CONFIG.loopRightBound) {
+            carousel.scrollLeft = scroll - setWidth;
         }
     }
-    
-    // Touch handlers
-    function onTouchStart() {
-        userActive = true;
-    }
-    
-    function onTouchEnd() {
-        setTimeout(() => {
-            const start = el.scrollLeft;
-            setTimeout(() => {
-                if (Math.abs(el.scrollLeft - start) < 0.5) {
-                    userActive = false;
-                } else {
-                    onTouchEnd();
+
+    // Main animation loop
+    function animateCarousel() {
+        if (!userIsInteracting) {
+            // Decelerate to auto-scroll speed
+            if (currentSpeed > CONFIG.autoScrollSpeed) {
+                currentSpeed *= CONFIG.decelerationRate;
+                if (currentSpeed < CONFIG.autoScrollSpeed) {
+                    currentSpeed = CONFIG.autoScrollSpeed;
                 }
-            }, 50);
-        }, 50);
+            }
+            
+            // Apply scrolling
+            carousel.scrollLeft += currentSpeed;
+            maintainInfiniteLoop();
+        }
+        
+        animationFrame = requestAnimationFrame(animateCarousel);
     }
-    
-    // Init
-    function init() {
-        calcWidth();
-        el.scrollLeft = setW;
-        setTimeout(() => raf = requestAnimationFrame(loop), START_DELAY);
+
+    // Handle wheel events (desktop)
+    function handleWheel(event) {
+        if (event.deltaY !== 0 || event.deltaX !== 0) {
+            event.preventDefault();
+            
+            userIsInteracting = true;
+            
+            // Apply scroll (vertical wheel converts to horizontal)
+            const scrollDelta = event.deltaX !== 0 ? event.deltaX : event.deltaY;
+            carousel.scrollLeft += scrollDelta;
+            
+            // Clear existing timer
+            clearTimeout(wheelStopTimer);
+            
+            // Resume auto-scroll after wheel stops
+            wheelStopTimer = setTimeout(() => {
+                userIsInteracting = false;
+            }, CONFIG.wheelStopDelay);
+        }
     }
-    
-    // Events
-    el.addEventListener('scroll', checkLoop, { passive: true });
-    el.addEventListener('wheel', onWheel, { passive: false });
-    el.addEventListener('touchstart', onTouchStart, { passive: true });
-    el.addEventListener('touchend', onTouchEnd, { passive: true });
-    el.addEventListener('mousedown', () => userActive = true, { passive: true });
-    el.addEventListener('mouseup', () => userActive = false, { passive: true });
-    
-    // Resize
-    window.addEventListener('resize', () => {
-        clearTimeout(wheelTimer);
-        wheelTimer = setTimeout(() => {
-            const old = setW;
-            calcWidth();
-            if (old) el.scrollLeft = (el.scrollLeft / old) * setW;
+
+    // Handle touch start
+    function handleTouchStart() {
+        userIsInteracting = true;
+    }
+
+    // Handle touch end - check for momentum scrolling
+    function handleTouchEnd() {
+        setTimeout(() => {
+            checkIfScrollingStopped();
+        }, CONFIG.touchCheckInterval);
+    }
+
+    // Recursively check if inertia scrolling has stopped
+    function checkIfScrollingStopped() {
+        const startScroll = carousel.scrollLeft;
+        
+        setTimeout(() => {
+            const endScroll = carousel.scrollLeft;
+            
+            // Still scrolling with momentum
+            if (Math.abs(endScroll - startScroll) > 0.5) {
+                checkIfScrollingStopped();
+            }
+            // Scrolling stopped, resume auto-scroll
+            else {
+                userIsInteracting = false;
+            }
+        }, CONFIG.touchCheckInterval);
+    }
+
+    // Handle mouse interactions
+    function handleMouseDown() {
+        userIsInteracting = true;
+    }
+
+    function handleMouseUp() {
+        userIsInteracting = false;
+    }
+
+    // Handle window resize
+    function handleResize() {
+        clearTimeout(wheelStopTimer);
+        wheelStopTimer = setTimeout(() => {
+            const oldWidth = setWidth;
+            calculateSetWidth();
+            
+            // Maintain relative scroll position
+            if (oldWidth > 0) {
+                carousel.scrollLeft = (carousel.scrollLeft / oldWidth) * setWidth;
+            }
         }, 200);
-    }, { passive: true });
-    
-    // Cleanup
+    }
+
+    // Initialize carousel
+    function initialize() {
+        calculateSetWidth();
+        
+        // Position at middle set (Set B)
+        carousel.scrollLeft = setWidth;
+        
+        // Start animation after delay
+        setTimeout(() => {
+            animationFrame = requestAnimationFrame(animateCarousel);
+        }, CONFIG.startDelay);
+    }
+
+    // Attach event listeners
+    carousel.addEventListener('scroll', maintainInfiniteLoop, { passive: true });
+    carousel.addEventListener('wheel', handleWheel, { passive: false });
+    carousel.addEventListener('touchstart', handleTouchStart, { passive: true });
+    carousel.addEventListener('touchend', handleTouchEnd, { passive: true });
+    carousel.addEventListener('mousedown', handleMouseDown, { passive: true });
+    carousel.addEventListener('mouseup', handleMouseUp, { passive: true });
+    window.addEventListener('resize', handleResize, { passive: true });
+
+    // Cleanup on page unload
     window.addEventListener('beforeunload', () => {
-        if (raf) cancelAnimationFrame(raf);
+        if (animationFrame) cancelAnimationFrame(animationFrame);
+        clearTimeout(wheelStopTimer);
     });
-    
-    // Start
+
+    // Start when DOM is ready
     if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', init);
+        document.addEventListener('DOMContentLoaded', initialize);
     } else {
-        init();
+        initialize();
     }
 })();
 </script>
