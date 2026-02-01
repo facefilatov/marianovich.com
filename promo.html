@@ -1,4 +1,4 @@
-222<!DOCTYPE html>
+333<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -229,6 +229,7 @@
             -webkit-overflow-scrolling: touch;
             scrollbar-width: none;
             cursor: grab;
+            position: relative;
         }
         .gemstones::-webkit-scrollbar { display: none; }
         .gemstones:active { cursor: grabbing; }
@@ -237,18 +238,6 @@
             display: flex;
             gap: clamp(30px, 10vw, 150px);
             padding-left: 10vw;
-            /* Animation will be removed by JS on first touch/scroll */
-            animation: carousel-scroll 40s linear 1.54s infinite;
-        }
-
-        @keyframes carousel-scroll {
-            from { transform: translateX(0); }
-            to   { transform: translateX(-33.333%); }
-        }
-
-        /* Class to disable animation */
-        .gemstones-track.user-scrolling {
-            animation: none !important;
         }
 
         .gemstones-content {
@@ -428,8 +417,10 @@
         if (sets.length < 3) return;
 
         var setW = 0;
-        var isUserScrolling = false;
-        var scrollTimeout;
+        var animationId = null;
+        var isUserInteracting = false;
+        var interactionTimeout = null;
+        var scrollSpeed = 0.3; // pixels per frame (adjust for speed)
 
         // Initialize after layout
         function init() {
@@ -440,37 +431,68 @@
 
             // Start at Set B (middle set)
             el.scrollLeft = setW;
+            
+            // Start auto-scroll after initial slide-in animation
+            setTimeout(function() {
+                startAutoScroll();
+            }, 1540); // matches the CSS animation delay + duration
         }
 
-        // Disable CSS animation when user starts scrolling
-        function handleInteractionStart() {
-            if (!isUserScrolling) {
-                isUserScrolling = true;
-                track.classList.add('user-scrolling');
+        // Auto-scroll animation loop
+        function autoScroll() {
+            if (!isUserInteracting) {
+                el.scrollLeft += scrollSpeed;
+                handleLoopBoundaries();
+            }
+            animationId = requestAnimationFrame(autoScroll);
+        }
+
+        function startAutoScroll() {
+            if (animationId === null) {
+                animationId = requestAnimationFrame(autoScroll);
             }
         }
 
-        // Handle the infinite loop teleport
-        function handleScroll() {
-            handleInteractionStart();
-            
-            // Clear existing timeout
-            clearTimeout(scrollTimeout);
-            
-            // Perform the teleport logic
+        function stopAutoScroll() {
+            if (animationId !== null) {
+                cancelAnimationFrame(animationId);
+                animationId = null;
+            }
+        }
+
+        // Handle infinite loop teleporting
+        function handleLoopBoundaries() {
             var currentScroll = el.scrollLeft;
             
-            // If scrolled into Set A territory (left), jump to equivalent position in Set C
-            if (currentScroll < setW * 0.5) {
-                el.scrollLeft = currentScroll + setW;
+            // If scrolled into Set A territory (left edge), jump to Set C
+            if (currentScroll <= 0) {
+                el.scrollLeft = setW;
             }
-            // If scrolled into Set C territory (right), jump to equivalent position in Set A  
-            else if (currentScroll > setW * 2.5) {
-                el.scrollLeft = currentScroll - setW;
+            // If scrolled into Set C territory (right edge), jump to Set A
+            else if (currentScroll >= setW * 2) {
+                el.scrollLeft = setW;
             }
         }
 
-        // Wait for images to load and layout to stabilize
+        // User interaction handlers
+        function handleInteractionStart() {
+            isUserInteracting = true;
+            clearTimeout(interactionTimeout);
+        }
+
+        function handleInteractionEnd() {
+            clearTimeout(interactionTimeout);
+            // Resume auto-scroll 1 second after user stops interacting
+            interactionTimeout = setTimeout(function() {
+                isUserInteracting = false;
+            }, 1000);
+        }
+
+        function handleScroll() {
+            handleLoopBoundaries();
+        }
+
+        // Wait for layout to stabilize
         if (document.readyState === 'loading') {
             document.addEventListener('DOMContentLoaded', function() {
                 setTimeout(init, 100);
@@ -479,12 +501,17 @@
             setTimeout(init, 100);
         }
 
-        // Listen for scroll events
-        el.addEventListener('scroll', handleScroll, { passive: true });
-        
-        // Also listen for touch/mouse events to immediately disable animation
+        // Event listeners for user interaction
         el.addEventListener('touchstart', handleInteractionStart, { passive: true });
         el.addEventListener('mousedown', handleInteractionStart, { passive: true });
+        el.addEventListener('touchend', handleInteractionEnd, { passive: true });
+        el.addEventListener('mouseup', handleInteractionEnd, { passive: true });
+        el.addEventListener('scroll', handleScroll, { passive: true });
+
+        // Clean up on page unload
+        window.addEventListener('beforeunload', function() {
+            stopAutoScroll();
+        });
     })();
     </script>
 </body>
